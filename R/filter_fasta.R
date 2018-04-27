@@ -1,9 +1,15 @@
 #' filter_fasta
 #'
-#' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts filter paralog trees
+#' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts (prune_paralogs_MI.py, etc) filter paralog trees
 #' by a minimal number of taxa without considering ingroup / outgroup status (except for
-#' RT). Use this script to further filter the results from filter_1to1_orthologs.py,
-#' prune_paralogs_MI.py etc by outgroup/ingroup status.
+#' prune_paralogs_RT.py).
+#'
+#' Use this script to further filter the results from filter_1to1_orthologs.py,
+#' prune_paralogs_MI.py etc by outgroup/ingroup status. It can also filter by higher-level
+#' taxonomic groups, e.g., genus, family, order, etc. These are arbitrary, but here I provide options for
+#' genus, subfamily, and family. If the user wants to do by some other level such as order,
+#' they could simply enter the order instead in the "family" column of the taxonomy_data dataframe,
+#' or the code could be tweaked.
 #'
 #' @param MCL_settings Settings used for MCL (Markov Cluster Algorithm) step in Yang & Smith
 #' pipeline. Should be in the format "hit-frac0.3_I1.4_e5".
@@ -83,6 +89,11 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
   family_list <- taxonomy_data$family[taxonomy_data$group_status == "IN"]
   ingroup <- taxonomy_data$taxonID[taxonomy_data$group_status == "IN"]
 
+  # not all families have subfamilies. but, we do want to filter to family OR subfamily.
+  # so, make family_subfamily column
+  taxonomy_data$family_subfamily <- taxonomy_data$family
+  taxonomy_data$family_subfamily[!is.na(taxonomy_data$subfamily)] <- paste(taxonomy_data$family[!is.na(taxonomy_data$subfamily)], taxonomy_data$subfamily[!is.na(taxonomy_data$subfamily)], sep="_")
+
   # The following functions are different ways to filter the fasta files
 
   # initial_filter
@@ -118,6 +129,23 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
     # check if all ingroup families are included at least once in the subsetted alignment
     all(family_list %in% ingroup_families_in_alignment)
   }
+
+  # filter_by_subfamily
+  # filter fasta files based on having at least one species per ingroup subfamily and optionally by sequence length
+  # input: alignment, ingroup, length_cutoff are as in initial_filter above.
+  #        taxonomy_data = described in documentation for the whole function at the top.
+  #        subfamily_list = vector of subfamilies in the ingroup
+  # output: single logical value for whether or not the candidate alignment passes the filter
+
+  filter_by_subfamily <- function (alignment, ingroup, length_cutoff, taxonomy_data, family_list) {
+    # run initial filter to trim to only ingroup taxa, optionally dropping short sequences
+    ingroup_alignment <- initial_filter(alignment, ingroup, length_cutoff)
+    # get list of families for subsetted alignment
+    ingroup_subfamilies_in_alignment <- taxonomy_data$family_subfamily[match(names(ingroup_alignment), taxonomy_data$taxonID)]
+    # check if all ingroup families are included at least once in the subsetted alignment
+    all(family_list %in% ingroup_families_in_alignment)
+  }
+
 
   # filter fasta files based on having at least one species per eupoly II subfamily with seq length within 1 sd of overall mean seq length
   # input: candidate bait fasta file
