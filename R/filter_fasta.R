@@ -1,3 +1,10 @@
+# filter_fasta
+
+# The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts filter paralog trees
+# by a minimal number of taxa without considering ingroup / outgroup status (except for
+# RT). Use this script to further filter the results from filter_1to1_orthologs.py,
+# prune_paralogs_MI.py etc by outgroup/ingroup status.
+
 # given a set of fasta files with some minimum TOTAL taxa cutoff from an ortholog pruning step,
 # filter the fasta files down to only those including a minimum number of INGROUP taxa only
 
