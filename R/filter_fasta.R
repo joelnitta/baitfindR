@@ -38,24 +38,6 @@
 # given a set of fasta files with some minimum TOTAL taxa cutoff from an ortholog pruning step,
 # filter the fasta files down to only those including a minimum number of INGROUP taxa only
 
-# function to extract cluster name(s) from alignment, including "cluster" part and "1rr" part
-extract_cluster_name <- function (align) {
-  # grab either names or rownames of alignment depending if its in matrix format or a list
-  if (length(dim(align)) == 0) {
-    otu <- names(align)
-  } else if (length(dim(align)) > 0) {
-    otu <- rownames(align)
-  }
-
-  otu <- otu[grep("cluster", otu)]
-  otu <- sapply(otu, function (x) strsplit(x, split="_"))
-  otu_first <- sapply(otu, function (x) x[2])
-  otu_second <- sapply(otu, function (x) x[3])
-  otu <- paste(otu_first, otu_second, sep="_")
-  cluster_name <- unique(otu)
-  return(cluster_name)
-}
-
 filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_taxa", min_taxa) {
 
   # check that prune_method is one of the accepted values
