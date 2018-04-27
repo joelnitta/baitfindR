@@ -1,42 +1,29 @@
 #' filter_fasta
 #'
-#' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts (prune_paralogs_MI.py, etc) filter paralog trees
-#' by a minimal number of taxa without considering ingroup / outgroup status (except for
-#' prune_paralogs_RT.py).
+#' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts (prune_paralogs_MI.py, etc) filters paralog trees by a minimal number of taxa without considering ingroup / outgroup status (except for prune_paralogs_RT.py).
 #'
-#' Use this script to further filter the results from filter_1to1_orthologs.py,
-#' prune_paralogs_MI.py etc by outgroup/ingroup status. It can also filter by higher-level
-#' taxonomic groups, e.g., genus, family, order, etc. These are arbitrary, but here I provide options for
-#' genus, subfamily, and family. If the user wants to do by some other level such as order,
-#' they could simply enter the order instead in the "family" column of the taxonomy_data dataframe,
-#' or the code could be tweaked.
+#' Use this script to further filter the results from filter_1to1_orthologs.py, prune_paralogs_MI.py etc by outgroup/ingroup status. It can also filter by higher-level taxonomic groups. These are arbitrary, but here I provide options for genus, subfamily, and family. If the user wants to do by some other level such as order, they could simply enter the order instead in the "family" column of the taxonomy_data dataframe, or the code could be tweaked.
 #'
-#' @param MCL_settings Settings used for MCL (Markov Cluster Algorithm) step in Yang & Smith
-#' pipeline. Should be in the format "hit-frac0.3_I1.4_e5".
-#' @param prune_method Strategy used to identify homologs in Yang & Smith pipeline.
-#' Must be one of the following: "ortho_121", "ortho_MO", "ortho_MI", or "ortho_RT".
+#' @param MCL_settings Settings used for MCL (Markov Cluster Algorithm) step in Yang & Smith pipeline. Should be in the format "hit-frac0.3_I1.4_e5".
+#' @param prune_method Strategy used to identify homologs in Yang & Smith pipeline. Must be one of the following: "ortho_121", "ortho_MO", "ortho_MI", or "ortho_RT".
 #' @param taxaset
-#' @param filter_type Type of filter to be applied to fasta files. Choose to filter by
-#' ingroup family, subfamily, or genus (e.g., a given alignment must contain at least one
-#' representative of each ingroup family, subfamily, etc), or by minimum number of ingroup
-#' species. Must be one of the following: "family", "subfamily", "genus", "min_taxa"
-#' @param min_taxa If filter_type is "min_taxa", this sets the minimum number of ingroup taxa required
-#' to pass the filter.
+#' @param filter_type Type of filter to be applied to fasta files. Choose to filter by ingroup family, subfamily, or genus (e.g., a given alignment must contain at least one representative of each ingroup family, subfamily, etc), or by minimum number of ingroup species. Must be one of the following: "family", "subfamily", "genus", "min_taxa"
+#' @param min_taxa If filter_type is "min_taxa", this sets the minimum number of ingroup taxa required to pass the filter.
 #' @param taxonomy_data Dataframe matching taxonID to species, genus, subfamily, and family.
 #' Must also include outgroup/ingroup status. The columns must follow this format:
 #' \describe{
-#'   \item{taxonID}{Short unique identifier for the taxon (usually species). Must be exactly the
-#'   same taxonID used in the Y&S pipeline.}
+#'   \item{taxonID}{Short unique identifier for the taxon (usually species). Must be exactly the same taxonID used in the Y&S pipeline.}
 #'   \item{group_status}{Either "IN" or "OUT" depending if that taxon is in the ingroup or outgroup.}
-#'   \item{species}{Species in latin binomial form, with genus and species separated by space or underscore
+#'   \item{species}{Species in latin binomial form, with genus and specific epithet separated by space or underscore
 #'   (optional, only needed if filtering by genus).}
 #'   \item{family}{Taxonomic family (optional, only needed if filtering by family).
-#'   \item{subfamily}{Taxonomic subfamily (optional, only needed if filtering by subfamily). Does not need to be
-#'   specified for every taxon.}
+#'   \item{subfamily}{Taxonomic subfamily (optional, only needed if filtering by subfamily). Does not need to be specified for every taxon.}
 #' }
-#'
-# given a set of fasta files with some minimum TOTAL taxa cutoff from an ortholog pruning step,
-# filter the fasta files down to only those including a minimum number of INGROUP taxa only
+#' @return A named list including:
+#' \describe{
+#'   \item{filtered_fasta_files}{A list of fasta files that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
+#'   \item{filtered_fasta_names}{A character vector of the names of fasta files that passed the filter.}
+#' }
 
 filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_taxa", min_taxa) {
 
@@ -56,16 +43,16 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
   }
 
   # get names of all fasta files in ./MCL_settings/prune_method/fasta/
-  fasta.names <- list.files(paste0(MCL_settings, "/", prune_method, "/fasta/"))
-  fasta.names <- fasta.names[grep(".fa$", fasta.names)]
+  fasta_names <- list.files(paste0(MCL_settings, "/", prune_method, "/fasta/"))
+  fasta_names <- fasta_names[grep(".fa$", fasta_names)]
 
   # check that there are fasta files to read
-  if (length(fasta.names) == 0) {
+  if (length(fasta_names) == 0) {
     stop("No files named .fa or .fasta in MCL_settings/prune_method/fasta/")
   }
 
   # read in all fasta files in ./MCL_settings/prune_method/fasta/
-  fasta.files <- lapply(paste(MCL_settings, "/", prune_method, "/fasta/", fasta.names, sep=""), ape::read.dna, format="fasta")
+  fasta_files <- lapply(paste(MCL_settings, "/", prune_method, "/fasta/", fasta_names, sep=""), ape::read.dna, format="fasta")
 
   if (filter_type = "subfamily") {
     # not all families have subfamilies. but, we do want to filter to family OR subfamily.
@@ -155,29 +142,27 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
   # filter by minimum number of taxa in ingroup
   if (filter_type == "min_taxa" && !is.na(min_taxa)) {
     # filter fasta files based on minimum number of taxa in ingroup
-    count.in <- lapply(fasta.files, FUN = function (x) length(names(x)[names(x) %in% taxaset]))
-    count.total <- lapply(fasta.files, FUN = function (x) length(names(x)))
+    count.in <- lapply(fasta_files, FUN = function (x) length(names(x)[names(x) %in% taxaset]))
+    count.total <- lapply(fasta_files, FUN = function (x) length(names(x)))
     pass_filter <- count.in >= min_taxa
   } else if (filter_type == "min_taxa" && is.na(min_taxa)) {
     stop("need to provide minimum number of taxa for filtering")
   } else if (filter_type == "family") {
-    pass_filter <- sapply(fasta.files, filter_eupoly2_family)
+    pass_filter <- sapply(fasta_files, filter_eupoly2_family)
   } else if (filter_type == "subfamily") {
-    pass_filter <- sapply(fasta.files, filter_eupoly2_subfamily)
+    pass_filter <- sapply(fasta_files, filter_eupoly2_subfamily)
   } else if (filter_type == "genus") {
-    pass_filter <- sapply(fasta.files, filter_eupoly2_genus)
+    pass_filter <- sapply(fasta_files, filter_eupoly2_genus)
   } else {
     stop ("need to choose valid filtering method")
   }
 
-  fasta.filtered <- fasta.files[pass_filter]
-  fasta.names.filtered <- fasta.names[pass_filter]
+  filtered_fasta_files <- fasta_files[pass_filter]
+  filtered_fasta_names <- fasta_names[pass_filter]
 
   results <- list (
-    fasta.filtered = fasta.filtered,
-    fasta.names.filtered = fasta.names.filtered,
-    fasta.filtered.length = length(fasta.filtered),
-    fasta.raw.length = length(fasta.files)
+    filtered_fasta_files = filtered_fasta,
+    filtered_fasta_names = filtered_fasta_names
   )
   return(results)
 }
