@@ -85,16 +85,22 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
   # read in all fasta files in ./MCL_settings/prune_method/fasta/
   fasta.files <- lapply(paste(MCL_settings, "/", prune_method, "/fasta/", fasta.names, sep=""), ape::read.dna, format="fasta")
 
+  if (filter_type = "subfamily") {
+    # not all families have subfamilies. but, we do want to filter to family OR subfamily.
+    # so, make family_subfamily column
+    taxonomy_data$family_subfamily <- taxonomy_data$family
+    taxonomy_data$family_subfamily[!is.na(taxonomy_data$subfamily)] <- paste(taxonomy_data$family[!is.na(taxonomy_data$subfamily)], taxonomy_data$subfamily[!is.na(taxonomy_data$subfamily)], sep="_")
+  }
+
   # get list of unique ingroup families in taxonomy data
-  family_list <- taxonomy_data$family[taxonomy_data$group_status == "IN"]
+  if (filter_type == "family") {
+    family_list <- sort(unique(taxonomy_data$family[taxonomy_data$group_status == "IN"])) }
+  if (filter_type == "subfamily") {
+    subfamily_list <- sort(unique(taxonomy_data$family_subfamily[taxonomy_data$group_status == "IN"])) }
+  if (filter_type == "genus") {
+    genus_list <- sort(unique(taxonomy_data$genus[taxonomy_data$group_status == "IN"])) }
+  # above taxonomic groups are optional, but must provide ingroup/outgroup status
   ingroup <- taxonomy_data$taxonID[taxonomy_data$group_status == "IN"]
-
-  # not all families have subfamilies. but, we do want to filter to family OR subfamily.
-  # so, make family_subfamily column
-  taxonomy_data$family_subfamily <- taxonomy_data$family
-  taxonomy_data$family_subfamily[!is.na(taxonomy_data$subfamily)] <- paste(taxonomy_data$family[!is.na(taxonomy_data$subfamily)], taxonomy_data$subfamily[!is.na(taxonomy_data$subfamily)], sep="_")
-
-  # The following functions are different ways to filter the fasta files
 
   # initial_filter
   # first part of filtering step that is used in all filtering methods
@@ -113,6 +119,8 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
       ingroup_alignment <- ingroup_alignment[sapply(ingroup_alignment, length) > min_length ] }
     return(ingroup_alignment)
   }
+
+  # The following functions are different ways to filter the fasta files
 
   # filter_by_family
   # filter fasta files based on having at least one species per ingroup family and optionally by sequence length
@@ -137,61 +145,32 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
   #        subfamily_list = vector of subfamilies in the ingroup
   # output: single logical value for whether or not the candidate alignment passes the filter
 
-  filter_by_subfamily <- function (alignment, ingroup, length_cutoff, taxonomy_data, family_list) {
+  filter_by_subfamily <- function (alignment, ingroup, length_cutoff, taxonomy_data, subfamily_list) {
     # run initial filter to trim to only ingroup taxa, optionally dropping short sequences
     ingroup_alignment <- initial_filter(alignment, ingroup, length_cutoff)
     # get list of families for subsetted alignment
     ingroup_subfamilies_in_alignment <- taxonomy_data$family_subfamily[match(names(ingroup_alignment), taxonomy_data$taxonID)]
     # check if all ingroup families are included at least once in the subsetted alignment
-    all(family_list %in% ingroup_families_in_alignment)
+    all(subfamily_list %in% ingroup_families_in_alignment)
   }
 
+  # filter_by_genus
+  # filter fasta files based on having at least one species per ingroup genus and optionally by sequence length
+  # input: alignment, ingroup, length_cutoff are as in initial_filter above.
+  #        taxonomy_data = described in documentation for the whole function at the top.
+  #        genus_list = vector of genera in the ingroup
+  # output: single logical value for whether or not the candidate alignment passes the filter
 
-  # filter fasta files based on having at least one species per eupoly II subfamily with seq length within 1 sd of overall mean seq length
-  # input: candidate bait fasta file
-  # output: T/F whether the candidate passes the filter
-  filter_eupoly2_subfamily <- function (alignment) {
-    # minimum cutoff seq length is mean overall seq length - 1 sd
-    min_length <- mean(as.numeric(lapply(alignment, length))) - sd(as.numeric(lapply(alignment, length)))
-    # subsetted alignment with just EuII taxa
-    # eu2_alignment <- alignment[full_subfamilies %in% eu2_subfamily_list]
-    eu2_alignment <- alignment[names(alignment) %in% ingroup]
-    # subsetted alignment with just EuII taxa having min seq length
-    eu2_alignment <- eu2_alignment[sapply(eu2_alignment, length) > min_length ]
+  filter_by_genus <- function (alignment, ingroup, length_cutoff, taxonomy_data, genus_list) {
+    # run initial filter to trim to only ingroup taxa, optionally dropping short sequences
+    ingroup_alignment <- initial_filter(alignment, ingroup, length_cutoff)
     # get list of families for subsetted alignment
-    eu2_subfamilies <- onekp_data$Family_subfam[match(names(eu2_alignment), onekp_data$Code)]
-    # check if all 12 eu2 subfamilies are included at least once in subsetted alignment
-    all(eu2_subfamily_list %in% eu2_subfamilies)
+    ingroup_subfamilies_in_alignment <- taxonomy_data$family_subfamily[match(names(ingroup_alignment), taxonomy_data$taxonID)]
+    # check if all ingroup families are included at least once in the subsetted alignment
+    all(genus_list %in% ingroup_families_in_alignment)
   }
 
-  # filter fasta files based on having at least one species per eupoly II subfamily with seq length within 1 sd of overall mean seq length
-  # input: candidate bait fasta file
-  # output: T/F whether the candidate passes the filter
-  filter_eupoly2_genus <- function (alignment) {
-    # get list of genera for each seq in alignment
-    # full_genera <- onekp_data$genus[match(names(alignment), onekp_data$Code)]
-    # minimum cutoff seq length is mean overall seq length - 1 sd
-    min_length <- mean(as.numeric(lapply(alignment, length))) - sd(as.numeric(lapply(alignment, length)))
-    # subsetted alignment with just EuII taxa
-    #eu2_alignment <- alignment[full_genera %in% eu2_genus_list]
-    eu2_alignment <- alignment[names(alignment) %in% ingroup]
-    # subsetted alignment with just EuII taxa having min seq length
-    eu2_alignment <- eu2_alignment[sapply(eu2_alignment, length) > min_length ]
-    # get list of genera for subsetted alignment
-    eu2_genera <- onekp_data$genus[match(names(eu2_alignment), onekp_data$Code)]
-    # check if all 24 eu2 subfamilies are included at least once in subsetted alignment
-    all(eu2_genus_list %in% eu2_genera)
-    # length(which(eu2_genus_list %in% eu2_genera))
-  }
-
-  filter_xinping <- function (alignment_names, xinping_seqs) {
-    clusters <- sapply(alignment_names, function (x) strsplit(x, split="_"))
-    clusters_first <- sapply(clusters, function (x) x[1])
-    clusters_second <- sapply(clusters, function (x) x[2])
-    clusters <- paste(clusters_first, clusters_second, sep="_")
-    clusters %in% xinping_seqs
-  }
-
+  # filter by minimum number of taxa in ingroup
   if (filter_type == "min_taxa" && !is.na(min_taxa)) {
     # filter fasta files based on minimum number of taxa in ingroup
     count.in <- lapply(fasta.files, FUN = function (x) length(names(x)[names(x) %in% taxaset]))
@@ -205,8 +184,6 @@ filter_fasta <- function (MCL_settings, prune_method, taxaset, filter_type="min_
     pass_filter <- sapply(fasta.files, filter_eupoly2_subfamily)
   } else if (filter_type == "genus") {
     pass_filter <- sapply(fasta.files, filter_eupoly2_genus)
-  } else if (filter_type == "xinping") {
-    pass_filter <- filter_xinping (fasta.names, xinping_seqs)
   } else {
     stop ("need to choose valid filtering method")
   }
