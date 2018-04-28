@@ -1,12 +1,12 @@
 #' filter_fasta
 #'
-#' Additional options for filtering fasta files produced by Yang and Smith "Paralogy pruning" scripts
+#' Additional options for filtering fasta files produced by Yang and Smith 2014 "Paralogy pruning" scripts
 #'
 #' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts (\code{filter_1to1_orthologs.py}, \code{prune_paralogs_MI.py}, etc) filters paralog trees by a minimum number of taxa without considering ingroup / outgroup status (except for \code{prune_paralogs_RT.py}).
 #'
 #' Use \code{filter_fasta} to further filter the results from Y&S "Paralogy pruning" scripts by outgroup/ingroup status. \code{filter_fasta} can also filter by higher-level taxonomic groups provided by the user in the taxonomy_data argument. For example, if the dataset has multiple species per genus, we may wish to filter alignments such that we only keep those with at least one species per unique ingroup genus. To do this, include a column called "genus" in \code{taxonomy_data}, and set \code{filter_level} to "genus."
 #'
-#' @param MCL_settings Settings used for MCL (Markov Cluster Algorithm) step in Y&S pipeline. Should be in the format "hit-frac0.3_I1.4_e5".
+#' @param MCL_settings Settings used for mcl (Markov Cluster Algorithm) step in Y&S pipeline. Should be in the format "hit-frac0.3_I1.4_e5", where "hit-frac" is hit_fraction_cutoff used by blast_to_mcl.py, "I" is the inflation value used by mcl, and "e" specifies minimal log transformed evalue passed to -tf 'gq()' in mcl (for details, see Yang and Smith 2014).
 #' @param prune_method Strategy used to identify homologs in Y&S pipeline. Must be one of the following: "ortho_121", "ortho_MO", "ortho_MI", or "ortho_RT".
 #' @param taxonomy_data Dataframe matching taxonID to ingroup/outgroup status and (optional) higher-level taxonomy for filtering. The columns must follow this format:
 #' \describe{
@@ -14,7 +14,7 @@
 #'   \item{group_status}{Either "IN" or "OUT" depending if that taxon is in the ingroup or outgroup.}
 #'   \item{(user-selected taxonomic rank)}{The user can provide any taxonomic rank they wish to filter by. For example, alignments can be filtered by having at least one representative of each genus (family, order, etc.) in the dataset.}
 #' }
-#' #' @param filter_level A single character matching the name of the column to be used for filtering in \code{taxonomy_data}.
+#' @param filter_level A single character matching the name of the column to be used for filtering in \code{taxonomy_data}.
 #' @param min_taxa Minimum number of ingroup taxa required to pass the filter.
 #' @param exclude_short Logical; should extremely short sequences be excluded from the alignment during filtering? If \code{TRUE}, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.
 #' @return A named list including:
@@ -22,6 +22,8 @@
 #'   \item{filtered_fasta_files}{A list of fasta files that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
 #'   \item{filtered_fasta_names}{A character vector of the names of fasta files that passed the filter.}
 #' }
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #'
 #' @export
 filter_fasta <- function (MCL_settings, prune_method, taxonomy_data, filter_level = NULL, min_taxa = NULL, exclude_short = FALSE) {
