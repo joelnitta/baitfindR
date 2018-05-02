@@ -5,7 +5,7 @@
 \alias{trimmed_transcriptomes}
 \title{Example transcriptomes}
 \format{A list of eight fern transcriptomes stored in binary DNA format (class ape::DNAbin).
-All transcriptomes have been randomly subsampled to 2% of their original size.}
+All transcriptomes have been randomly subsampled to 2\% of their original size.}
 \source{
 \url{http://www.onekp.com/public_data.html}
 }
