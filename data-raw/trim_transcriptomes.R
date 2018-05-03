@@ -26,8 +26,8 @@ get_trimmed_transcriptome <- function (sample_code, keep_frac) {
 }
 
 # loop across all codes, keeping 2% of transcripts
-trimmed_transcriptomes <- lapply(codes, get_trimmed_transcriptome, keep_frac = 0.02)
+onekp_ferns <- lapply(codes, get_trimmed_transcriptome, keep_frac = 0.02)
 # name the transcriptomes
-names(trimmed_transcriptomes) <- codes
+names(onekp_ferns) <- codes
 # export data
-usethis::use_data(trimmed_transcriptomes, overwrite = TRUE)
+usethis::use_data(onekp_ferns, overwrite = TRUE)
