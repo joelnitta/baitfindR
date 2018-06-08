@@ -13,6 +13,8 @@ blast_to_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 \item{blast_results}{Character vector of length one; the path to the tab-separated text file containing the results from an all-by-all blast search. If blast searches were run separately (i.e., one for each sample), the results should be concatenated into a single file. For the blast search, the output format should specified as: -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'}
 
 \item{hit_fraction_cutoff}{Numeric between 0 and 1. Indicates the minimum percentage overlap between query and target in blast results to be retained in the output. According to Y&S, "A low hit-fraction cutoff will output clusters with more incomplete sequences and much larger and sparser alignments, whereas a high hit-fraction cutoff gives tighter clusters but ignores incomplete or divergent sequences."}
+
+\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \description{
 Wrapper for Yang and Smith (2014) blast_to_mcl.py

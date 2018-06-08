@@ -6,7 +6,7 @@
 \usage{
 
   write_fasta_files_from_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  all_fasta, mcl_outfile, minimal_taxa = 4, outdir)
+  all_fasta, mcl_outfile, minimal_taxa = 4, outdir, get_hash, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
@@ -18,6 +18,10 @@
 \item{minimal_taxa}{Numeric; minimal number of taxa required to be present or the clus. Default 4, the minimum number of taxa needed for an un-rooted tree.}
 
 \item{outdir}{Character vector of length one; the path to the folder where the clusters should be written.}
+
+\item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
+
+\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \description{
 Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
