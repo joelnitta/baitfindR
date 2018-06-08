@@ -5,28 +5,38 @@
 \title{fasta_to_tree}
 \usage{
 fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  seq_folder, number_cores, seq_type, bootstrap = FALSE)
+  overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE,
+  get_hash = FALSE)
 }
 \arguments{
-\item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
+\item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{seq_folder}{Character vector of length one; the name of the folder containing the fasta files.}
 
-\item{number_cores}{Numeric; number of threads to use for RAxML.}
+\item{number_cores}{Numeric; number of threads to use for \code{RAxML} and \code{mafft}.}
 
-\item{seq_type}{Character vector of length one indicating type of sequences. Should either be "dna" for DNA or "aa" for proteins.}
+\item{seq_type}{Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.}
 
-\item{bootstrap}{Logical; choose whether or not to run a bootstrap analysis for the trees.}
+\item{bootstrap}{Logical; should run a bootstrap analysis be run for the trees?}
+
+\item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all output tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
+
+\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+}
+\value{
+(For "small" clusters). For each input cluster \code{cluster1.fa} in \code{seq_folder}, \code{cluster1.fa.mafft.aln} (aligned cluster), \code{cluster1.fa.mafft.aln-cln} (cleaned, aligned cluster), and \code{cluster1.raxml.tre} (maximum-likelihood tree) will be written to \code{seq_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.raxml.tre} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) fasta_to_tree.py
+Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
 }
 \details{
 Given a folder containing unaligned sequences in fasta format (i.e., clusters),
-aligns each cluster with mafft (small alignments) or pasta (large alignments),
-excludes poorly aligned sites with phyutility, and infers a maximum-likelihood
-tree with RAxML (small alignments) or fasttree (large alignments). Requires all
-of these programs to be installed and included in the user's `$PATH`.
+aligns each cluster with \code{mafft} (small alignments) or \code{pasta} (large alignments),
+excludes poorly aligned sites with \code{phyutility}, and infers a maximum-likelihood
+tree with \code{RAxML} (small alignments) or \code{fasttree} (large alignments). Requires all
+of these programs to be installed and included in the user's \code{$PATH}. Assumes clusters are named \code{"cluster1.fa"}, \code{"cluster2.fa"}, etc.
 }
 \examples{
 \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}

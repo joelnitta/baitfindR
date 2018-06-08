@@ -1,28 +1,64 @@
 #' fasta_to_tree
 #'
-#' Wrapper for Yang and Smith (2014) fasta_to_tree.py
+#' Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
 #'
 #' Given a folder containing unaligned sequences in fasta format (i.e., clusters),
-#' aligns each cluster with mafft (small alignments) or pasta (large alignments),
-#' excludes poorly aligned sites with phyutility, and infers a maximum-likelihood
-#' tree with RAxML (small alignments) or fasttree (large alignments). Requires all
-#' of these programs to be installed and included in the user's `$PATH`.
+#' aligns each cluster with \code{mafft} (small alignments) or \code{pasta} (large alignments),
+#' excludes poorly aligned sites with \code{phyutility}, and infers a maximum-likelihood
+#' tree with \code{RAxML} (small alignments) or \code{fasttree} (large alignments). Requires all
+#' of these programs to be installed and included in the user's \code{$PATH}. Assumes clusters are named \code{"cluster1.fa"}, \code{"cluster2.fa"}, etc.
 #'
-#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param seq_folder Character vector of length one; the name of the folder containing the fasta files.
-#' @param number_cores Numeric; number of threads to use for RAxML.
-#' @param seq_type Character vector of length one indicating type of sequences. Should either be "dna" for DNA or "aa" for proteins.
-#' @param bootstrap Logical; choose whether or not to run a bootstrap analysis for the trees.
+#' @param number_cores Numeric; number of threads to use for \code{RAxML} and \code{mafft}.
+#' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
+#' @param bootstrap Logical; should run a bootstrap analysis be run for the trees?
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return (For "small" clusters). For each input cluster \code{cluster1.fa} in \code{seq_folder}, \code{cluster1.fa.mafft.aln} (aligned cluster), \code{cluster1.fa.mafft.aln-cln} (cleaned, aligned cluster), and \code{cluster1.raxml.tre} (maximum-likelihood tree) will be written to \code{seq_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.raxml.tre} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = FALSE) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
   bootstrap <- ifelse(bootstrap, "y", "n")
   path_to_ys <- jntools::add_slash(path_to_ys)
+  seq_folder <- jntools::add_slash(seq_folder)
+
+  # optional: delete all previous output written by a previous call to fasta_to_tree.py in this folder
+  if (overwrite) {
+    files_to_delete <- list.files(seq_folder)
+    search_terms <- paste("cluster\\d*\\.fa\\.mafft\\.aln",
+                           "cluster\\d*\\.fa\\.mafft\\.aln-cln",
+                           "cluster\\d*\\.fa\\.mafft\\.aln-cln.reduced",
+                           "cluster\\d*\\.raxml\\.tre", sep = "|")
+    files_to_delete <- files_to_delete[grep(search_terms, files_to_delete)]
+    files_to_delete <- paste0(seq_folder, files_to_delete)
+    file.remove(files_to_delete)
+  }
+
+  # call fasta_to_tree.py
   arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
   system2("python", arguments)
+
+  # optional: get MD5 hash of concatenated trees
+  if (get_hash) {
+    trees <- list.files(seq_folder)
+    trees <- trees[grep("\\.raxml\\.tre", trees)]
+    trees <- paste0(seq_folder, trees)
+    trees <- unlist(lapply(trees, readr::read_file))
+    hash <- digest::digest(trees)
+    return(hash)
+  }
 }
 
 #' write_fasta_files_from_mcl
