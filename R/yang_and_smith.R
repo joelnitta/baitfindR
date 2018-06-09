@@ -76,6 +76,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @param outdir Character vector of length one; the path to the folder where the clusters should be written.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return One fasta file per cluster (\code{cluster1.fa}, \code{cluster2.fa}, etc.) will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
@@ -114,10 +115,11 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 #'
 #'Converts the output of an all-by-all blast query into a format that can be parsed by mcl to find clusters.
 #'
-#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
-#' @param blast_results Character vector of length one; the path to the tab-separated text file containing the results from an all-by-all blast search. If blast searches were run separately (i.e., one for each sample), the results should be concatenated into a single file. For the blast search, the output format should specified as: -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'
+#' @param path_to_ys Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param blast_results Character vector of length one; the complete path to the tab-separated text file containing the results from an all-by-all blast search. If blast searches were run separately (i.e., one for each sample), the results should be concatenated into a single file. For the blast search, the output format should specified as: -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'
 #' @param hit_fraction_cutoff Numeric between 0 and 1. Indicates the minimum percentage overlap between query and target in blast results to be retained in the output. According to Y&S, "A low hit-fraction cutoff will output clusters with more incomplete sequences and much larger and sparser alignments, whereas a high hit-fraction cutoff gives tighter clusters but ignores incomplete or divergent sequences."
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return A tab-separated text file with three columns: the first two are the matching query and target from the all-by-all blast, and the third is the negative log e-value for that match. This file is named \code{<blast_results>.hit-frac<hit_fraction_cutoff>.minusLogEvalue}, where \code{<blast_results>} and \code{<hit_fraction_cutoff>} correspond to the values of those arguments. If possible contaminants (i.e., identical sequences between different samples) were found, these are written to \code{<blast_results>.ident.hit-frac<hit_fraction_cutoff>}. Output files will be written to the same folder containing \code{blast_results}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
@@ -127,4 +129,15 @@ blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to
   path_to_ys <- jntools::add_slash(path_to_ys)
   arguments <- c(paste0(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
   system2("python", arguments)
+
+  # Normally, the warning file with sequences that are identical between
+  # samples (possible contamination) is output as "blast_output.ident",
+  # but this results in files with the same name from different hit_faction_cutoff
+  # values. Append the hit_fraction_cutoff value so we can tell them apart.
+  #
+  ident_file <- paste0(blast_results, ".ident")
+  ident_file_rename <- paste0(ident_file, ".hit-frac", hit_fraction_cutoff)
+  if (file.exists(ident_file)) {
+    file.rename(ident_file, ident_file_rename)
+  }
 }

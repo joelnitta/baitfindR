@@ -23,6 +23,9 @@
 
 \item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
+\value{
+One fasta file per cluster (\code{cluster1.fa}, \code{cluster2.fa}, etc.) will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
+}
 \description{
 Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
 }
