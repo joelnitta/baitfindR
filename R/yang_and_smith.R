@@ -72,7 +72,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param all_fasta Character vector of length one; the path to the fasta file including all query sequences concatenated together, i.e., the fasta file used to create the "all-by-all" blast database.
 #' @param mcl_outfile Character vector of length one; the path to the output from running mcl on blast distances.
-#' @param minimal_taxa Numeric; minimal number of taxa required to be present or the clus. Default 4, the minimum number of taxa needed for an un-rooted tree.
+#' @param minimal_taxa Numeric; minimal number of taxa required to be present for the cluster to be written. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the clusters should be written.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
