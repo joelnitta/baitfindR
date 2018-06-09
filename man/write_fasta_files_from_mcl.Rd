@@ -15,7 +15,7 @@
 
 \item{mcl_outfile}{Character vector of length one; the path to the output from running mcl on blast distances.}
 
-\item{minimal_taxa}{Numeric; minimal number of taxa required to be present or the clus. Default 4, the minimum number of taxa needed for an un-rooted tree.}
+\item{minimal_taxa}{Numeric; minimal number of taxa required to be present for the cluster to be written. Default 4, the minimum number of taxa needed for an un-rooted tree.}
 
 \item{outdir}{Character vector of length one; the path to the folder where the clusters should be written.}
 

@@ -3,4 +3,6 @@
 export(blast_to_mcl)
 export(fasta_to_tree)
 export(filter_fasta)
+export(set_transdecoder_path)
+export(set_ys_path)
 export(write_fasta_files_from_mcl)
