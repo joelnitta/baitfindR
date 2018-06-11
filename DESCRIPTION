@@ -13,4 +13,5 @@ Imports:
     jntools,
     pkgconfig,
     digest,
-    readr
+    readr,
+    processx
