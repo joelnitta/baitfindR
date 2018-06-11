@@ -23,7 +23,7 @@ build_blast_db <- function (in_seqs, out_name, db_type = "nucl", other_args = NU
 
 }
 
-#' blastp
+#' blast_p
 #'
 #' Wrapper to call blastp
 #'
@@ -36,18 +36,35 @@ build_blast_db <- function (in_seqs, out_name, db_type = "nucl", other_args = NU
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @export
-blastp <- function (query, database, out_file, other_args = NULL, ...) {
+blast_p <- function (query, database, out_file, other_args = NULL, ...) {
 
   # modify arguments
   arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), other_args)
 
   # run command
-  system2("makeblastdb", arguments)
+  system2("blastp", arguments)
 
 }
 
-# # blast n single file, save as outformat 6
-# blast_cdhitest <- function (query, blast_result_file, database, other_args = "-evalue 10 -num_threads 1 -max_target_seqs 1000 -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'", ...) {
-#   arguments <- paste0("-query ", query, " -db ", database, " ", other_args, " > ", blast_result_file)
-#   system2("blastn", arguments)
-# }
+#' blast_n
+#'
+#' Wrapper to call blastn
+#'
+#' @param query Character vector of length one; the path to the fasta file to use as the query sequence(s).
+#' @param database Character vector of length one; the name of the blast database.
+#' @param out_file Character vector of length one; the name to use for the results file.
+#' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastn -help}.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return A tab-separated text file with the results of the blastn search, named with the value of \code{out_file}.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
+#' @export
+blast_n <- function (query, database, out_file, other_args = NULL, ...) {
+
+  # modify arguments
+  arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), other_args)
+
+  # run command
+  system2("blastn", arguments)
+
+}
