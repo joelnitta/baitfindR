@@ -6,18 +6,18 @@
 \usage{
 
   transdecoder_long_orfs(path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"),
-  transcriptome, wd, other_args = NULL, ...)
+  transcriptome_file, wd = here::here(), other_args = NULL, ...)
 }
 \arguments{
 \item{path_to_transdecoder}{Character vector of length one; the path to the folder containing TransDecoder scripts, e.g., \code{"/Users/me/apps/TransDecoder/"}}
+
+\item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
 
 \item{wd}{Character vector of length one; the directory where the command will be run, and the output folder created.}
 
 \item{other_args}{Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.}
 
 \item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
-
-\item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
 }
 \value{
 An output folder in the working directory containing base frequencies and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named \code{<transcriptome>.transdecoder_dir}, where \code{<transcriptome>} is the value of that argument.

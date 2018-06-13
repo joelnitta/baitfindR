@@ -17,7 +17,7 @@
 #' \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
 #'
 #' @export
-transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"), transcriptome_file, wd, other_args = NULL, ...) {
+transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"), transcriptome_file, wd = here::here(), other_args = NULL, ...) {
 
   # error checking
   if(is.null(path_to_transdecoder)) {
@@ -35,11 +35,11 @@ transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config
   processx::run(command, arguments, wd = wd)
 }
 
-#' transdecoder_predict_with_blast
+#' transdecoder_predict
 #'
 #' Wrapper to call transdecoder.predict
 #'
-#' This has to be run in the same directory containing the .transdecoder_dir output folders from \code{\link{transdecoder_long_orfs}}.
+#' This has to be run in the same directory containing the .transdecoder_dir output folders from \code{\link{transdecoder_long_orfs}}. Optionally include the results of a blastp search to make sure that peptides with a blastp hit against the reference database are retained in the TransDecoder output.
 #'
 #' @param path_to_transdecoder Character vector of length one; the path to the folder containing TransDecoder scripts, e.g., \code{"/Users/me/apps/TransDecoder/"}
 #' @param transcriptome_file Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).
@@ -55,7 +55,7 @@ transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config
 #' \dontrun{transdecoder_predict_with_blast("some/transcriptome_file.fa", "some/blast_result.txt")}
 #'
 #' @export
-transdecoder_predict_with_blast <- function (path_to_transdecoder = "~/apps/TransDecoder/", transcriptome_file, blast_result, wd, other_args = NULL, ...) {
+transdecoder_predict <- function (path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"), transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, ...) {
 
   # error checking
   if(is.null(path_to_transdecoder)) {
@@ -64,7 +64,9 @@ transdecoder_predict_with_blast <- function (path_to_transdecoder = "~/apps/Tran
 
   # modify arguments
   path_to_transdecoder <- jntools::add_slash(path_to_transdecoder)
-  arguments <- c(paste("-t", transcriptome_file), paste("--retain_blastp_hits", blast_result), other_args)
+  blast_argument <- ifelse(is.null(blast_result), NULL, paste("--retain_blastp_hits", blast_result))
+
+  arguments <- c(paste("-t", transcriptome_file), blast_argument, other_args)
 
   # modify command
   command <- paste0(path_to_transdecoder, "TransDecoder.Predict")
