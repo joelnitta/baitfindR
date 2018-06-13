@@ -70,6 +70,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' including the sequences in that cluster.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param all_fasta Character vector of length one; the path to the fasta file including all query sequences concatenated together, i.e., the fasta file used to create the "all-by-all" blast database.
 #' @param mcl_outfile Character vector of length one; the path to the output from running mcl on blast distances.
 #' @param minimal_taxa Numeric; minimal number of taxa required to be present for the cluster to be written. Default 4, the minimum number of taxa needed for an un-rooted tree.
@@ -92,6 +93,16 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
   outdir <- jntools::add_slash(outdir)
+
+
+  # optional: delete all previous output written by a previous call to fasta_to_tree.py in this folder
+  if (overwrite) {
+    files_to_delete <- list.files(outdir)
+    search_terms <- "cluster\\d*\\.fa$"
+    files_to_delete <- files_to_delete[grep(search_terms, files_to_delete)]
+    files_to_delete <- paste0(outdir, files_to_delete)
+    file.remove(files_to_delete)
+  }
 
   # call write_fasta_files_from_mcl.py
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
