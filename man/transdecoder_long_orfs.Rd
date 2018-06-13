@@ -20,7 +20,9 @@
 \item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \value{
-An output folder in the working directory containing base frequencies and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named \code{<transcriptome>.transdecoder_dir}, where \code{<transcriptome>} is the value of that argument.
+Within the R environment, a list with components specified in \code{\link[processx]{run}}.
+
+Externally, an output folder in the working directory containing base frequencies and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named \code{<transcriptome>.transdecoder_dir}, where \code{<transcriptome>} is the value of that argument.
 }
 \description{
 Wrapper to call TransDecoder.LongOrfs

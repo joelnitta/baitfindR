@@ -23,7 +23,9 @@
 \item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \value{
-Four output files (.cds, .pep, .bed, and .gff3) for each input transcriptome file will be written to the working directory.
+Within the R environment, a list with components specified in \code{\link[processx]{run}}.
+
+Externally, four output files (.cds, .pep, .bed, and .gff3) for each input transcriptome file will be written to the working directory.
 }
 \description{
 Wrapper to call transdecoder.predict
