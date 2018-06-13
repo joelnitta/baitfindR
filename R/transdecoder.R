@@ -64,9 +64,9 @@ transdecoder_predict <- function (path_to_transdecoder = pkgconfig::get_config("
 
   # modify arguments
   path_to_transdecoder <- jntools::add_slash(path_to_transdecoder)
-  blast_argument <- if(is.null(blast_result)) {NULL} else {paste("--retain_blastp_hits", blast_result)}
+  blast_argument <- if(is.null(blast_result)) {NULL} else {c("--retain_blastp_hits", blast_result)}
 
-  arguments <- c(paste("-t", transcriptome_file), blast_argument, other_args)
+  arguments <- c("-t", transcriptome_file, blast_argument, other_args)
 
   # modify command
   command <- paste0(path_to_transdecoder, "TransDecoder.Predict")
