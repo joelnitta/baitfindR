@@ -52,3 +52,28 @@ make_dir <- function (dir_name, ...) {
     sink()
   }
 }
+
+# concatenate list of files that have been read into R, write out as single file
+#
+# input files must be a list
+
+
+#' cat_files
+#'
+#' Equivalent of \code{cat file1 file2}
+#'
+#' Concatenate a list and write out the result as single file.
+#'
+#' @param input_file_list A list. Could be any list, but it's meant to used for lists of files that have been read into R as character vectors, e.g., using \code{\link[readr]{read_file}}.
+#' @param output_file Path to write output file.
+#'
+#' @return A character vector of length one in the R environment; externally, the concatenated output file.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @examples
+#' \dontrun{cat_files(list("a", "b", "c"), "my_list.txt")}
+#' @export
+cat_files <- function (input_file_list, output_file) {
+  unlisted_files <- unlist(input_file_list)
+  collapsed_files <- paste(unlisted_files, collapse="")
+  readr::write_file(collapsed_files, output_file)
+}
