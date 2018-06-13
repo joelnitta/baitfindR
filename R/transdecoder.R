@@ -17,7 +17,7 @@
 #' \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
 #'
 #' @export
-transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"), transcriptome, wd, other_args = NULL, ...) {
+transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"), transcriptome_file, wd, other_args = NULL, ...) {
 
   # error checking
   if(is.null(path_to_transdecoder)) {
