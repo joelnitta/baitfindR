@@ -15,4 +15,6 @@ Imports:
     digest,
     readr,
     processx,
-    here
+    here,
+    purrr,
+    stringr

@@ -141,3 +141,57 @@ blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to
     file.rename(ident_file, ident_file_rename)
   }
 }
+
+#' fix_names_from_transdecoder
+#'
+#' Shortens names in fasta headers.
+#'
+#' Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time.
+#'
+#' @param transdecoder_output Character vector of length one; the path to the .transdecoder.cds file produced by \code{\link{transdecoder_predict}}. It is assumed that the first part of the filename (immediately preceding .transdecoder.cds) is the sample code.
+#' @param mol_type Character vector of length one; "dna" for DNA or "aa" for proteins.
+#'
+#' @return Object of class \code{DNAbin} or \code{AAbin} with names shortened to \code{sample_code`"@"`gene}
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{fix_names_from_transdecoder(transdecoder_output = "some/folder/CODE.transdecoder.cds")}
+#' @export
+fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") {
+
+  if (!(mol_type == "dna" | mol_type == "aa")) {
+    stop("Must choose 'dna' or 'aa' for mol_type")
+  } else if (mol_type == "dna") {
+    seq <- ape::read.FASTA (transdecoder_output)
+  } else if (mol_type == "aa") {
+    seq <- ape::read.FASTA (transdecoder_output, type = "AA")
+  }
+
+  # get sequence names from fasta file
+  seq_names <- names(seq)
+
+  # get sample code from input string
+  # break up by slashes, and grab last element
+  code <- stringr::str_split(transdecoder_output, "/", simplify = TRUE)
+  code <- code[,length(code)]
+
+  # check to make sure input file name format is correct
+  if (grepl(".transdecoder.cds", code) == FALSE) {
+    stop("transdecoder_output does not end in '.transdecoder.cds' ")
+  }
+
+  # isolate sample code
+  code <- gsub(".transdecoder.cds", "", code)
+
+  # recreate Y&S code to isolate gene number:
+  # 1. grab first substring separated by spaces,
+  # 2. then grab the last substring of that separated by periods
+  newid <- purrr::map_chr(seq_names, function (x) stringr::str_split(x, pattern = " ")[[1]][[1]] )
+  newid <- purrr::map_chr(newid, function (x) stringr::str_split(x, pattern = "\\.")[[1]][[ length(stringr::str_split(x, pattern = "\\.")[[1]]) ]] )
+  new_names <- paste(code, newid, sep="@")
+
+  names(seq) <- new_names
+
+  return(seq)
+
+}
