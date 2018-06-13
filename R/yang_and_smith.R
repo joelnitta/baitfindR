@@ -101,7 +101,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   if (get_hash) {
     clusters <- list.files(outdir)
     clusters <- clusters[grep("\\.fa$", clusters)]
-    clusters <- paste0(out_dir, clusters)
+    clusters <- paste0(outdir, clusters)
     clusters <- unlist(lapply(clusters, readr::read_file))
     hash <- digest::digest(clusters)
     return(hash)
