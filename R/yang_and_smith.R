@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = FALSE) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
