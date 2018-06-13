@@ -29,3 +29,26 @@ set_ys_path <- function (path) {
 set_transdecoder_path <- function (path) {
   pkgconfig::set_config("baitfindR::path_to_transdecoder" = path)
 }
+
+#' make_dir
+#'
+#' Make a directory
+#'
+#' Creates a directory in the working directory, and adds a hidden \code{.name} file, which is a plain text file containing the name of the directory. The purpose of the \code{.name} file is to allow for tracking by \code{\link{drake}} during workflows, because \code{\link{drake}} can only track files, not folders.
+#'
+#' @param dir_name Name of the directory to be created.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#'
+#' @return \code{NULL} in the R environment; externally, creates a directory \code{dir_name}.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @examples
+#' \dontrun{make_dir("new_dir")}
+#' @export
+make_dir <- function (dir_name, ...) {
+  if(!dir.exists(dir_name)) {
+    dir.create(dir_name)
+    sink(file = paste0(here::here(dir_name), "/.name"), type = "output")
+    cat(dir_name)
+    sink()
+  }
+}
