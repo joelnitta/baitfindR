@@ -1,3 +1,5 @@
+# DEPRECATED
+
 # download arabidopsis and lygodium proteomes
 # these will be used to make blastp database in Yang and Smith (2014) workflow
 
@@ -32,5 +34,5 @@ lygodium_proteome <- read_file("data-raw/lygodium_predicted_potein_ver1.0RC.clea
 arabidopsis_proteome <- read_file("data-raw/TAIR10_pep_20110103_representative_gene_model_updated.fasta")
 
 # export data
-usethis::use_data(lygodium_proteome, overwrite = TRUE, compress="xz")
-usethis::use_data(arabidopsis_proteome, overwrite = TRUE, compress="xz")
+#usethis::use_data(lygodium_proteome, overwrite = TRUE, compress="xz")
+#usethis::use_data(arabidopsis_proteome, overwrite = TRUE, compress="xz")
