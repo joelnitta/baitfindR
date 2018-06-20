@@ -220,7 +220,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to trim.
-#' @param tree_file_ending Character; string used to match tree files that should be trimmed.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
 #' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be cut.
 #' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be cut.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
@@ -319,7 +319,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to cut.
-#' @param tree_file_ending Character; string used to match tree files that should be cut.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
 #' @param internal_branch_length_cutoff Numeric vector of length one; the depth at which cuts should be made (smaller numbers indicate greater depth).
 #' @param minimal_taxa Numeric; minimal number of taxa required for tree to be cut. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the subtrees should be written.
@@ -358,6 +358,55 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
     sub_trees <- paste0(outdir, sub_trees)
     sub_trees <- unlist(lapply(sub_trees, readr::read_file))
     hash <- digest::digest(sub_trees)
+    return(hash)
+  }
+}
+
+#' write_fasta_files_from_trees
+#'
+#' Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py
+#'
+#' Given a folder containing phylogenetic trees and a single concatenated fasta file
+#' including all the sequences used to build the trees, output one fasta file per tree
+#' with the sequences in that tree. This function will overwrite any output files with
+#' the same name in \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param all_fasta Character vector of length one; the path to the fasta file including all the sequences that were originally used to build the trees.
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for extracting fasta sequences.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
+#' @param outdir Character vector of length one; the path to the folder where the fasta files should be written.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output fasta files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return One fasta file per tree file ending in \code{tree_file_ending} in \code{tree_folder} will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all output fasta files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
+#' @export
+write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, get_hash, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # call write_fasta_files_from_mcl.py
+  arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
+  system2("python", arguments)
+
+  # optional: get MD5 hash of concatenated clusters
+  if (get_hash) {
+    clusters <- list.files(outdir)
+    clusters <- clusters[grep("rr\\.fa$", clusters)]
+    clusters <- paste0(outdir, clusters)
+    clusters <- unlist(lapply(clusters, readr::read_file))
+    hash <- digest::digest(clusters)
     return(hash)
   }
 }

@@ -13,7 +13,7 @@ trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 
 \item{tree_folder}{Character vector of length one; the path to the folder containing the trees to trim.}
 
-\item{tree_file_ending}{Character; string used to match tree files that should be trimmed.}
+\item{tree_file_ending}{Character vector of length one; only tree files with this file ending will be used.}
 
 \item{relative_cutoff}{Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be cut.}
 

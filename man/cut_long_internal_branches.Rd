@@ -14,7 +14,7 @@
 
 \item{tree_folder}{Character vector of length one; the path to the folder containing the trees to cut.}
 
-\item{tree_file_ending}{Character; string used to match tree files that should be cut.}
+\item{tree_file_ending}{Character vector of length one; only tree files with this file ending will be used.}
 
 \item{internal_branch_length_cutoff}{Numeric vector of length one; the depth at which cuts should be made (smaller numbers indicate greater depth).}
 
