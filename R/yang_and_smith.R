@@ -206,3 +206,52 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
   return(seq)
 
 }
+
+#' trim_tips
+#'
+#' Wrapper for Yang and Smith (2014) \code{trim_tips.py}
+#'
+#' Given a folder containing phylogenetic trees, exclude (i.e., "trim"),
+#' tips on unusually long branches. Tips on a branch 10 times longer
+#' than their sister AND longer than \code{relative_cutoff}, OR tips
+#' that are longer than \code{absolute_cutoff} will be trimmed. This
+#' function will overwrite any output files with the same name in
+#' \code{tree_folder}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
+#' @param tree_folder Character vector of length one; the name of the folder containing the trees to trim.
+#' @param tree_file_ending Character; string used to match tree files that should be trimmed.
+#' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be cut.
+#' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be cut.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each input tree with a file ending matching \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.tt} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all trimmed tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
+#' @export
+trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, get_hash = FALSE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # call fasta_to_tree.py
+  arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated trees
+  if (isTRUE(get_hash)) {
+    trimmed_trees <- list.files(tree_folder, pattern = "\\.tt")
+    trimmed_trees <- paste0(tree_folder, trimmed_trees)
+    trimmed_trees <- unlist(lapply(trimmed_trees, readr::read_file))
+    hash <- digest::digest(trimmed_trees)
+    return(hash)
+  }
+}
