@@ -242,7 +242,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   path_to_ys <- jntools::add_slash(path_to_ys)
   tree_folder <- jntools::add_slash(tree_folder)
 
-  # call fasta_to_tree.py
+  # call trim_tips.py
   arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
   processx::run("python", arguments)
 
@@ -294,16 +294,70 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   aln_folder <- jntools::add_slash(aln_folder)
   mask_paraphyletic <- ifelse(isTRUE(mask_paraphyletic), "y", "n")
 
-  # call fasta_to_tree.py
+  # call mask_tips_by_taxonID_transcripts.py
   arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
   processx::run("python", arguments)
 
   # optional: get MD5 hash of concatenated trees
   if (isTRUE(get_hash)) {
-    trimmed_trees <- list.files(tree_folder, pattern = "\\.tt")
-    trimmed_trees <- paste0(tree_folder, trimmed_trees)
-    trimmed_trees <- unlist(lapply(trimmed_trees, readr::read_file))
-    hash <- digest::digest(trimmed_trees)
+    masked_trees <- list.files(tree_folder, pattern = "\\.mm$")
+    masked_trees <- paste0(tree_folder, masked_trees)
+    masked_trees <- unlist(lapply(masked_trees, readr::read_file))
+    hash <- digest::digest(masked_trees)
+    return(hash)
+  }
+}
+
+#' cut_long_internal_branches
+#'
+#' Wrapper for Yang and Smith (2014) \code{cut_long_internal_branches.py}
+#'
+#' Given a folder containing phylogenetic trees, split the trees into multiple subtrees
+#' for nodes that bifurcate deeper than \code{internal_branch_length_cutoff}.
+#' \code{tree_folder} and \code{outdir} should be different to avoid writing over input trees.
+#' This function will overwrite any output files with the same name in \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to cut.
+#' @param tree_file_ending Character; string used to match tree files that should be cut.
+#' @param internal_branch_length_cutoff Numeric vector of length one; the depth at which cuts should be made (smaller numbers indicate greater depth).
+#' @param minimal_taxa Numeric; minimal number of taxa required for tree to be cut. Default 4, the minimum number of taxa needed for an un-rooted tree.
+#' @param outdir Character vector of length one; the path to the folder where the subtrees should be written.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output subtree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each input tree with a file ending in \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.mm} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all masked tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
+#' @export
+cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, get_hash = FALSE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  tree_folder <- jntools::add_slash(tree_folder)
+  outdir <- jntools::add_slash(outdir)
+
+  # more error checking
+  if(tree_folder == outdir) {
+    stop("Must provide provide different paths for input and output folders")
+  }
+
+  # call cut_long_internal_branches.py
+  arguments <- c(paste0(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated trees
+  if (isTRUE(get_hash)) {
+    sub_trees <- list.files(outdir, pattern = "\\.subtree$")
+    sub_trees <- paste0(outdir, sub_trees)
+    sub_trees <- unlist(lapply(sub_trees, readr::read_file))
+    hash <- digest::digest(sub_trees)
     return(hash)
   }
 }
