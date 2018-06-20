@@ -48,7 +48,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 
   # call fasta_to_tree.py
   arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
-  system2("python", arguments)
+  processx::run("python", arguments, wd = seq_folder)
 
   # optional: get MD5 hash of concatenated trees
   if (get_hash) {
@@ -106,7 +106,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 
   # call write_fasta_files_from_mcl.py
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
-  system2("python", arguments)
+  processx::run("python", arguments)
 
   # optional: get MD5 hash of concatenated clusters
   if (get_hash) {
@@ -139,7 +139,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, ...) {
   path_to_ys <- jntools::add_slash(path_to_ys)
   arguments <- c(paste0(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
-  system2("python", arguments)
+  processx::run("python", arguments)
 
   # Normally, the warning file with sequences that are identical between
   # samples (possible contamination) is output as "blast_output.ident",
@@ -398,7 +398,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 
   # call write_fasta_files_from_mcl.py
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
-  system2("python", arguments)
+  processx::run("python", arguments)
 
   # optional: get MD5 hash of concatenated clusters
   if (get_hash) {
