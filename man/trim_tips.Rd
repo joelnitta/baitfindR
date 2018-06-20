@@ -11,7 +11,7 @@ trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
 
-\item{tree_folder}{Character vector of length one; the name of the folder containing the trees to trim.}
+\item{tree_folder}{Character vector of length one; the path to the folder containing the trees to trim.}
 
 \item{tree_file_ending}{Character; string used to match tree files that should be trimmed.}
 

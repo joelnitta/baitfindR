@@ -13,7 +13,7 @@ fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 
 \item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
-\item{seq_folder}{Character vector of length one; the name of the folder containing the fasta files.}
+\item{seq_folder}{Character vector of length one; the path to the folder containing the fasta files.}
 
 \item{number_cores}{Numeric; number of threads to use for \code{RAxML} and \code{mafft}.}
 

@@ -10,7 +10,7 @@
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
-#' @param seq_folder Character vector of length one; the name of the folder containing the fasta files.
+#' @param seq_folder Character vector of length one; the path to the folder containing the fasta files.
 #' @param number_cores Numeric; number of threads to use for \code{RAxML} and \code{mafft}.
 #' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
 #' @param bootstrap Logical; should run a bootstrap analysis be run for the trees?
@@ -219,7 +219,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' \code{tree_folder}.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
-#' @param tree_folder Character vector of length one; the name of the folder containing the trees to trim.
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to trim.
 #' @param tree_file_ending Character; string used to match tree files that should be trimmed.
 #' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be cut.
 #' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be cut.
@@ -244,6 +244,58 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 
   # call fasta_to_tree.py
   arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated trees
+  if (isTRUE(get_hash)) {
+    trimmed_trees <- list.files(tree_folder, pattern = "\\.tt")
+    trimmed_trees <- paste0(tree_folder, trimmed_trees)
+    trimmed_trees <- unlist(lapply(trimmed_trees, readr::read_file))
+    hash <- digest::digest(trimmed_trees)
+    return(hash)
+  }
+}
+
+#' mask_tips_by_taxonID_transcripts
+#'
+#' Wrapper for Yang and Smith (2014) \code{mask_tips_by_taxonID_transcripts.py}
+#'
+#' Given a folder containing phylogenetic trees and their alignments, mask monophyletic
+#' (and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
+#' to represent clades consisting of a single taxon). Tree files are assumed to end in \code{.tt}
+#' (the output of \code{trim_tips}), and only tree files with this ending will be included.
+#' Alignment files are assumed to end in \code{.aln-cln} (the output of \code{fasta_to_tree}),
+#' and only alignment files with this ending will be included.
+#' The tip with the fewest ambiguous characters in the alignment will be kept. This
+#' function will overwrite any output files with the same name in \code{tree_folder}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to mask.
+#' @param aln_folder Character vector of length one; the path to the folder containing the alignments used to make the trees.
+#' @param mask_paraphyletic Logical; should paraphyletic tips belonging to the same taxon be masked?
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output masked tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each input tree with a file ending in \code{.tt} in \code{tree_folder}, a trimmed tree with a file ending in \code{.mm} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all masked tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
+#' @export
+mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = FALSE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  tree_folder <- jntools::add_slash(tree_folder)
+  aln_folder <- jntools::add_slash(aln_folder)
+  mask_paraphyletic <- ifelse(isTRUE(mask_paraphyletic), "y", "n")
+
+  # call fasta_to_tree.py
+  arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
   processx::run("python", arguments)
 
   # optional: get MD5 hash of concatenated trees
