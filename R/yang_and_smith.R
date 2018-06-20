@@ -36,14 +36,18 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 
   # optional: delete all previous output written by a previous call to fasta_to_tree.py in this folder
   if (overwrite) {
-    files_to_delete <- list.files(seq_folder)
-    search_terms <- paste("cluster\\d*\\.fa\\.mafft\\.aln",
-                           "cluster\\d*\\.fa\\.mafft\\.aln-cln",
-                           "cluster\\d*\\.fa\\.mafft\\.aln-cln.reduced",
-                           "cluster\\d*\\.raxml\\.tre", sep = "|")
-    files_to_delete <- files_to_delete[grep(search_terms, files_to_delete)]
-    files_to_delete <- paste0(seq_folder, files_to_delete)
-    file.remove(files_to_delete)
+    search_terms <- paste("cluster.*\\.fa\\.mafft\\.aln$",
+                           "cluster.*\\.fa\\.mafft\\.aln-cln$",
+                           "cluster.*\\.fa\\.mafft\\.aln-cln.reduced$",
+                           "cluster.*\\.raxml\\.tre$",
+                           sep = "|")
+    files_to_delete <- list.files(seq_folder, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(seq_folder, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
   }
 
   # call fasta_to_tree.py
