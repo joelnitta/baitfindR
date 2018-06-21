@@ -50,7 +50,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
     }
   }
 
-  # call fasta_to_tree.py
+  # call command
   arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
   processx::run("python", arguments, wd = seq_folder)
 
@@ -108,7 +108,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
     file.remove(files_to_delete)
   }
 
-  # call write_fasta_files_from_mcl.py
+  # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
   processx::run("python", arguments)
 
@@ -141,15 +141,19 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 #' \dontrun{blast_to_mcl(blast_results = "some/folder/blastresults.tab", hit_fraction_cutoff = 0.5)}
 #' @export
 blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, ...) {
+
+  # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
   arguments <- c(paste0(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
+
+  # call command
   processx::run("python", arguments)
 
   # Normally, the warning file with sequences that are identical between
   # samples (possible contamination) is output as "blast_output.ident",
   # but this results in files with the same name from different hit_faction_cutoff
   # values. Append the hit_fraction_cutoff value so we can tell them apart.
-  #
+
   ident_file <- paste0(blast_results, ".ident")
   ident_file_rename <- paste0(ident_file, ".hit-frac", hit_fraction_cutoff)
   if (file.exists(ident_file)) {
@@ -225,8 +229,8 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to trim.
 #' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
-#' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be cut.
-#' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be cut.
+#' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be trimmed.
+#' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be trimmed.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each input tree with a file ending matching \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.tt} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all trimmed tree files concatenated together will be returned.
@@ -246,7 +250,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   path_to_ys <- jntools::add_slash(path_to_ys)
   tree_folder <- jntools::add_slash(tree_folder)
 
-  # call trim_tips.py
+  # call command
   arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
   processx::run("python", arguments)
 
@@ -298,7 +302,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   aln_folder <- jntools::add_slash(aln_folder)
   mask_paraphyletic <- ifelse(isTRUE(mask_paraphyletic), "y", "n")
 
-  # call mask_tips_by_taxonID_transcripts.py
+  # call command
   arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
   processx::run("python", arguments)
 
@@ -352,7 +356,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
     stop("Must provide provide different paths for input and output folders")
   }
 
-  # call cut_long_internal_branches.py
+  # call command
   arguments <- c(paste0(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
   processx::run("python", arguments)
 
@@ -400,7 +404,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   outdir <- jntools::add_slash(outdir)
   tree_folder <- jntools::add_slash(tree_folder)
 
-  # call write_fasta_files_from_mcl.py
+  # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
   processx::run("python", arguments)
 
@@ -411,6 +415,108 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
     clusters <- paste0(outdir, clusters)
     clusters <- unlist(lapply(clusters, readr::read_file))
     hash <- digest::digest(clusters)
+    return(hash)
+  }
+}
+
+#' filter_1to1_orthologs
+#'
+#' Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py
+#'
+#' Given a folder containing homolog trees, filter the trees to only those
+#' containing one-to-one orthologs (i.e., no duplications within a sample).
+#' This function will overwrite any output files with the same name in
+#' \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for filtering.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
+#' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
+#' @param outdir Character vector of length one; the path to the folder where the filtered trees should be written.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all filtered tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{filter_1to1_orthologs(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
+#' @export
+filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated clusters
+  if (get_hash) {
+    trees <- list.files(outdir)
+    trees <- trees[grep("\\.1to1ortho\\.tre$", trees)]
+    trees <- paste0(outdir, trees)
+    trees <- unlist(lapply(trees, readr::read_file))
+    hash <- digest::digest(trees)
+    return(hash)
+  }
+}
+
+#' prune_paralogs_MI
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_MI.py
+#'
+#' Given a folder containing homolog trees, prune paralogs from the trees
+#' using the maximum inclusion (MI) method. This method iteratively
+#' extracts subtrees containing the greatest number of samples (taxa)
+#' without duplication. Long branches will also be trimmed (i.e., removed)
+#' according to \code{relative_cutoff} and \code{absolute_cutoff} values.
+#' This function will overwrite any output files with the same name in \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
+#' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be trimmed.
+#' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be trimmed.
+#' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
+#' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{prune_paralogs_MI(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4, outdir = "some/folder")}
+#' @export
+prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated clusters
+  if (get_hash) {
+    trees <- list.files(outdir)
+    trees <- trees[grep("1to1ortho\\.tre$|MIortho.*\\.tre$", trees)]
+    trees <- paste0(outdir, trees)
+    trees <- unlist(lapply(trees, readr::read_file))
+    hash <- digest::digest(trees)
     return(hash)
   }
 }
