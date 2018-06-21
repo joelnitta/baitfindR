@@ -460,7 +460,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   # optional: get MD5 hash of concatenated clusters
   if (get_hash) {
     trees <- list.files(outdir)
-    trees <- trees[grep("\\.1to1ortho\\.tre$", trees)]
+    trees <- trees[grep("1to1ortho\\.tre$", trees)]
     trees <- paste0(outdir, trees)
     trees <- unlist(lapply(trees, readr::read_file))
     hash <- digest::digest(trees)
