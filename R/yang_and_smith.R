@@ -701,6 +701,9 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   arguments <- c(here::here("prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments)
 
+  # delete temporary script
+  file.remove(here::here("prune_paralogs_MO_temp.py"))
+
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
     output <- list.files(outdir, pattern = search_terms)
@@ -708,9 +711,6 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     hash <- digest::digest(output)
     return(hash)
   }
-
-  # delete temporary script
-  file.remove(here::here("prune_paralogs_MO_temp.py"))
 }
 
 #' prune_paralogs_RT
@@ -781,6 +781,9 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   arguments <- c(paste0(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
   processx::run("python", arguments)
 
+  # delete temporary in_out file
+  file.remove(here::here("in_out_temp"))
+
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
     output <- list.files(outdir, pattern = search_terms)
@@ -788,7 +791,4 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     hash <- digest::digest(output)
     return(hash)
   }
-
-  # delete temporary in_out file
-  file.remove(here::here("in_out_temp"))
 }
