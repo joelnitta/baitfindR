@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = FALSE, ...) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -235,7 +235,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @examples
 #' \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
 #' @export
-trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, get_hash = FALSE, ...) {
+trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -285,7 +285,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @examples
 #' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
 #' @export
-mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = FALSE, ...) {
+mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -335,7 +335,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @examples
 #' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
 #' @export
-cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, get_hash = FALSE, ...) {
+cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
