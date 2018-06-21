@@ -6,7 +6,7 @@
 \usage{
 trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff,
-  get_hash = TRUE, ...)
+  overwrite = FALSE, get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
@@ -18,6 +18,8 @@ trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 \item{relative_cutoff}{Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be trimmed.}
 
 \item{absolute_cutoff}{Numeric vector of length one; tips on branches longer than this value will be trimmed.}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
 

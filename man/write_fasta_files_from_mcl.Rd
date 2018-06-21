@@ -6,12 +6,10 @@
 \usage{
 
   write_fasta_files_from_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  overwrite, all_fasta, mcl_outfile, minimal_taxa = 4, outdir, get_hash, ...)
+  all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite, get_hash, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
-
-\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{all_fasta}{Character vector of length one; the path to the fasta file including all query sequences concatenated together, i.e., the fasta file used to create the "all-by-all" blast database.}
 
@@ -20,6 +18,8 @@
 \item{minimal_taxa}{Numeric; minimal number of taxa required to be present for the cluster to be written. Default 4, the minimum number of taxa needed for an un-rooted tree.}
 
 \item{outdir}{Character vector of length one; the path to the folder where the clusters should be written.}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
 

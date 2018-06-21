@@ -9,11 +9,11 @@
 #' of these programs to be installed and included in the user's \code{$PATH}. Assumes clusters are named \code{"cluster1.fa"}, \code{"cluster2.fa"}, etc. Clusters with fewer than 1,000 sequences are considered "small," and those with more are considered "large."
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
-#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param seq_folder Character vector of length one; the path to the folder containing the fasta files.
 #' @param number_cores Numeric; number of threads to use for \code{RAxML} and \code{mafft}.
 #' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
 #' @param bootstrap Logical; should run a bootstrap analysis be run for the trees?
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each input cluster \code{cluster1.fa} in \code{seq_folder}, \code{cluster1.fa.mafft.aln} (small clusters) or \code{cluster1.pasta.aln} (large clusters), \code{cluster1.fa.mafft.aln-cln} (small clusters) or \code{cluster1.fa.pasta.aln-cln} (large clusters), and \code{cluster1.raxml.tre} (small clusters) or \code{cluster1.fasttree.tre} (large clusters) will be written to \code{seq_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.tre} files concatenated together will be returned.
@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE, get_hash = TRUE, ...) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -34,13 +34,15 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   path_to_ys <- jntools::add_slash(path_to_ys)
   seq_folder <- jntools::add_slash(seq_folder)
 
-  # optional: delete all previous output written by a previous call to fasta_to_tree.py in this folder
-  if (overwrite) {
-    search_terms <- paste("cluster.*\\.fa\\.mafft\\.aln$",
-                           "cluster.*\\.fa\\.mafft\\.aln-cln$",
-                           "cluster.*\\.fa\\.mafft\\.aln-cln.reduced$",
-                           "cluster.*\\.raxml\\.tre$",
-                           sep = "|")
+  # define search terms for output files
+  search_terms <- paste("cluster.*\\.fa\\.mafft\\.aln$",
+                        "cluster.*\\.fa\\.mafft\\.aln-cln$",
+                        "cluster.*\\.fa\\.mafft\\.aln-cln.reduced$",
+                        "cluster.*\\.raxml\\.tre$",
+                        sep = "|")
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
     files_to_delete <- list.files(seq_folder, pattern = search_terms)
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(seq_folder, files_to_delete)
@@ -54,13 +56,11 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
   processx::run("python", arguments, wd = seq_folder)
 
-  # optional: get MD5 hash of concatenated trees
-  if (get_hash) {
-    trees <- list.files(seq_folder)
-    trees <- trees[grep("\\.raxml\\.tre", trees)]
-    trees <- paste0(seq_folder, trees)
-    trees <- unlist(lapply(trees, readr::read_file))
-    hash <- digest::digest(trees)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(seq_folder, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(seq_folder, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -74,11 +74,11 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' including the sequences in that cluster.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
-#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param all_fasta Character vector of length one; the path to the fasta file including all query sequences concatenated together, i.e., the fasta file used to create the "all-by-all" blast database.
 #' @param mcl_outfile Character vector of length one; the path to the output from running mcl on blast distances.
 #' @param minimal_taxa Numeric; minimal number of taxa required to be present for the cluster to be written. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the clusters should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return One fasta file per cluster (\code{cluster1.fa}, \code{cluster2.fa}, etc.) will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
@@ -87,7 +87,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{write_fasta_files_from_mcl(all_fasta = "some/folder/all.fasta", mcl_outfile = "some/folder/hit-frac0.4_I1.4_e5", minimal_taxa = 5, outdir = "some/folder")}
 #' @export
-write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), overwrite, all_fasta, mcl_outfile, minimal_taxa = 4, outdir, get_hash, ...) {
+write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite, get_hash, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -98,30 +98,31 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   path_to_ys <- jntools::add_slash(path_to_ys)
   outdir <- jntools::add_slash(outdir)
 
+  # define search terms for output files
+  search_terms <- "cluster\\d*\\.fa$"
 
-  # optional: delete all previous output written by a previous call to fasta_to_tree.py in this folder
-  if (overwrite) {
-    files_to_delete <- list.files(outdir)
-    search_terms <- "cluster\\d*\\.fa$"
-    files_to_delete <- files_to_delete[grep(search_terms, files_to_delete)]
-    files_to_delete <- paste0(outdir, files_to_delete)
-    file.remove(files_to_delete)
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
   }
 
   # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    clusters <- list.files(outdir)
-    clusters <- clusters[grep("\\.fa$", clusters)]
-    clusters <- paste0(outdir, clusters)
-    clusters <- unlist(lapply(clusters, readr::read_file))
-    hash <- digest::digest(clusters)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
-
 }
 
 #' blast_to_mcl
@@ -231,6 +232,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
 #' @param relative_cutoff Numeric vector of length one; tips on a branch 10 times longer than their sister AND longer than this value will be trimmed.
 #' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be trimmed.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each input tree with a file ending matching \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.tt} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all trimmed tree files concatenated together will be returned.
@@ -239,7 +241,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @examples
 #' \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
 #' @export
-trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, get_hash = TRUE, ...) {
+trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -250,16 +252,29 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   path_to_ys <- jntools::add_slash(path_to_ys)
   tree_folder <- jntools::add_slash(tree_folder)
 
+  # define search terms for output files
+  search_terms <- "\\.tt$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(tree_folder, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(tree_folder, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated trees
+  # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
-    trimmed_trees <- list.files(tree_folder, pattern = "\\.tt")
-    trimmed_trees <- paste0(tree_folder, trimmed_trees)
-    trimmed_trees <- unlist(lapply(trimmed_trees, readr::read_file))
-    hash <- digest::digest(trimmed_trees)
+    output <- list.files(tree_folder, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(tree_folder, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -281,6 +296,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to mask.
 #' @param aln_folder Character vector of length one; the path to the folder containing the alignments used to make the trees.
 #' @param mask_paraphyletic Logical; should paraphyletic tips belonging to the same taxon be masked?
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output masked tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each input tree with a file ending in \code{.tt} in \code{tree_folder}, a trimmed tree with a file ending in \code{.mm} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all masked tree files concatenated together will be returned.
@@ -289,7 +305,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @examples
 #' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
 #' @export
-mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = TRUE, ...) {
+mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -302,16 +318,29 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   aln_folder <- jntools::add_slash(aln_folder)
   mask_paraphyletic <- ifelse(isTRUE(mask_paraphyletic), "y", "n")
 
+  # define search terms for output files
+  search_terms <- "\\.mm$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(tree_folder, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(tree_folder, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated trees
+  # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
-    masked_trees <- list.files(tree_folder, pattern = "\\.mm$")
-    masked_trees <- paste0(tree_folder, masked_trees)
-    masked_trees <- unlist(lapply(masked_trees, readr::read_file))
-    hash <- digest::digest(masked_trees)
+    output <- list.files(tree_folder, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(tree_folder, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -331,6 +360,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @param internal_branch_length_cutoff Numeric vector of length one; the depth at which cuts should be made (smaller numbers indicate greater depth).
 #' @param minimal_taxa Numeric; minimal number of taxa required for tree to be cut. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the subtrees should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output subtree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each input tree with a file ending in \code{tree_file_ending} in \code{tree_folder}, one or more subtrees with a file ending in \code{.subtree} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all subtree files concatenated together will be returned.
@@ -339,7 +369,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @examples
 #' \dontrun{cut_long_internal_branches(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".mm", internal_branch_length_cutoff = 0.3, outdir = "some/other/folder/")}
 #' @export
-cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -356,16 +386,29 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
     stop("Must provide provide different paths for input and output folders")
   }
 
+  # define search terms for output files
+  search_terms <- "\\.subtree$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated trees
+  # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
-    sub_trees <- list.files(outdir, pattern = "\\.subtree$")
-    sub_trees <- paste0(outdir, sub_trees)
-    sub_trees <- unlist(lapply(sub_trees, readr::read_file))
-    hash <- digest::digest(sub_trees)
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -384,6 +427,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for extracting fasta sequences.
 #' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
 #' @param outdir Character vector of length one; the path to the folder where the fasta files should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output fasta files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return One fasta file per tree file ending in \code{tree_file_ending} in \code{tree_folder} will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all output fasta files concatenated together will be returned.
@@ -392,7 +436,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, get_hash = TRUE, ...) {
+write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -404,17 +448,29 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   outdir <- jntools::add_slash(outdir)
   tree_folder <- jntools::add_slash(tree_folder)
 
+  # define search terms for output files
+  search_terms <- "rr\\.fa$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    clusters <- list.files(outdir)
-    clusters <- clusters[grep("rr\\.fa$", clusters)]
-    clusters <- paste0(outdir, clusters)
-    clusters <- unlist(lapply(clusters, readr::read_file))
-    hash <- digest::digest(clusters)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -433,6 +489,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
 #' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the filtered trees should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all filtered tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs with the file ending \code{.1to1ortho.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
@@ -441,7 +498,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @examples
 #' \dontrun{filter_1to1_orthologs(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -453,17 +510,29 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   outdir <- jntools::add_slash(outdir)
   tree_folder <- jntools::add_slash(tree_folder)
 
+  # define search terms for output files
+  search_terms <- "1to1ortho\\.tre$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    trees <- list.files(outdir)
-    trees <- trees[grep("1to1ortho\\.tre$", trees)]
-    trees <- paste0(outdir, trees)
-    trees <- unlist(lapply(trees, readr::read_file))
-    hash <- digest::digest(trees)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -488,6 +557,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be trimmed.
 #' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir} with the file ending \code{.MIortho1.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
@@ -496,7 +566,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @examples
 #' \dontrun{prune_paralogs_MI(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4, outdir = "some/folder")}
 #' @export
-prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -508,17 +578,29 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   outdir <- jntools::add_slash(outdir)
   tree_folder <- jntools::add_slash(tree_folder)
 
+  # define search terms for output files
+  search_terms <- "1to1ortho\\.tre$|MIortho.*\\.tre$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
   # call command
   arguments <- c(paste0(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    trees <- list.files(outdir)
-    trees <- trees[grep("1to1ortho\\.tre$|MIortho.*\\.tre$", trees)]
-    trees <- paste0(outdir, trees)
-    trees <- unlist(lapply(trees, readr::read_file))
-    hash <- digest::digest(trees)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
 }
@@ -541,6 +623,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @param outgroup Character vector; names of outgroup taxa/samples.
 #' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir} with the file ending \code{.ortho.tre}; re-rooted trees will also be written with the file ending \code{.reroot}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
@@ -549,7 +632,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{prune_paralogs_MO(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
 #' @export
-prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -560,6 +643,20 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   path_to_ys <- jntools::add_slash(path_to_ys)
   outdir <- jntools::add_slash(outdir)
   tree_folder <- jntools::add_slash(tree_folder)
+
+  # define search terms for output files
+  search_terms <- "1to1ortho\\.tre$|\\.reroot$|\\.ortho\\.tre$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
 
   # modify actual script to change ingroups and outgroups
   ys_script <- readr::read_lines(paste0(path_to_ys, "prune_paralogs_MO.py"))
@@ -604,15 +701,14 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   arguments <- c(here::here("prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    trees <- list.files(outdir)
-    trees <- trees[grep("1to1ortho\\.tre$|\\.reroot$|\\.ortho\\.tre$", trees)]
-    trees <- paste0(outdir, trees)
-    trees <- unlist(lapply(trees, readr::read_file))
-    hash <- digest::digest(trees)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
+
   # delete temporary script
   file.remove(here::here("prune_paralogs_MO_temp.py"))
 }
@@ -685,13 +781,14 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   arguments <- c(paste0(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
   processx::run("python", arguments)
 
-  # optional: get MD5 hash of concatenated clusters
-  if (get_hash) {
-    trees <- list.files(outdir, pattern = search_terms)
-    trees <- if (length(trees) > 0) {unlist( lapply(paste0(outdir, trees), readr::read_file) )} else {trees}
-    hash <- digest::digest(trees)
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
     return(hash)
   }
+
   # delete temporary in_out file
   file.remove(here::here("in_out_temp"))
 }

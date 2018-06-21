@@ -6,7 +6,8 @@
 \usage{
 
   write_fasta_files_from_trees(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  all_fasta, tree_folder, tree_file_ending, outdir, get_hash = TRUE, ...)
+  all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE,
+  get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
@@ -18,6 +19,8 @@
 \item{tree_file_ending}{Character vector of length one; only tree files with this file ending will be used.}
 
 \item{outdir}{Character vector of length one; the path to the folder where the fasta files should be written.}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all output fasta files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
 

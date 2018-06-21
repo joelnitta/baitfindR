@@ -5,13 +5,11 @@
 \title{fasta_to_tree}
 \usage{
 fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE,
+  seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE,
   get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
-
-\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{seq_folder}{Character vector of length one; the path to the folder containing the fasta files.}
 
@@ -20,6 +18,8 @@ fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 \item{seq_type}{Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.}
 
 \item{bootstrap}{Logical; should run a bootstrap analysis be run for the trees?}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all output tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
 

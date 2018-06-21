@@ -7,7 +7,7 @@
 
   prune_paralogs_MI(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff,
-  minimal_taxa = 4, outdir, get_hash = TRUE, ...)
+  minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
@@ -23,6 +23,8 @@
 \item{minimal_taxa}{Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.}
 
 \item{outdir}{Character vector of length one; the path to the folder where the pruned trees should be written.}
+
+\item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
 
