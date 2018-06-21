@@ -476,8 +476,10 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' using the maximum inclusion (MI) method. This method iteratively
 #' extracts subtrees containing the greatest number of samples (taxa)
 #' without duplication. Long branches will also be trimmed (i.e., removed)
-#' according to \code{relative_cutoff} and \code{absolute_cutoff} values.
-#' This function will overwrite any output files with the same name in \code{outdir}.
+#' according to \code{relative_cutoff} and \code{absolute_cutoff} values. Trees
+#' that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+#' will also be retained. This function will overwrite any output files with
+#' the same name in \code{outdir}.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
@@ -519,4 +521,98 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     hash <- digest::digest(trees)
     return(hash)
   }
+}
+
+#' prune_paralogs_MO
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
+#'
+#' Given a folder containing homolog trees, prune paralogs from the trees
+#' using the monophyletic outgroups (MO) method. For trees that have non-duplicated
+#' outgroups, this method extracts the largest subtree containing the outgroup. Trees
+#' that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+#' will also be retained. This function will overwrite any output files with the same
+#' name in \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
+#' @param ingroup Character vector; names of ingroup taxa/samples.
+#' @param outgroup Character vector; names of outgroup taxa/samples.
+#' @param minimal_taxa Numeric; minimal number of taxa required for tree to be included. Default 4, the minimum number of taxa needed for an un-rooted tree.
+#' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{prune_paralogs_MO(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
+#' @export
+prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # modify actual script to change ingroups and outgroups
+  ys_script <- readr::read_lines(paste0(path_to_ys, "prune_paralogs_MO.py"))
+
+  # look for chunks of comments and single comment lines, delete these
+  # (some comment chunks contained old outgroup / ingroup assignments)
+  comment_block_lines <- grep('\"\"\"', ys_script)
+  comment_block_start <- comment_block_lines[seq(1,length(comment_block_lines),by=2)]
+  comment_block_end <- comment_block_lines[seq(2,length(comment_block_lines),by=2)]
+  comment_blocks <- unlist(purrr::map2(comment_block_start, comment_block_end, ~ seq(.x, .y)))
+
+  single_comment_lines <- grep("^#", ys_script )
+
+  comments <- unique(c(comment_block_start, comment_block_end, comment_blocks, single_comment_lines))
+
+  ys_script <- ys_script[-comments]
+
+  # find lines specifying outgroups and ingroups
+  outgroup_line <- grep("^OUTGROUPS = ", ys_script)
+  ingroup_line <- grep("^INGROUPS = ", ys_script)
+
+  # error if outgroup and ingroup lines can't be found or aren't unique
+  if (length(outgroup_line) != 1) {stop ("Unable to assign single outgroup; check prune_paralogs_MO.py")}
+  if (length(ingroup_line) != 1) {stop ("Unable to assign single ingroup; check prune_paralogs_MO.py")}
+
+  # replace outgroup and ingroup lines
+  outgroup_replacement <- paste0(outgroup, collapse= '\",\"')
+  outgroup_replacement <- paste0('\"', outgroup_replacement, '\"')
+  outgroup_replacement <- paste0("OUTGROUPS = [", outgroup_replacement, "]")
+
+  ingroup_replacement <- paste0(ingroup, collapse= '\",\"')
+  ingroup_replacement <- paste0('\"', ingroup_replacement, '\"')
+  ingroup_replacement <- paste0("INGROUPS = [", ingroup_replacement, "]")
+
+  ys_script[outgroup_line] <- outgroup_replacement
+  ys_script[ingroup_line] <- ingroup_replacement
+
+  # write out new temporary python script
+  readr::write_lines(ys_script, path = here::here("prune_paralogs_MO_temp.py"))
+
+  # call command
+  arguments <- c(here::here("prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated clusters
+  if (get_hash) {
+    trees <- list.files(outdir)
+    trees <- trees[grep("1to1ortho\\.tre$|\\.reroot$|\\.ortho\\.tre$", trees)]
+    trees <- paste0(outdir, trees)
+    trees <- unlist(lapply(trees, readr::read_file))
+    hash <- digest::digest(trees)
+    return(hash)
+  }
+  # delete temporary script
+  file.remove(here::here("prune_paralogs_MO_temp.py"))
 }
