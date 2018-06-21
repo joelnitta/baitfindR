@@ -25,7 +25,7 @@
 \item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \value{
-For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
+For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs with the file ending \code{.1to1ortho.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
 }
 \description{
 Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py

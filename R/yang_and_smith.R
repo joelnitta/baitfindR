@@ -435,7 +435,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @param outdir Character vector of length one; the path to the folder where the filtered trees should be written.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all filtered tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
-#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs with the file ending \code{.1to1ortho.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
@@ -490,7 +490,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
-#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir} with the file ending \code{.MIortho1.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
@@ -528,9 +528,9 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
 #'
 #' Given a folder containing homolog trees, prune paralogs from the trees
-#' using the monophyletic outgroups (MO) method. For trees that have non-duplicated
+#' using the monophyletic outgroups (MO) method. For trees that have non-repeating, monophyletic
 #' outgroups, this method extracts the largest subtree containing the outgroup. Trees
-#' that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+#' that consist solely of one-to-one orthologs (i.e., no duplications within a sample/taxon)
 #' will also be retained. This function will overwrite any output files with the same
 #' name in \code{outdir}.
 #'
@@ -543,7 +543,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
-#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir} with the file ending \code{.ortho.tre}; re-rooted trees will also be written with the file ending \code{.reroot}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
 #' @examples
@@ -615,4 +615,83 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
   # delete temporary script
   file.remove(here::here("prune_paralogs_MO_temp.py"))
+}
+
+#' prune_paralogs_RT
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_RT.py
+#'
+#' Given a folder containing homolog trees, prune paralogs from the trees
+#' using the rooted ingroups (RT) method. For trees that have outgroups, this
+#' method iteratively extracts subtrees with the highest number of ingroup taxa/samples.
+#' This function will overwrite any output files with the same
+#' name in \code{outdir}.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
+#' @param tree_file_ending Character vector of length one; only tree files with this file ending will be used.
+#' @param ingroup Character vector; names of ingroup taxa/samples.
+#' @param outgroup Character vector; names of outgroup taxa/samples.
+#' @param min_ingroup_taxa Numeric; minimal number of taxa in the ingroup required for an ortholog to be written. Default 2.
+#' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, the following outputs are possible depending on the presence of outgroups in the homolog tree:
+#' \describe{
+#'   \item{No outgroups in homolog tree}{Unrooted ingroup clades without duplications (files ending in \code{unrooted-ortho.tre})}
+#'   \item{Outgroups present in homolog tree}{Rooted ingroup clades (files ending in \code{inclade}) and one or more paralogs (files ending in \code{inclade.ortho.tre})}
+#' }
+#'
+#' If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{prune_paralogs_RT(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
+#' @export
+prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, min_ingroup_taxa = 2, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # define search terms for output files
+  search_terms <- "\\.inclade\\d*|\\.unrooted-ortho\\.tre$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
+  # this script needs outgroups and ingroups provided as a text file
+  in_out <- c(paste0("OUT\t", outgroup), paste0("IN\t", ingroup))
+
+  # write out temporary text file with ingroups and outgroups
+  readr::write_lines(in_out, path = here::here("in_out_temp"))
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of concatenated clusters
+  if (get_hash) {
+    trees <- list.files(outdir, pattern = search_terms)
+    trees <- if (length(trees) > 0) {unlist( lapply(paste0(outdir, trees), readr::read_file) )} else {trees}
+    hash <- digest::digest(trees)
+    return(hash)
+  }
+  # delete temporary in_out file
+  file.remove(here::here("in_out_temp"))
 }

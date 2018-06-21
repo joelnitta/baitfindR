@@ -29,16 +29,16 @@
 \item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
 }
 \value{
-For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
+For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir} with the file ending \code{.ortho.tre}; re-rooted trees will also be written with the file ending \code{.reroot}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 }
 \description{
 Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
 }
 \details{
 Given a folder containing homolog trees, prune paralogs from the trees
-using the monophyletic outgroups (MO) method. For trees that have non-duplicated
+using the monophyletic outgroups (MO) method. For trees that have non-repeating, monophyletic
 outgroups, this method extracts the largest subtree containing the outgroup. Trees
-that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+that consist solely of one-to-one orthologs (i.e., no duplications within a sample/taxon)
 will also be retained. This function will overwrite any output files with the same
 name in \code{outdir}.
 }
