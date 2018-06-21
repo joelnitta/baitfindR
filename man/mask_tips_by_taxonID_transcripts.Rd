@@ -6,7 +6,7 @@
 \usage{
 
   mask_tips_by_taxonID_transcripts(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = FALSE, ...)
+  tree_folder, aln_folder, mask_paraphyletic = TRUE, get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}

@@ -6,7 +6,7 @@
 \usage{
 fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   overwrite = FALSE, seq_folder, number_cores, seq_type, bootstrap = FALSE,
-  get_hash = FALSE, ...)
+  get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
