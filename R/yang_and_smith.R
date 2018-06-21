@@ -87,7 +87,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{write_fasta_files_from_mcl(all_fasta = "some/folder/all.fasta", mcl_outfile = "some/folder/hit-frac0.4_I1.4_e5", minimal_taxa = 5, outdir = "some/folder")}
 #' @export
-write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite, get_hash, ...) {
+write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -783,6 +783,66 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 
   # delete temporary in_out file
   file.remove(here::here("in_out_temp"))
+
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(outdir, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
+    return(hash)
+  }
+}
+
+#' write_ortholog_fasta_files
+#'
+#' Wrapper for Yang and Smith (2014) write_ortholog_fasta_files.py
+#'
+#' Given a folder containing ortholog trees, write out the fasta files
+#' that correspond to the sequences in the trees.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param all_fasta Character vector of length one; the path to the fasta file including all the sequences that were originally used to build the trees.
+#' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for extracting sequences.
+#' @param outdir Character vector of length one; the path to the folder where the fasta files should be written.
+#' @param minimal_taxa Numeric; minimal number of taxa required for output sequences to be written (regardless of ingroup/outgroup status).
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all fasta files concatenated together? Used for by \code{\link{drake}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @return One fasta file per tree will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{write_ortholog_fasta_files(all_fasta = "some/folder/all.fasta", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder", minimal_taxa = 5)}
+#' @export
+write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, outdir, minimal_taxa = 4, overwrite = FALSE, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  outdir <- jntools::add_slash(outdir)
+  tree_folder <- jntools::add_slash(tree_folder)
+
+  # define search terms for output files
+  search_terms <- "\\.fa$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(outdir, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(outdir, files_to_delete)
+      file.remove(files_to_delete)
+    } else {
+      print("No files to overwrite, continuing")
+    }
+  }
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "write_ortholog_fasta_files.py"), all_fasta, tree_folder, outdir, minimal_taxa)
+  processx::run("python", arguments)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
