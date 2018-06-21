@@ -388,7 +388,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, get_hash, ...) {
+write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, get_hash = TRUE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
