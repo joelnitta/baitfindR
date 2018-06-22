@@ -8,7 +8,7 @@
 #' @param transcriptome_file Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).
 #' @param wd Character vector of length one; the directory where the command will be run, and the output folder created.
 #' @param other_args Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return
 #' Within the R environment, a list with components specified in \code{\link[processx]{run}}.
@@ -50,7 +50,7 @@ transdecoder_long_orfs <- function (path_to_transdecoder = pkgconfig::get_config
 #' @param blast_result Character vector of length one; the path to the tab-separated text file containing the results from a blastp search of the transcriptome against a reference blast protein database. For the blast search, the output format should specified as: -outfmt 6.
 #' @param wd Character vector of length one; the directory where the command will be run. Must contain .transdecoder_dir folder with results from \code{\link{transdecoder_long_orfs}}.
 #' @param other_args Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return
 #' Within the R environment, a list with components specified in \code{\link[processx]{run}}.
@@ -95,7 +95,7 @@ transdecoder_predict <- function (path_to_transdecoder = pkgconfig::get_config("
 #' @param output Character vector of length one; the name to assign to the output. Can include a path, in which case the output will be written there.
 #' @param wd Character vector of length one; the directory where the command will be run.
 #' @param other_args Character vector; other arguments to pass to cd-hit-est. Each should be an element of the vector.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return
 #' Within the R environment, a list with components specified in \code{\link[processx]{run}}.

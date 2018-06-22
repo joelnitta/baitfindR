@@ -15,7 +15,7 @@ build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL, ...)
 
 \item{other_args}{Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{makeblastdb -help}.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 A series of files starting with \code{out_name} and ending in .phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog, .nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in the directory specified by \code{wd}.

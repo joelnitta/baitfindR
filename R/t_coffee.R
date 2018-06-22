@@ -6,7 +6,7 @@
 #' @param number_cores Number of cores to use by t_coffee
 #' @param other_args Character vector; other arguments to pass to t_coffee. Each should be an element of the vector.
 #' @param wd Character vector of length one; the directory where the command will be run, and the external output written.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return
 #' A numeric value; the overall TCS score of the input alignment.
@@ -47,7 +47,7 @@ tcs <- function (alignment, number_cores = 1, other_args = NULL, wd = here::here
 #' @param pattern An optional regular expression. Only alignment files with names that match the regular expression will be included.
 #' @param number_cores Number of cores for t-coffee to use.
 #' @param other_args Character vector; other arguments to pass to t_coffee. Each should be an element of the vector.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return A numeric vector; the overall TCS scores for all alignments in the folder.
 #'

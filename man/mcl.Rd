@@ -17,7 +17,7 @@ mcl(mcl_input, mcl_output, i_value, e_value, other_args = NULL, ...)
 
 \item{other_args}{Character vector; other arguments to pass to mcl. Each should be an element of the vector. For example, to pass "-abc" to specify the input file format and "--te" to specify number of threads, use \code{c("--abc", "-te", "2")}.}
 
-\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 A plain text file of tab-separated values, where each value on a line belongs to the same cluster.

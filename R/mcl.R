@@ -9,7 +9,7 @@
 #' @param i_value Numeric or character vector of length one; the inflation value.
 #' @param e_value Numeric or character vector of length one; the minimal -log transformed evalue to be considered by the algorithm.
 #' @param other_args Character vector; other arguments to pass to mcl. Each should be an element of the vector. For example, to pass "-abc" to specify the input file format and "--te" to specify number of threads, use \code{c("--abc", "-te", "2")}.
-#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
 #' @return A plain text file of tab-separated values, where each value on a line belongs to the same cluster.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}

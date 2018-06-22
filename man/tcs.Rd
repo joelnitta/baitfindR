@@ -16,7 +16,7 @@ tcs(alignment, number_cores = 1, other_args = NULL, wd = here::here(),
 
 \item{wd}{Character vector of length one; the directory where the command will be run, and the external output written.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 A numeric value; the overall TCS score of the input alignment.

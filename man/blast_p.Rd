@@ -15,7 +15,7 @@ blast_p(query, database, out_file, other_args = NULL, ...)
 
 \item{other_args}{Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastp -help}.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 A tab-separated text file with the results of the blastp search, named with the value of \code{out_file}.

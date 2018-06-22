@@ -20,7 +20,7 @@
 
 \item{other_args}{Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 Within the R environment, a list with components specified in \code{\link[processx]{run}}.

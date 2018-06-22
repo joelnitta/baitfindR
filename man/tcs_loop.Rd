@@ -15,7 +15,7 @@ tcs_loop(folder, pattern = NULL, number_cores = 1, other_args = NULL, ...)
 
 \item{other_args}{Character vector; other arguments to pass to t_coffee. Each should be an element of the vector.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 A numeric vector; the overall TCS scores for all alignments in the folder.

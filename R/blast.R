@@ -8,7 +8,7 @@
 #' @param out_name Character vector of length one; name of BLAST database to be created.
 #' @param db_type Character vector of length one; "nucl" for DNA or "prot" for amino acids (proteins).
 #' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{makeblastdb -help}.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A series of files starting with \code{out_name} and ending in .phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog, .nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in the directory specified by \code{wd}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
@@ -31,7 +31,7 @@ build_blast_db <- function (in_seqs, out_name, db_type = "nucl", other_args = NU
 #' @param database Character vector of length one; the name of the blast database.
 #' @param out_file Character vector of length one; the name to use for the results file.
 #' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastp -help}.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A tab-separated text file with the results of the blastp search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
@@ -54,7 +54,7 @@ blast_p <- function (query, database, out_file, other_args = NULL, ...) {
 #' @param database Character vector of length one; the name of the blast database.
 #' @param out_file Character vector of length one; the name to use for the results file.
 #' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastn -help}.
-#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link{drake}} for tracking during workflows.
+#' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A tab-separated text file with the results of the blastn search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
