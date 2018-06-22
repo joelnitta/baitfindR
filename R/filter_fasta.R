@@ -18,6 +18,7 @@
 #' @param filter_col Optional character; the name of the column to be used for filtering by taxonomic rank in \code{taxonomy_data}.
 #' @param min_taxa Minimum number of ingroup samples required to pass the filter.
 #' @param exclude_short Logical; should extremely short sequences be excluded from the alignment during filtering? If \code{TRUE}, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A named list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
@@ -28,7 +29,7 @@
 #'   min_taxa = 2)}
 #'
 #' @export
-filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa = NULL, exclude_short = FALSE, sample_col = "sample", group_col = "group") {
+filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa = NULL, exclude_short = FALSE, sample_col = "sample", group_col = "group", ...) {
 
   ### error checking and editing taxonomy data
 
