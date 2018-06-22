@@ -17,4 +17,5 @@ Imports:
     processx,
     here,
     purrr,
-    stringr
+    stringr,
+    checkr

@@ -1,85 +1,99 @@
 #' filter_fasta
 #'
-#' Additional options for filtering fasta files produced by Yang and Smith 2014 "Paralogy pruning" scripts
+#' Filter a directory of fasta files by ingroup/outgroup status and taxonomic rank.
 #'
-#' The minimal_taxa setting in Y&S Step 6 "Paralogy pruning" scripts (\code{filter_1to1_orthologs.py}, \code{prune_paralogs_MI.py}, etc) filters paralog trees by a minimum number of taxa without considering ingroup / outgroup status (except for \code{prune_paralogs_RT.py}).
+#' Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta file contains more than one sequence) and a dataframe including taxonomic data and ingroup/outgroup status, \code{filter_fasta()} outputs a list of those fasta files that pass one of two filters, or a combination of both. One filter excludes fasta files that do not contain greater than the minimum number of ingroup sequences. The other filter excludes fasta files that do not contain at least one sequence per ingroup taxon at the specified taxonomic rank.
 #'
-#' Use \code{filter_fasta} to further filter the results from Y&S "Paralogy pruning" scripts by outgroup/ingroup status. \code{filter_fasta} can also filter by higher-level taxonomic groups provided by the user in the taxonomy_data argument. For example, if the dataset has multiple species per genus, we may wish to filter alignments such that we only keep those with at least one species per unique ingroup genus. To do this, include a column called "genus" in \code{taxonomy_data}, and set \code{filter_level} to "genus."
+#' For example, if the dataset includes multiple ingroup genera each with multiple samples per genus, we may wish to filter alignments such that we only keep those with at least one sequence per ingroup genus. To do this, include a column called \code{"genus"} in \code{taxonomy_data}, and set \code{filter_col = "genus"}.
 #'
-#' @param MCL_settings Settings used for mcl (Markov Cluster Algorithm) step in Y&S pipeline. Should be in the format "hit-frac0.3_I1.4_e5", where "hit-frac" is hit_fraction_cutoff used by blast_to_mcl.py, "I" is the inflation value used by mcl, and "e" specifies minimal log transformed evalue passed to -tf 'gq()' in mcl (for details, see Yang and Smith 2014).
-#' @param prune_method Strategy used to identify homologs in Y&S pipeline. Must be one of the following: "ortho_121", "ortho_MO", "ortho_MI", or "ortho_RT".
-#' @param taxonomy_data Dataframe matching taxonID to ingroup/outgroup status and (optional) higher-level taxonomy for filtering. The columns must follow this format:
+#' @param seq_folder Character vector of length one; the path to the folder containing the fasta files (ending in \code{.fa} or \code{.fasta}) to filter.
+#' @param taxonomy_data Dataframe matching sequences to ingroup/outgroup status and (optionally) higher-level taxonomic ranks for filtering. The columns must follow this format:
 #' \describe{
-#'   \item{taxonID}{Short unique identifier for the taxon (i.e., source of the transcriptome analyzed in Y&S pipeline). Must be exactly the same taxonID used in the Y&S pipeline.}
-#'   \item{group_status}{Either "IN" or "OUT" depending if that taxon is in the ingroup or outgroup.}
-#'   \item{(user-selected taxonomic rank)}{The user can provide any taxonomic rank they wish to filter by. For example, alignments can be filtered by having at least one representative of each genus (family, order, etc.) in the dataset.}
+#'   \item{sample}{Unique identifier for the source of the sequence, such as transcriptome IDs or species names. All sequences names must include such an identifier.}
+#'   \item{group}{Either "in" or "out" (case-insensitive) depending if that sample is in the ingroup or outgroup.}
+#'   \item{(user-selected taxonomic rank)}{The user can provide any taxonomic rank they wish to filter by. For example, alignments can be filtered by having at least one representative of each ingroup genus (family, order, etc.) in the dataset.}
 #' }
-#' @param filter_level A single character matching the name of the column to be used for filtering in \code{taxonomy_data}.
-#' @param min_taxa Minimum number of ingroup taxa required to pass the filter.
+#' @param sample_col Optional character; user-provided column name for \code{sample} in \code{taxonomy_data}.
+#' @param group_col Optional character; user-provided column name for \code{group} \code{taxonomy_data}.
+#' @param filter_col Optional character; the name of the column to be used for filtering by taxonomic rank in \code{taxonomy_data}.
+#' @param min_taxa Minimum number of ingroup samples required to pass the filter.
 #' @param exclude_short Logical; should extremely short sequences be excluded from the alignment during filtering? If \code{TRUE}, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.
 #' @return A named list including:
 #' \describe{
-#'   \item{filtered_fasta_files}{A list of fasta files that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
+#'   \item{filtered_fasta_seqs}{A list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
 #'   \item{filtered_fasta_names}{A character vector of the names of fasta files that passed the filter.}
 #' }
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
-#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{filter_fasta(
+#'   seq_folder = "some/folder/",
+#'   taxonomy_data = onekp_data,
+#'   filter_col = "genus",
+#'   min_taxa = 2)}
 #'
 #' @export
-filter_fasta <- function (MCL_settings, prune_method, taxonomy_data, filter_level = NULL, min_taxa = NULL, exclude_short = FALSE) {
+filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa = NULL, exclude_short = FALSE, sample_col = "sample", group_col = "group") {
 
-  # error checking ----------------------------------------------------------
-  # check that at least filter_level or min_taxa are provided
-  if (is.null(filter_level) & is.null(min_taxa)) {
-    stop("Must provide value for either filter_level, min_taxa, or both")
+  ### error checking and editing taxonomy data
+
+  if(!is.data.frame(taxonomy_data)) {stop ("taxonomy_data must be of class data.frame")}
+
+  # check column names
+  if(!sample_col %in% colnames(taxonomy_data)) {stop ("sample_col must be in colnames(taxonomy_data)")}
+  if(!group_col %in% colnames(taxonomy_data)) {stop ("group_col must be in colnames(taxonomy_data)")}
+  if(length(colnames(taxonomy_data)) != length(unique(colnames(taxonomy_data)))) {stop ("colnames(taxonomy_data) must be unique")}
+
+  # convert column names
+  colnames(taxonomy_data)[grep(sample_col, colnames(taxonomy_data))] <- "sample"
+  colnames(taxonomy_data)[grep(group_col, colnames(taxonomy_data))] <- "group"
+
+  # convert to lowercase
+  taxonomy_data$group <- tolower(taxonomy_data$group)
+
+  # other checks on taxonomy_data
+  checkr::check_data(taxonomy_data, values = list(
+      sample = "a",
+      group = c("out", "in")),
+      order = FALSE, nrow = TRUE, exclusive = FALSE, key = "sample", error = TRUE)
+
+  ### check that at least filter_col or min_taxa are provided
+  if (is.null(filter_col) & is.null(min_taxa)) {
+    stop("Must provide value for either filter_col, min_taxa, or both")
   }
 
-  # check that prune_method is one of the accepted values
-  if (!prune_method %in% c("ortho_121", "ortho_MO", "ortho_MI", "ortho_RT")) {
-    stop ("prune_method not one of 'ortho_121', 'ortho_MO', 'ortho_MI', or 'ortho_RT'")
-  }
+  ### read fasta files
 
-  # check if ./MCL_settings/prune_method/ exists
-  if(!any(grepl(paste0(MCL_settings, "/", prune_method), list.dirs() ))) {
-    stop ("Can't find directory containing fasta files in working directory. Check MCL_settings and prune_method.")
-  }
+  seq_folder <- jntools::add_slash(seq_folder)
 
-  # check if ./MCL_settings/prune_method/fasta/ exists
-  if(!any(grepl(paste0(MCL_settings, "/", prune_method, "/fasta"), list.dirs() ))) {
-    stop ("Can't find 'fasta' directory within MCL_settings/prune_method")
-  }
-
-  # get names of all fasta files in ./MCL_settings/prune_method/fasta/
-  fasta_names <- list.files(paste0(MCL_settings, "/", prune_method, "/fasta/"))
-  fasta_names <- fasta_names[grep(".fa$", fasta_names)]
+  fasta_names <- list.files(seq_folder, pattern = "\\.fa$|\\.fasta$")
 
   # check that there are fasta files to read
   if (length(fasta_names) == 0) {
-    stop("No files named .fa or .fasta in MCL_settings/prune_method/fasta/")
+    stop(paste("No files ending in .fa or .fasta in", seq_folder))
   }
 
-  # read in fasta files, set up filters -------------------------------------
-
-  # read in all fasta files in ./MCL_settings/prune_method/fasta/
-  fasta_files <- lapply(paste(MCL_settings, "/", prune_method, "/fasta/", fasta_names, sep=""), ape::read.dna, format="fasta")
+  fasta_files <- lapply(paste0(seq_folder, fasta_names), ape::read.FASTA)
 
   # make list of unique user-provided higher-level taxa (e.g., genus, family, etc)
-  if (!is.null(filter_level)) {
-    if (!filter_level %in% colnames(taxonomy_data)) { stop ("'filter_level' not present in 'taxonomy_data' column names") }
-    taxa_filter_list <- sort(unique(taxonomy_data[[filter_level]][taxonomy_data$group_status == "IN"]))
+  if (!is.null(filter_col)) {
+    if (!filter_col %in% colnames(taxonomy_data)) { stop ("'filter_col' not present in 'taxonomy_data' column names") }
+    taxa_filter_list <- sort(unique(taxonomy_data[[filter_col]][taxonomy_data$group == "in"]))
   }
 
   # make list of ingroup/outgroup status
-  ingroup <- taxonomy_data$taxonID[taxonomy_data$group_status == "IN"]
+  ingroup <- taxonomy_data$sample[taxonomy_data$group == "in"]
 
   # filter function that works on a single alignment ------------------------
   # input: alignment = candidate bait fasta file
-  #        ingroup = vector of taxonIDs that are in the ingroup
+  #        ingroup = vector of samples that are in the ingroup
   #        exclude_short = described in documentation for the whole function at the top.
   #        taxonomy_data = described in documentation for the whole function at the top.
   #        taxa_filter_list = vector of higher-level ingroup taxa to use for filtering
   # output: single logical value for whether or not the candidate alignment passes the filter
   filter_alignment <- function (alignment, ingroup, exclude_short, taxonomy_data, taxa_filter_list, min_taxa) {
+
+    # first convert aligment to list if it isn't already
+    alignment <- as.list(alignment)
 
     # optionally remove extremely short sequences from consideration during filtering
     if (exclude_short) {
@@ -92,9 +106,9 @@ filter_fasta <- function (MCL_settings, prune_method, taxonomy_data, filter_leve
     alignment <- alignment[names(alignment) %in% ingroup]
 
     # optionally filter by higher-level taxa (passes filter by default)
-    if (!is.null(filter_level)) {
+    if (!is.null(filter_col)) {
       # get list of user-specified ingroup higher-level taxa present in subsetted alignment
-      ingroup_higher_taxa_in_alignment <- taxonomy_data[[filter_level]][match(names(alignment), taxonomy_data$taxonID)]
+      ingroup_higher_taxa_in_alignment <- taxonomy_data[[filter_col]][match(names(alignment), taxonomy_data$sample)]
       # check if all ingroup higher-level taxa are included at least once in the subsetted alignment
       taxa_filter_result <- all(taxa_filter_list %in% ingroup_higher_taxa_in_alignment)
     } else {
