@@ -18,11 +18,7 @@
 #' @param filter_col Optional character; the name of the column to be used for filtering by taxonomic rank in \code{taxonomy_data}.
 #' @param min_taxa Minimum number of ingroup samples required to pass the filter.
 #' @param exclude_short Logical; should extremely short sequences be excluded from the alignment during filtering? If \code{TRUE}, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.
-#' @return A named list including:
-#' \describe{
-#'   \item{filtered_fasta_seqs}{A list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
-#'   \item{filtered_fasta_names}{A character vector of the names of fasta files that passed the filter.}
-#' }
+#' @return A named list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
 #' \dontrun{filter_fasta(
@@ -127,16 +123,13 @@ filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa
   }
 
   # apply above function to all alignments (ie, fasta files)
-  pass_filter <- sapply(fasta_files, filter_alignment, ingroup=ingroup, exclude_short=TRUE, taxonomy_data=taxonomy_data, taxa_filter_list=taxa_filter_list, min_taxa=NULL)
+  pass_filter <- sapply(fasta_files, filter_alignment, ingroup = ingroup, exclude_short = exclude_short, taxonomy_data = taxonomy_data, taxa_filter_list = taxa_filter_list, min_taxa = min_taxa)
 
   # make lists of passing fasta files and their names
   filtered_fasta_files <- fasta_files[pass_filter]
   filtered_fasta_names <- fasta_names[pass_filter]
 
-  results <- list (
-    filtered_fasta_files = filtered_fasta_files,
-    filtered_fasta_names = filtered_fasta_names
-  )
+  names(filtered_fasta_files) <- filtered_fasta_names
 
-  return(results)
+  return(filtered_fasta_files)
 }

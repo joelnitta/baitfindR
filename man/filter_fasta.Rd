@@ -28,11 +28,7 @@ filter_fasta(seq_folder, taxonomy_data, filter_col = NULL, min_taxa = NULL,
 \item{group_col}{Optional character; user-provided column name for \code{group} \code{taxonomy_data}.}
 }
 \value{
-A named list including:
-\describe{
-  \item{filtered_fasta_seqs}{A list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.}
-  \item{filtered_fasta_names}{A character vector of the names of fasta files that passed the filter.}
-}
+A named list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.
 }
 \description{
 Filter a directory of fasta files by ingroup/outgroup status and taxonomic rank.
