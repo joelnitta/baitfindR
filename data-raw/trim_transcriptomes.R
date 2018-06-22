@@ -46,6 +46,12 @@ onekp_data <- onekp_data %>%
       genus == "Thelypteris" ~ "Thelypteridaceae",
       genus == "Woodsia" ~ "Woodsiaceae"
     )
+  ) %>%
+  mutate(
+    group = case_when (
+      family == "Aspleniaceae" ~ "out",
+      family != "Aspleniaceae" ~ "in"
+    )
   )
 
 # export data -------------------------------------------------------------
