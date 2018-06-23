@@ -10,9 +10,10 @@ library(ape)
 # (all eupolypod II ferns)
 # codes <- c("PSKY", "KJZG", "URCP", "FCHS", "UFJN", "VITX", "LHLE", "XXHP", "YOWV", "RICC", "HNDZ", "HEGQ", "OCZL", "HTFH", "MROH", "YQEC", "YJJY")
 
-# (subset of eupolypod II ferns incl Aspleniaceae, Athyriaceae, and Woodsiaceae)
+# (subset of eupolypod II ferns incl Aspleniaceae, Athyriaceae, Blechnaceae, and Woodsiaceae)
+# plus two eupolypod I ferns as outgroups (OQWW, FQGQ)
 # note that AFPO no longer is a separate sample; see "RWYZ: combined assembly of AFPO+VITX"
-codes <- c("PSKY", "KJZG", "YJJY", "YQEC", "URCP", "FCHS", "UFJN")
+codes <- c("PSKY", "KJZG", "YJJY", "YQEC", "URCP", "FCHS", "UFJN", "VITX", "OQWW", "FQGQ")
 
 # read in html
 onekp_parsed <- read_html("http://www.onekp.com/samples/list.php")
@@ -44,13 +45,15 @@ onekp_data <- onekp_data %>%
       genus == "Homalosorus" ~ "Diplaziopsidaceae",
       genus == "Onoclea" ~ "Onocleaceae",
       genus == "Thelypteris" ~ "Thelypteridaceae",
-      genus == "Woodsia" ~ "Woodsiaceae"
+      genus == "Woodsia" ~ "Woodsiaceae",
+      genus == "Davallia" ~ "Davalliaceae",
+      genus == "Polystichum" ~ "Dryopteridaceae"
     )
   ) %>%
   mutate(
     group = case_when (
-      family == "Aspleniaceae" ~ "out",
-      family != "Aspleniaceae" ~ "in"
+      family == "Davalliaceae" | family == "Dryopteridaceae" ~ "out",
+      TRUE ~ "in"
     )
   )
 
