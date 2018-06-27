@@ -13,7 +13,7 @@ library(ape)
 # (subset of eupolypod II ferns incl Aspleniaceae, Athyriaceae, Blechnaceae, and Woodsiaceae)
 # plus two eupolypod I ferns as outgroups (OQWW, FQGQ)
 # note that AFPO no longer is a separate sample; see "RWYZ: combined assembly of AFPO+VITX"
-codes <- c("PSKY", "KJZG", "YJJY", "YQEC", "URCP", "FCHS", "UFJN", "VITX", "OQWW", "FQGQ")
+codes <- c("FQGQ", "PSKY", "KJZG", "YJJY", "YQEC", "URCP", "FCHS", "UFJN")
 
 # read in html
 onekp_parsed <- read_html("http://www.onekp.com/samples/list.php")
