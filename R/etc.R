@@ -47,7 +47,8 @@ set_transdecoder_path <- function (path) {
 make_dir <- function (dir_name, ...) {
   if(!dir.exists(dir_name)) {
     dir.create(dir_name)
-    sink(file = paste0(here::here(dir_name), "/.name"), type = "output")
+    dir_name <- jntools::add_slash(dir_name)
+    sink(file = paste0(dir_name, ".name"), type = "output")
     cat(dir_name)
     sink()
   }
