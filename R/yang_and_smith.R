@@ -47,8 +47,6 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(seq_folder, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -107,8 +105,6 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -261,8 +257,6 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(tree_folder, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -327,8 +321,6 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(tree_folder, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -395,8 +387,6 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -457,8 +447,6 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -519,8 +507,6 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -587,8 +573,6 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -653,8 +637,6 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -766,8 +748,6 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
@@ -835,8 +815,6 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
     if (length(files_to_delete) > 0) {
       files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
-    } else {
-      print("No files to overwrite, continuing")
     }
   }
 
