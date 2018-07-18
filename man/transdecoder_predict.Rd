@@ -4,14 +4,10 @@
 \alias{transdecoder_predict}
 \title{transdecoder_predict}
 \usage{
-
-  transdecoder_predict(path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"),
-  transcriptome_file, blast_result = NULL, wd = here::here(),
-  other_args = NULL, ...)
+transdecoder_predict(transcriptome_file, blast_result = NULL,
+  wd = here::here(), other_args = NULL, ...)
 }
 \arguments{
-\item{path_to_transdecoder}{Character vector of length one; the path to the folder containing TransDecoder scripts, e.g., \code{"/Users/me/apps/TransDecoder/"}}
-
 \item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
 
 \item{blast_result}{Character vector of length one; the path to the tab-separated text file containing the results from a blastp search of the transcriptome against a reference blast protein database. For the blast search, the output format should specified as: -outfmt 6.}

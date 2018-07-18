@@ -4,13 +4,9 @@
 \alias{cd_hit_est}
 \title{cd_hit_est}
 \usage{
-
-  cd_hit_est(path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"),
-  input, output, wd = here::here(), other_args = NULL, ...)
+cd_hit_est(input, output, wd = here::here(), other_args = NULL, ...)
 }
 \arguments{
-\item{path_to_transdecoder}{Character vector of length one; the path to the folder containing TransDecoder scripts, e.g., \code{"/Users/me/apps/TransDecoder/"}.}
-
 \item{input}{Character vector of length one; the path to the input file for cd-hit-est. Should be DNA or AA sequences in fasta format.}
 
 \item{output}{Character vector of length one; the name to assign to the output. Can include a path, in which case the output will be written there.}

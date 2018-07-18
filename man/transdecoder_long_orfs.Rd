@@ -4,13 +4,10 @@
 \alias{transdecoder_long_orfs}
 \title{transdecoder_long_orfs}
 \usage{
-
-  transdecoder_long_orfs(path_to_transdecoder = pkgconfig::get_config("baitfindR::path_to_transdecoder"),
-  transcriptome_file, wd = here::here(), other_args = NULL, ...)
+transdecoder_long_orfs(transcriptome_file, wd = here::here(),
+  other_args = NULL, ...)
 }
 \arguments{
-\item{path_to_transdecoder}{Character vector of length one; the path to the folder containing TransDecoder scripts, e.g., \code{"/Users/me/apps/TransDecoder/"}}
-
 \item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
 
 \item{wd}{Character vector of length one; the directory where the command will be run, and the output folder created.}
