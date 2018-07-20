@@ -4,7 +4,7 @@
 \alias{blast_p}
 \title{blast_p}
 \usage{
-blast_p(query, database, out_file, other_args = NULL, ...)
+blast_p(query, database, out_file, outfmt = "6", other_args = NULL, ...)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta file to use as the query sequence(s).}
@@ -13,7 +13,9 @@ blast_p(query, database, out_file, other_args = NULL, ...)
 
 \item{out_file}{Character vector of length one; the name to use for the results file.}
 
-\item{other_args}{Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastp -help}.}
+\item{outfmt}{Character vector of length one; value to pass to \code{blastp} \code{outfmt} argument. Default = "6".}
+
+\item{other_args}{Character vector; other arguments to pass on to \code{blastp}. For a list of options, run \code{blastp -help}.}
 
 \item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }

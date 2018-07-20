@@ -30,16 +30,17 @@ build_blast_db <- function (in_seqs, out_name, db_type = "nucl", other_args = NU
 #' @param query Character vector of length one; the path to the fasta file to use as the query sequence(s).
 #' @param database Character vector of length one; the name of the blast database.
 #' @param out_file Character vector of length one; the name to use for the results file.
-#' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastp -help}.
+#' @param outfmt Character vector of length one; value to pass to \code{blastp} \code{outfmt} argument. Default = "6".
+#' @param other_args Character vector; other arguments to pass on to \code{blastp}. For a list of options, run \code{blastp -help}.
 #' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A tab-separated text file with the results of the blastp search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @export
-blast_p <- function (query, database, out_file, other_args = NULL, ...) {
+blast_p <- function (query, database, out_file, outfmt = "6", other_args = NULL, ...) {
 
   # modify arguments
-  arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), other_args)
+  arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), paste("-outfmt", outfmt), other_args)
 
   # run command
   system2("blastp", arguments)
@@ -53,16 +54,17 @@ blast_p <- function (query, database, out_file, other_args = NULL, ...) {
 #' @param query Character vector of length one; the path to the fasta file to use as the query sequence(s).
 #' @param database Character vector of length one; the name of the blast database.
 #' @param out_file Character vector of length one; the name to use for the results file.
-#' @param other_args Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastn -help}.
+#' @param outfmt Character vector of length one; value to pass to \code{blastn} \code{outfmt} argument. Default = "6".
+#' @param other_args Character vector; other arguments to pass on to \code{blastn}. For a list of options, run \code{blastn -help}.
 #' @param ... Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A tab-separated text file with the results of the blastn search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @export
-blast_n <- function (query, database, out_file, other_args = NULL, ...) {
+blast_n <- function (query, database, out_file, outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'", other_args = NULL, ...) {
 
   # modify arguments
-  arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), other_args)
+  arguments <- c(paste("-query", query), paste("-db", database), paste("-out", out_file), paste("-outfmt", outfmt), other_args)
 
   # run command
   system2("blastn", arguments)

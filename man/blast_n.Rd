@@ -4,7 +4,9 @@
 \alias{blast_n}
 \title{blast_n}
 \usage{
-blast_n(query, database, out_file, other_args = NULL, ...)
+blast_n(query, database, out_file,
+  outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'",
+  other_args = NULL, ...)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta file to use as the query sequence(s).}
@@ -13,7 +15,9 @@ blast_n(query, database, out_file, other_args = NULL, ...)
 
 \item{out_file}{Character vector of length one; the name to use for the results file.}
 
-\item{other_args}{Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{blastn -help}.}
+\item{outfmt}{Character vector of length one; value to pass to \code{blastn} \code{outfmt} argument. Default = "6".}
+
+\item{other_args}{Character vector; other arguments to pass on to \code{blastn}. For a list of options, run \code{blastn -help}.}
 
 \item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
