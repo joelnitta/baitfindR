@@ -677,14 +677,14 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   ys_script[ingroup_line] <- ingroup_replacement
 
   # write out new temporary python script
-  readr::write_lines(ys_script, path = here::here("prune_paralogs_MO_temp.py"))
+  readr::write_lines(ys_script, path = paste0(path_to_ys, "prune_paralogs_MO_temp.py"))
 
   # call command
-  arguments <- c(here::here("prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
+  arguments <- c(paste0(path_to_ys, "prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments)
 
   # delete temporary script
-  file.remove(here::here("prune_paralogs_MO_temp.py"))
+  file.remove(paste0(path_to_ys, "prune_paralogs_MO_temp.py"))
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
