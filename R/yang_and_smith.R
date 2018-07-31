@@ -830,3 +830,118 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
     return(hash)
   }
 }
+
+#' mafft_wrapper
+#'
+#' Wrapper for Yang and Smith (2014) mafft_wrapper.py
+#'
+#' Given a directory containing unaligned fasta files, align all fasta files in the directory. If there are > 1000 sequences in the directory, use the mafft \code{--auto} algorithm. If less, use the \code{--genafpair} algorithm.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param fasta_folder Character vector of length one; the path to the folder containing the fasta files to be aligned.
+#' @param infile_ending Character vector of length one; only files with this ending will be included.
+#' @param number_cores Numeric; number of threads to use for and \code{mafft}.
+#' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all aligned fasta files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
+#' @return Aligned fasta files will be written to \code{fasta_folder} with the file ending \code{.aln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln} files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{mafft_wrapper(fasta_folder = "some/folder/with/fasta/files", number_cores = 2, seq_type = "dna")}
+#' @export
+mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, ...) {
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  fasta_folder <- jntools::add_slash(fasta_folder)
+
+  # define search terms for output files
+  search_terms <- "\\.mafft\\.aln$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(fasta_folder, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(fasta_folder, files_to_delete)
+      file.remove(files_to_delete)
+    }
+  }
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "mafft_wrapper.py"), fasta_folder, infile_ending, number_cores, seq_type)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(fasta_folder, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(fasta_folder, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
+    return(hash)
+  }
+}
+
+#' phyutility_wrapper
+#'
+#' Wrapper for Yang and Smith (2014) phyutility_wrapper.py
+#'
+#' Given a directory containing aligned fasta files, clean the alignments by removing columns below the specified occupancy cutoff.
+#'
+#' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
+#' @param fasta_folder Character vector of length one; the path to the folder containing the alignments (fasta files) to be cleaned. Alignment files must end in \code{.aln}.
+#' @param min_col_occup Numeric; characters (columns of the alignment) with less than this occupancy (as a decimal) will be removed from each alignment in the folder.
+#' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
+#' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
+#' @param get_hash Logical; should the 32-byte MD5 hash be computed for all result files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
+#' @return Cleaned alignments will be written to \code{fasta_folder} with the file ending \code{.aln-cln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln-cln} files concatenated together will be returned.
+#' @author Joel H Nitta, \email{joelnitta@@gmail.com}
+#' @references Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. \url{https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview}
+#' @examples
+#' \dontrun{phyutility_wrapper(fasta_folder = "some/folder/with/alignments/", min_col_occup = 0.3, seq_type = "dna")}
+#' @export
+phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, ...) {
+
+  # modify arguments
+  path_to_ys <- jntools::add_slash(path_to_ys)
+  fasta_folder <- jntools::add_slash(fasta_folder)
+
+  # error checking
+  if(is.null(path_to_ys)) {
+    stop("Must provide 'path_to_ys' (path to Yang & Smith Phylogenomic Dataset Analysis folder)")
+  }
+
+  if (length(list.files(fasta_folder, pattern = "\\.aln$")) == 0) {
+    stop(glue::glue('No file ending with .aln found in {fasta_folder}'))
+  }
+
+  # define search terms for output files
+  search_terms <- "\\.aln-cln$"
+
+  # optional: delete all previous output written in this folder
+  if (isTRUE(overwrite)) {
+    files_to_delete <- list.files(fasta_folder, pattern = search_terms)
+    if (length(files_to_delete) > 0) {
+      files_to_delete <- paste0(fasta_folder, files_to_delete)
+      file.remove(files_to_delete)
+    }
+  }
+
+  # call command
+  arguments <- c(paste0(path_to_ys, "phyutility_wrapper.py"), fasta_folder, min_col_occup, seq_type)
+  processx::run("python", arguments)
+
+  # optional: get MD5 hash of output
+  if (isTRUE(get_hash)) {
+    output <- list.files(fasta_folder, pattern = search_terms)
+    output <- if (length(output) > 0) {unlist( lapply(paste0(fasta_folder, output), readr::read_file) )} else {output}
+    hash <- digest::digest(output)
+    return(hash)
+  }
+}

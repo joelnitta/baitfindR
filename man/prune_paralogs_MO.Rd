@@ -6,8 +6,8 @@
 \usage{
 
   prune_paralogs_MO(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir,
-  overwrite = FALSE, get_hash = TRUE, ...)
+  tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4,
+  outdir, overwrite = FALSE, get_hash = TRUE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}

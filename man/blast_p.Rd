@@ -4,7 +4,8 @@
 \alias{blast_p}
 \title{blast_p}
 \usage{
-blast_p(query, database, out_file, outfmt = "6", other_args = NULL, ...)
+blast_p(query, database, out_file, outfmt = "6", other_args = NULL,
+  ...)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta file to use as the query sequence(s).}

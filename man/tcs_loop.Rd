@@ -4,7 +4,8 @@
 \alias{tcs_loop}
 \title{tcs_loop}
 \usage{
-tcs_loop(folder, pattern = NULL, number_cores = 1, other_args = NULL, ...)
+tcs_loop(folder, pattern = NULL, number_cores = 1, other_args = NULL,
+  ...)
 }
 \arguments{
 \item{folder}{Character vector of length one; the path to the folder containing the alignments.}

@@ -4,7 +4,8 @@
 \alias{build_blast_db}
 \title{build_blast_db}
 \usage{
-build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL, ...)
+build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL,
+  ...)
 }
 \arguments{
 \item{in_seqs}{Character vector of length one; the path to the fasta file containing the sequences to be included in the database.}

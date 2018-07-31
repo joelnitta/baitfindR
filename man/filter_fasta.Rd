@@ -4,8 +4,9 @@
 \alias{filter_fasta}
 \title{filter_fasta}
 \usage{
-filter_fasta(seq_folder, taxonomy_data, filter_col = NULL, min_taxa = NULL,
-  exclude_short = FALSE, sample_col = "sample", group_col = "group", ...)
+filter_fasta(seq_folder, taxonomy_data, filter_col = NULL,
+  min_taxa = NULL, exclude_short = FALSE, sample_col = "sample",
+  group_col = "group", ...)
 }
 \arguments{
 \item{seq_folder}{Character vector of length one; the path to the folder containing the fasta files (ending in \code{.fa} or \code{.fasta}) to filter.}

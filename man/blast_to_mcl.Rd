@@ -4,7 +4,8 @@
 \alias{blast_to_mcl}
 \title{blast_to_mcl}
 \usage{
-blast_to_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
+
+  blast_to_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   blast_results, hit_fraction_cutoff, ...)
 }
 \arguments{
