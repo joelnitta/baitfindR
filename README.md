@@ -8,10 +8,8 @@ You can install the development version of baitfindR from this repository using:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("joelnitta/baitfindR", auth_token = "TOKEN")
+devtools::install_github("joelnitta/baitfindR")
 ```
-
-Since this is still a private repo, please provide your personal access token (PAT).
 
 ## Example
 
