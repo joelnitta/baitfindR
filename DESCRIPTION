@@ -19,4 +19,5 @@ Imports:
     purrr,
     stringr,
     checkr,
-    glue
+    glue,
+    ips
