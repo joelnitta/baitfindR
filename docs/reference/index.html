@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -103,8 +103,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-blast" class="hasAnchor"><a href="#section-blast" class="anchor"></a>BLAST</h2>
+          <p class="section-desc"><p>Functions relating to building and querying BLAST databases.</p></p>
         </th>
       </tr>
       <tr>
@@ -122,27 +122,23 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="blast_to_mcl.html">blast_to_mcl()</a></code> </p>
-        </td>
-        <td><p>blast_to_mcl</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="build_blast_db.html">build_blast_db()</a></code> </p>
         </td>
         <td><p>build_blast_db</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-y-s-workflow" class="hasAnchor"><a href="#section-y-s-workflow" class="anchor"></a>Y&amp;S workflow</h2>
+          <p class="section-desc"><p>Wrappers for functions used in the Y&amp;S workflow.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
-          <p><code><a href="calculate_alignment_stats.html">calculate_alignment_stats()</a></code> </p>
+          <p><code><a href="blast_to_mcl.html">blast_to_mcl()</a></code> </p>
         </td>
-        <td><p>calculate_alignment_stats</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cat_files.html">cat_files()</a></code> </p>
-        </td>
-        <td><p>cat_files</p></td>
+        <td><p>blast_to_mcl</p></td>
       </tr><tr>
         
         <td>
@@ -170,12 +166,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="filter_fasta.html">filter_fasta()</a></code> </p>
-        </td>
-        <td><p>filter_fasta</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="fix_names_from_transdecoder.html">fix_names_from_transdecoder()</a></code> </p>
         </td>
         <td><p>fix_names_from_transdecoder</p></td>
@@ -188,12 +178,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="make_dir.html">make_dir()</a></code> </p>
-        </td>
-        <td><p>make_dir</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="mask_tips_by_taxonID_transcripts.html">mask_tips_by_taxonID_transcripts()</a></code> </p>
         </td>
         <td><p>mask_tips_by_taxonID_transcripts</p></td>
@@ -203,12 +187,6 @@
           <p><code><a href="mcl.html">mcl()</a></code> </p>
         </td>
         <td><p>mcl</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="onekp_data.html">onekp_data</a></code> </p>
-        </td>
-        <td><p>Taxonomic data for fern transcriptomes</p></td>
       </tr><tr>
         
         <td>
@@ -233,24 +211,6 @@
           <p><code><a href="prune_paralogs_RT.html">prune_paralogs_RT()</a></code> </p>
         </td>
         <td><p>prune_paralogs_RT</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_ys_path.html">set_ys_path()</a></code> </p>
-        </td>
-        <td><p>set_ys_path</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tcs.html">tcs()</a></code> </p>
-        </td>
-        <td><p>tcs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tcs_loop.html">tcs_loop()</a></code> </p>
-        </td>
-        <td><p>tcs_loop</p></td>
       </tr><tr>
         
         <td>
@@ -288,6 +248,78 @@
         </td>
         <td><p>write_ortholog_fasta_files</p></td>
       </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-bait-filtering" class="hasAnchor"><a href="#section-bait-filtering" class="anchor"></a>Bait filtering</h2>
+          <p class="section-desc"><p>Functions to help choose a final set of baits from the pool of candidate low copy orthologs produced by the Y&amp;S workflow.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="calculate_alignment_stats.html">calculate_alignment_stats()</a></code> </p>
+        </td>
+        <td><p>calculate_alignment_stats</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cat_files.html">cat_files()</a></code> </p>
+        </td>
+        <td><p>cat_files</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_fasta.html">filter_fasta()</a></code> </p>
+        </td>
+        <td><p>filter_fasta</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-miscellaneous" class="hasAnchor"><a href="#section-miscellaneous" class="anchor"></a>Miscellaneous</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="make_dir.html">make_dir()</a></code> </p>
+        </td>
+        <td><p>make_dir</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="onekp_data.html">onekp_data</a></code> </p>
+        </td>
+        <td><p>Taxonomic data for fern transcriptomes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="set_ys_path.html">set_ys_path()</a></code> </p>
+        </td>
+        <td><p>set_ys_path</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-deprecated" class="hasAnchor"><a href="#section-deprecated" class="anchor"></a>Deprecated</h2>
+          <p class="section-desc"><p>Functions that aren’t used anymore.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tcs.html">tcs()</a></code> </p>
+        </td>
+        <td><p>tcs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tcs_loop.html">tcs_loop()</a></code> </p>
+        </td>
+        <td><p>tcs_loop</p></td>
+      </tr>
     </tbody>
     </table>
   </div>
@@ -295,7 +327,11 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-blast">BLAST</a></li>
+      <li><a href="#section-y-s-workflow">Y&amp;S workflow</a></li>
+      <li><a href="#section-bait-filtering">Bait filtering</a></li>
+      <li><a href="#section-miscellaneous">Miscellaneous</a></li>
+      <li><a href="#section-deprecated">Deprecated</a></li>
     </ul>
   </div>
 </div>
