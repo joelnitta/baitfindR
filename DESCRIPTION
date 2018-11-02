@@ -21,3 +21,5 @@ Imports:
     checkr,
     glue,
     ips
+URL: https://github.com/joelnitta/baitfindR
+BugReports: https://github.com/joelnitta/baitfindR/issues
