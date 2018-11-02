@@ -2,23 +2,26 @@
 % Please edit documentation in R/etc.R
 \name{make_dir}
 \alias{make_dir}
-\title{make_dir}
+\title{Make a directory.}
 \usage{
 make_dir(dir_name, ...)
 }
 \arguments{
 \item{dir_name}{Name of the directory to be created.}
 
-\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Other arguments. Not used by this function, but meant to be used
+by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
-\code{NULL} in the R environment; externally, creates a directory \code{dir_name}.
+\code{NULL} in the R environment; externally, creates a
+directory \code{dir_name}.
 }
 \description{
-Make a directory
-}
-\details{
-Creates a directory in the working directory, and adds a hidden \code{.name} file, which is a plain text file containing the name of the directory. The purpose of the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}} during workflows, because \code{\link[drake]{drake_plan}} can only track files, not folders.
+Creates a directory in the working directory, and adds a hidden \code{.name} file,
+which is a plain text file containing the name of the directory. The purpose of
+the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}}
+during workflows, because \code{\link[drake]{drake_plan}} can only track files,
+not folders.
 }
 \examples{
 \dontrun{make_dir("new_dir")}

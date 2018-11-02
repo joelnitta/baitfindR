@@ -2,23 +2,24 @@
 % Please edit documentation in R/etc.R
 \name{cat_files}
 \alias{cat_files}
-\title{cat_files}
+\title{Concatenate files.}
 \usage{
 cat_files(input_file_list, output_file)
 }
 \arguments{
-\item{input_file_list}{A list. Could be any list, but it's meant to used for lists of files that have been read into R as character vectors, e.g., using \code{\link[readr]{read_file}}.}
+\item{input_file_list}{A list. Could be any list, but it's meant to used
+for lists of files that have been read into R as character vectors, e.g.,
+using \code{\link[readr]{read_file}}.}
 
 \item{output_file}{Path to write output file.}
 }
 \value{
-A character vector of length one in the R environment; externally, the concatenated output file.
+A character vector of length one in the R environment; externally,
+the concatenated output file.
 }
 \description{
-Equivalent of \code{cat file1 file2}
-}
-\details{
-Concatenate a list and write out the result as single file.
+Concatenate a list and write out the result as single file. Equivalent
+of \code{cat file1 file2}.
 }
 \examples{
 \dontrun{cat_files(list("a", "b", "c"), "my_list.txt")}

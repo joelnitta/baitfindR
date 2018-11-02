@@ -1,10 +1,11 @@
-#' set_ys_path
+#' Set the default path to Y&S scripts.
 #'
-#' Set the default path to the folder containing Yang and Smith (2014) python scripts.
+#' This will overwrite the default value of the \code{path_to_ys} argument
+#' for all \code{baitfindR} functions.
 #'
-#' This will overwrite the default value of the \code{path_to_ys} argument for all \code{baitfindR} functions.
-#'
-#' @param path Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
+#' @param path Character vector of length one; the complete path to the
+#' folder containing Y&S python scripts, e.g.,
+#' \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @examples
 #' set_ys_path("/Users/me/apps/phylogenomic_dataset_construction/")
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -14,16 +15,20 @@ set_ys_path <- function (path) {
   pkgconfig::set_config("baitfindR::path_to_ys" = path)
 }
 
-#' make_dir
+#' Make a directory.
 #'
-#' Make a directory
-#'
-#' Creates a directory in the working directory, and adds a hidden \code{.name} file, which is a plain text file containing the name of the directory. The purpose of the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}} during workflows, because \code{\link[drake]{drake_plan}} can only track files, not folders.
+#' Creates a directory in the working directory, and adds a hidden \code{.name} file,
+#' which is a plain text file containing the name of the directory. The purpose of
+#' the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}}
+#' during workflows, because \code{\link[drake]{drake_plan}} can only track files,
+#' not folders.
 #'
 #' @param dir_name Name of the directory to be created.
-#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
+#' @param ... Other arguments. Not used by this function, but meant to be used
+#' by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
-#' @return \code{NULL} in the R environment; externally, creates a directory \code{dir_name}.
+#' @return \code{NULL} in the R environment; externally, creates a
+#' directory \code{dir_name}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
 #' \dontrun{make_dir("new_dir")}
@@ -38,21 +43,19 @@ make_dir <- function (dir_name, ...) {
   }
 }
 
-# concatenate list of files that have been read into R, write out as single file
-#
-# input files must be a list
 
-
-#' cat_files
+#' Concatenate files.
 #'
-#' Equivalent of \code{cat file1 file2}
+#' Concatenate a list and write out the result as single file. Equivalent
+#' of \code{cat file1 file2}.
 #'
-#' Concatenate a list and write out the result as single file.
-#'
-#' @param input_file_list A list. Could be any list, but it's meant to used for lists of files that have been read into R as character vectors, e.g., using \code{\link[readr]{read_file}}.
+#' @param input_file_list A list. Could be any list, but it's meant to used
+#' for lists of files that have been read into R as character vectors, e.g.,
+#' using \code{\link[readr]{read_file}}.
 #' @param output_file Path to write output file.
 #'
-#' @return A character vector of length one in the R environment; externally, the concatenated output file.
+#' @return A character vector of length one in the R environment; externally,
+#' the concatenated output file.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
 #' \dontrun{cat_files(list("a", "b", "c"), "my_list.txt")}

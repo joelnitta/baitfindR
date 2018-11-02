@@ -2,18 +2,18 @@
 % Please edit documentation in R/etc.R
 \name{set_ys_path}
 \alias{set_ys_path}
-\title{set_ys_path}
+\title{Set the default path to Y&S scripts.}
 \usage{
 set_ys_path(path)
 }
 \arguments{
-\item{path}{Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
+\item{path}{Character vector of length one; the complete path to the
+folder containing Y&S python scripts, e.g.,
+\code{"/Users/me/apps/phylogenomic_dataset_construction/"}}
 }
 \description{
-Set the default path to the folder containing Yang and Smith (2014) python scripts.
-}
-\details{
-This will overwrite the default value of the \code{path_to_ys} argument for all \code{baitfindR} functions.
+This will overwrite the default value of the \code{path_to_ys} argument
+for all \code{baitfindR} functions.
 }
 \examples{
 set_ys_path("/Users/me/apps/phylogenomic_dataset_construction/")
