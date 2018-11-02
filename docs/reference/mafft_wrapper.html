@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mafft_wrapper — mafft_wrapper • baitfindR</title>
+<title>Align all fasta files in a directory. — mafft_wrapper • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="mafft_wrapper — mafft_wrapper" />
+<meta property="og:title" content="Align all fasta files in a directory. — mafft_wrapper" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) mafft_wrapper.py" />
+<meta property="og:description" content="Given a directory containing unaligned fasta files, align all fasta files in
+the directory. If there are &amp;gt; 1000 sequences in the directory, use the
+mafft --auto algorithm. If less, use the --genafpair
+algorithm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +100,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mafft_wrapper</h1>
-    
+    <h1>Align all fasta files in a directory.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>mafft_wrapper.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) mafft_wrapper.py</p>
+    <p>Given a directory containing unaligned fasta files, align all fasta files in
+the directory. If there are &gt; 1000 sequences in the directory, use the
+mafft <code>--auto</code> algorithm. If less, use the <code>--genafpair</code>
+algorithm.</p>
     
     </div>
 
@@ -150,7 +161,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a directory containing unaligned fasta files, align all fasta files in the directory. If there are &gt; 1000 sequences in the directory, use the mafft <code>--auto</code> algorithm. If less, use the <code>--genafpair</code> algorithm.</p>
+    <p>Wrapper for Yang and Smith (2014) mafft_wrapper.py</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

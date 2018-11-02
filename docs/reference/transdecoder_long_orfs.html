@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>transdecoder_long_orfs — transdecoder_long_orfs • baitfindR</title>
+<title>Find long open reading frames. — transdecoder_long_orfs • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="transdecoder_long_orfs — transdecoder_long_orfs" />
+<meta property="og:title" content="Find long open reading frames. — transdecoder_long_orfs" />
 
-<meta property="og:description" content="Wrapper to call TransDecoder.LongOrfs" />
+<meta property="og:description" content="Extracts long open reading frames (ORFs) from a fasta file containing transcript
+sequences (i.e., the transcriptome). This is a wrapper that calls
+TransDecoder.LongOrfs." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +81,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +99,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>transdecoder_long_orfs</h1>
-    
+    <h1>Find long open reading frames.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/transdecoder.R'><code>R/transdecoder.R</code></a></small>
     <div class="hidden name"><code>transdecoder_long_orfs.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper to call TransDecoder.LongOrfs</p>
+    <p>Extracts long open reading frames (ORFs) from a fasta file containing transcript
+sequences (i.e., the transcriptome). This is a wrapper that calls
+<code>TransDecoder.LongOrfs</code>.</p>
     
     </div>
 
@@ -111,30 +120,34 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>transcriptome_file</th>
-      <td><p>Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).</p></td>
+      <td><p>Character vector of length one; the path to the
+fasta file containing transcript sequences (i.e., the transcriptome).</p></td>
     </tr>
     <tr>
       <th>wd</th>
-      <td><p>Character vector of length one; the directory where the command will be run, and the output folder created.</p></td>
+      <td><p>Character vector of length one; the directory where the command
+will be run, and the output folder created.</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.</p></td>
+      <td><p>Character vector; other arguments to pass to TransDecoder.
+Each should be an element of the vector.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Additional other arguments. Not used by this function, but meant to
+be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Within the R environment, a list with components specified in <code><a href='http://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
-<p>Externally, an output folder in the working directory containing base frequencies and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named <code>&lt;transcriptome&gt;.transdecoder_dir</code>, where <code>&lt;transcriptome&gt;</code> is the value of that argument.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Extracts long open reading frames (ORFs) from a fasta file containing transcript sequences (i.e., the transcriptome).</p>
+    <p>Within the R environment, a list with components specified in
+<code><a href='http://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
+<p>Externally, an output folder in the working directory containing base frequencies
+and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named
+<code>&lt;transcriptome&gt;.transdecoder_dir</code>, where <code>&lt;transcriptome&gt;</code> is the value
+of that argument.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -153,8 +166,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
       

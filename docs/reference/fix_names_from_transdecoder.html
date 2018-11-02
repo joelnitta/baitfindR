@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fix_names_from_transdecoder — fix_names_from_transdecoder • baitfindR</title>
+<title>Shorten names in fasta headers. — fix_names_from_transdecoder • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="fix_names_from_transdecoder — fix_names_from_transdecoder" />
+<meta property="og:title" content="Shorten names in fasta headers. — fix_names_from_transdecoder" />
 
-<meta property="og:description" content="Shortens names in fasta headers." />
+<meta property="og:description" content="Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +79,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +97,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fix_names_from_transdecoder</h1>
-    
+    <h1>Shorten names in fasta headers.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>fix_names_from_transdecoder.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Shortens names in fasta headers.</p>
+    <p>Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time.</p>
     
     </div>
 
@@ -122,10 +127,6 @@
 
     <p>Object of class <code>DNAbin</code> or <code>AAbin</code> with names shortened to <code>sample_code`"@"`gene</code></p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time.</p>
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Yang, Y. and S.A. Smith. 2014. Orthology inference in non-model organisms using transcriptomes and low-coverage genomes: improving accuracy and matrix occupancy for phylogenomics. Molecular Biology and Evolution 31:3081-3092. <a href='https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview'>https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview</a></p>
@@ -142,8 +143,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
       

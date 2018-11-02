@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>prune_paralogs_MI — prune_paralogs_MI • baitfindR</title>
+<title>Identify orthologs using the "MI" method. — prune_paralogs_MI • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,16 @@
 
 
 
-<meta property="og:title" content="prune_paralogs_MI — prune_paralogs_MI" />
+<meta property="og:title" content="Identify orthologs using the "MI" method. — prune_paralogs_MI" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) prune_paralogs_MI.py" />
+<meta property="og:description" content="Given a folder containing homolog trees, prune paralogs from the trees
+using the maximum inclusion (MI) method. This method iteratively
+extracts subtrees containing the greatest number of samples (taxa)
+without duplication. Long branches will also be trimmed (i.e., removed)
+according to relative_cutoff and absolute_cutoff values. Trees
+that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+will also be retained. This function will overwrite any output files with
+the same name in outdir." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +86,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +104,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>prune_paralogs_MI</h1>
-    
+    <h1>Identify orthologs using the "MI" method.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>prune_paralogs_MI.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) prune_paralogs_MI.py</p>
+    <p>Given a folder containing homolog trees, prune paralogs from the trees
+using the maximum inclusion (MI) method. This method iteratively
+extracts subtrees containing the greatest number of samples (taxa)
+without duplication. Long branches will also be trimmed (i.e., removed)
+according to <code>relative_cutoff</code> and <code>absolute_cutoff</code> values. Trees
+that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
+will also be retained. This function will overwrite any output files with
+the same name in <code>outdir</code>.</p>
     
     </div>
 
@@ -158,14 +177,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing homolog trees, prune paralogs from the trees
-using the maximum inclusion (MI) method. This method iteratively
-extracts subtrees containing the greatest number of samples (taxa)
-without duplication. Long branches will also be trimmed (i.e., removed)
-according to <code>relative_cutoff</code> and <code>absolute_cutoff</code> values. Trees
-that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
-will also be retained. This function will overwrite any output files with
-the same name in <code>outdir</code>.</p>
+    <p>Wrapper for Yang and Smith (2014) prune_paralogs_MI.py</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

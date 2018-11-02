@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>transdecoder_predict — transdecoder_predict • baitfindR</title>
+<title>Predict coding regions. — transdecoder_predict • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,13 @@
 
 
 
-<meta property="og:title" content="transdecoder_predict — transdecoder_predict" />
+<meta property="og:title" content="Predict coding regions. — transdecoder_predict" />
 
-<meta property="og:description" content="Wrapper to call transdecoder.predict" />
+<meta property="og:description" content="This is a wrapper for transdecoder.predict. It must be run in the same directory
+containing the .transdecoder_dir output folders from
+transdecoder_long_orfs. Optionally include the results of a
+blastp search to make sure that peptides with a blastp hit against the
+reference database are retained in the TransDecoder output." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +83,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +101,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>transdecoder_predict</h1>
-    
+    <h1>Predict coding regions.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/transdecoder.R'><code>R/transdecoder.R</code></a></small>
     <div class="hidden name"><code>transdecoder_predict.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper to call transdecoder.predict</p>
+    <p>This is a wrapper for transdecoder.predict. It must be run in the same directory
+containing the .transdecoder_dir output folders from
+<code><a href='transdecoder_long_orfs.html'>transdecoder_long_orfs</a></code>. Optionally include the results of a
+blastp search to make sure that peptides with a blastp hit against the
+reference database are retained in the TransDecoder output.</p>
     
     </div>
 
@@ -111,34 +124,39 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>transcriptome_file</th>
-      <td><p>Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).</p></td>
+      <td><p>Character vector of length one; the path to the fasta
+file containing transcript sequences (i.e., the transcriptome).</p></td>
     </tr>
     <tr>
       <th>blast_result</th>
-      <td><p>Character vector of length one; the path to the tab-separated text file containing the results from a blastp search of the transcriptome against a reference blast protein database. For the blast search, the output format should specified as: -outfmt 6.</p></td>
+      <td><p>Character vector of length one; the path to the tab-separated
+text file containing the results from a blastp search of the transcriptome against
+a reference blast protein database. For the blast search, the output format should
+specified as: -outfmt 6.</p></td>
     </tr>
     <tr>
       <th>wd</th>
-      <td><p>Character vector of length one; the directory where the command will be run. Must contain .transdecoder_dir folder with results from <code><a href='transdecoder_long_orfs.html'>transdecoder_long_orfs</a></code>.</p></td>
+      <td><p>Character vector of length one; the directory where the command will be
+run. Must contain .transdecoder_dir folder with results from
+<code><a href='transdecoder_long_orfs.html'>transdecoder_long_orfs</a></code>.</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.</p></td>
+      <td><p>Character vector; other arguments to pass to TransDecoder. Each
+should be an element of the vector.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Additional other arguments. Not used by this function, but meant to be
+used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Within the R environment, a list with components specified in <code><a href='http://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
-<p>Externally, four output files (.cds, .pep, .bed, and .gff3) for each input transcriptome file will be written to the working directory.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This has to be run in the same directory containing the .transdecoder_dir output folders from <code><a href='transdecoder_long_orfs.html'>transdecoder_long_orfs</a></code>. Optionally include the results of a blastp search to make sure that peptides with a blastp hit against the reference database are retained in the TransDecoder output.</p>
+<p>Externally, four output files (.cds, .pep, .bed, and .gff3) for each input
+transcriptome file will be written to the working directory.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -147,7 +165,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>transdecoder_predict_with_blast</span>(<span class='st'>"some/transcriptome_file.fa"</span>, <span class='st'>"some/blast_result.txt"</span>)
+<span class='fu'>transdecoder_predict</span>(<span class='st'>"some/transcriptome_file.fa"</span>, <span class='st'>"some/blast_result.txt"</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
@@ -157,8 +175,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
       

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>set_ys_path — set_ys_path • baitfindR</title>
+<title>Set the default path to Y&amp;S scripts. — set_ys_path • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="set_ys_path — set_ys_path" />
+<meta property="og:title" content="Set the default path to Y&amp;S scripts. — set_ys_path" />
 
-<meta property="og:description" content="Set the default path to the folder containing Yang and Smith (2014) python scripts." />
+<meta property="og:description" content="This will overwrite the default value of the path_to_ys argument
+for all baitfindR functions." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +80,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +98,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>set_ys_path</h1>
-    
+    <h1>Set the default path to Y&amp;S scripts.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/etc.R'><code>R/etc.R</code></a></small>
     <div class="hidden name"><code>set_ys_path.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Set the default path to the folder containing Yang and Smith (2014) python scripts.</p>
+    <p>This will overwrite the default value of the <code>path_to_ys</code> argument
+for all <code>baitfindR</code> functions.</p>
     
     </div>
 
@@ -110,13 +117,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>Character vector of length one; the complete path to the folder containing Y&amp;S python scripts, e.g., <code>"/Users/me/apps/phylogenomic_dataset_construction/"</code></p></td>
+      <td><p>Character vector of length one; the complete path to the
+folder containing Y&amp;S python scripts, e.g.,
+<code>"/Users/me/apps/phylogenomic_dataset_construction/"</code></p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This will overwrite the default value of the <code>path_to_ys</code> argument for all <code>baitfindR</code> functions.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -131,8 +136,6 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
-
       <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>

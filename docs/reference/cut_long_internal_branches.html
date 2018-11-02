@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cut_long_internal_branches — cut_long_internal_branches • baitfindR</title>
+<title>Cut long internal branches in tree. — cut_long_internal_branches • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="cut_long_internal_branches — cut_long_internal_branches" />
+<meta property="og:title" content="Cut long internal branches in tree. — cut_long_internal_branches" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) cut_long_internal_branches.py" />
+<meta property="og:description" content="Given a folder containing phylogenetic trees, split the trees into multiple subtrees
+for nodes that bifurcate deeper than internal_branch_length_cutoff.
+tree_folder and outdir should be different to avoid writing over input trees.
+This function will overwrite any output files with the same name in outdir." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +100,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cut_long_internal_branches</h1>
-    
+    <h1>Cut long internal branches in tree.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>cut_long_internal_branches.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) <code>cut_long_internal_branches.py</code></p>
+    <p>Given a folder containing phylogenetic trees, split the trees into multiple subtrees
+for nodes that bifurcate deeper than <code>internal_branch_length_cutoff</code>.
+<code>tree_folder</code> and <code>outdir</code> should be different to avoid writing over input trees.
+This function will overwrite any output files with the same name in <code>outdir</code>.</p>
     
     </div>
 
@@ -154,10 +165,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing phylogenetic trees, split the trees into multiple subtrees
-for nodes that bifurcate deeper than <code>internal_branch_length_cutoff</code>.
-<code>tree_folder</code> and <code>outdir</code> should be different to avoid writing over input trees.
-This function will overwrite any output files with the same name in <code>outdir</code>.</p>
+    <p>Wrapper for Yang and Smith (2014) <code>cut_long_internal_branches.py</code></p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

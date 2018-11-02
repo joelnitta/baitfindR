@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>blast_n — blast_n • baitfindR</title>
+<title>Run a blastn query. — blast_n • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="blast_n — blast_n" />
+<meta property="og:title" content="Run a blastn query. — blast_n" />
 
-<meta property="og:description" content="Wrapper to call blastn" />
+<meta property="og:description" content="This is a wrapper for blastn." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +79,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +97,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>blast_n</h1>
-    
+    <h1>Run a blastn query.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/blast.R'><code>R/blast.R</code></a></small>
     <div class="hidden name"><code>blast_n.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper to call blastn</p>
+    <p>This is a wrapper for blastn.</p>
     
     </div>
 
@@ -112,33 +117,41 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>query</th>
-      <td><p>Character vector of length one; the path to the fasta file to use as the query sequence(s).</p></td>
+      <td><p>Character vector of length one; the path to the fasta
+file to use as the query sequence(s).</p></td>
     </tr>
     <tr>
       <th>database</th>
-      <td><p>Character vector of length one; the name of the blast database.</p></td>
+      <td><p>Character vector of length one; the name of the blast
+database.</p></td>
     </tr>
     <tr>
       <th>out_file</th>
-      <td><p>Character vector of length one; the name to use for the results file.</p></td>
+      <td><p>Character vector of length one; the name to use for
+the results file.</p></td>
     </tr>
     <tr>
       <th>outfmt</th>
-      <td><p>Character vector of length one; value to pass to <code>blastn</code> <code>outfmt</code> argument. Default = "6".</p></td>
+      <td><p>Character vector of length one; value to pass to
+<code>blastn</code> <code>outfmt</code> argument. Default = "6".</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass on to <code>blastn</code>. For a list of options, run <code>blastn -help</code>.</p></td>
+      <td><p>Character vector; other arguments to pass on to
+<code>blastn</code>. For a list of options, run <code>blastn -help</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Additional other arguments. Not used by this function,
+but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking
+during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tab-separated text file with the results of the blastn search, named with the value of <code>out_file</code>.</p>
+    <p>A tab-separated text file with the results of the blastn
+search, named with the value of <code>out_file</code>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

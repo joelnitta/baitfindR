@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make_dir — make_dir • baitfindR</title>
+<title>Make a directory. — make_dir • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,13 @@
 
 
 
-<meta property="og:title" content="make_dir — make_dir" />
+<meta property="og:title" content="Make a directory. — make_dir" />
 
-<meta property="og:description" content="Make a directory" />
+<meta property="og:description" content="Creates a directory in the working directory, and adds a hidden .name file,
+which is a plain text file containing the name of the directory. The purpose of
+the .name file is to allow for tracking by drake_plan
+during workflows, because drake_plan can only track files,
+not folders." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +83,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +101,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make_dir</h1>
-    
+    <h1>Make a directory.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/etc.R'><code>R/etc.R</code></a></small>
     <div class="hidden name"><code>make_dir.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Make a directory</p>
+    <p>Creates a directory in the working directory, and adds a hidden <code>.name</code> file,
+which is a plain text file containing the name of the directory. The purpose of
+the <code>.name</code> file is to allow for tracking by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code>
+during workflows, because <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> can only track files,
+not folders.</p>
     
     </div>
 
@@ -114,17 +127,15 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Other arguments. Not used by this function, but meant to be used
+by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>NULL</code> in the R environment; externally, creates a directory <code>dir_name</code>.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Creates a directory in the working directory, and adds a hidden <code>.name</code> file, which is a plain text file containing the name of the directory. The purpose of the <code>.name</code> file is to allow for tracking by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> during workflows, because <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> can only track files, not folders.</p>
+    <p><code>NULL</code> in the R environment; externally, creates a
+directory <code>dir_name</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -138,8 +149,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

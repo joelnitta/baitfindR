@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cd_hit_est — cd_hit_est • baitfindR</title>
+<title>Cluster DNA sequences. — cd_hit_est • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="cd_hit_est — cd_hit_est" />
+<meta property="og:title" content="Cluster DNA sequences. — cd_hit_est" />
 
-<meta property="og:description" content="Wrapper for CD-HIT-EST" />
+<meta property="og:description" content="This is a wrapper for the CD-HIT-EST algorithm. According to the CD-HIT user's guide,
+&quot;CD-HIT-EST clusters a nucleotide dataset into clusters that meet a user-defined
+similarity threshold, usually a sequence identity.&quot; cd-hit-est comes bundled with
+transdecoder, so it is run from there." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +100,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cd_hit_est</h1>
-    
+    <h1>Cluster DNA sequences.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/transdecoder.R'><code>R/transdecoder.R</code></a></small>
     <div class="hidden name"><code>cd_hit_est.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for CD-HIT-EST</p>
+    <p>This is a wrapper for the CD-HIT-EST algorithm. According to the CD-HIT user's guide,
+"CD-HIT-EST clusters a nucleotide dataset into clusters that meet a user-defined
+similarity threshold, usually a sequence identity." cd-hit-est comes bundled with
+transdecoder, so it is run from there.</p>
     
     </div>
 
@@ -110,35 +121,40 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>input</th>
-      <td><p>Character vector of length one; the path to the input file for cd-hit-est. Should be DNA or AA sequences in fasta format.</p></td>
+      <td><p>Character vector of length one; the path to the input file for
+cd-hit-est. Should be DNA or AA sequences in fasta format.</p></td>
     </tr>
     <tr>
       <th>output</th>
-      <td><p>Character vector of length one; the name to assign to the output. Can include a path, in which case the output will be written there.</p></td>
+      <td><p>Character vector of length one; the name to assign to the output.
+Can include a path, in which case the output will be written there.</p></td>
     </tr>
     <tr>
       <th>wd</th>
-      <td><p>Character vector of length one; the directory where the command will be run.</p></td>
+      <td><p>Character vector of length one; the directory where the command
+will be run.</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass to cd-hit-est. Each should be an element of the vector.</p></td>
+      <td><p>Character vector; other arguments to pass to cd-hit-est.
+Each should be an element of the vector.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Additional other arguments. Not used by this function, but meant
+to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Within the R environment, a list with components specified in <code><a href='http://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
-<p>Externally, two files will be written: according to the CD-HIT user's guide, "The output are two files: a fasta file of representative sequences and a text file of list of clusters."</p>
-<p>The fasta file will be named with the value of <code>output</code>; the list of clusters will be the same, with <code>.clstr</code> appended.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>According to the CD-HIT user's guide, "CD-HIT-EST clusters a nucleotide dataset into clusters that meet a user-defined similarity threshold, usually a sequence identity." cd-hit-est comes bundled with transdecoder, so it is run from there.</p>
+    <p>Within the R environment, a list with components specified in
+<code><a href='http://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
+<p>Externally, two files will be written: according to the CD-HIT user's guide,
+"The output are two files: a fasta file of representative sequences and a text
+file of list of clusters."</p>
+<p>The fasta file will be named with the value of <code>output</code>; the list of clusters
+will be the same, with <code>.clstr</code> appended.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -157,8 +173,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
       

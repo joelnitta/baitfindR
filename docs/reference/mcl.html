@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mcl — mcl • baitfindR</title>
+<title>Run mcl. — mcl • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="mcl — mcl" />
+<meta property="og:title" content="Run mcl. — mcl" />
 
-<meta property="og:description" content="Wrapper to call mcl" />
+<meta property="og:description" content="This is a wrapper for the Markov Cluster Algorithm (mcl), a clustering algorithm
+for graphs. Here, it is meant to be used on genetic distances from BLAST." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +80,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +98,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mcl</h1>
-    
+    <h1>Run mcl.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/mcl.R'><code>R/mcl.R</code></a></small>
     <div class="hidden name"><code>mcl.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper to call mcl</p>
+    <p>This is a wrapper for the Markov Cluster Algorithm (mcl), a clustering algorithm
+for graphs. Here, it is meant to be used on genetic distances from BLAST.</p>
     
     </div>
 
@@ -110,11 +117,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mcl_input</th>
-      <td><p>Character vector of length one; the path to the input file for mcl clustering.</p></td>
+      <td><p>Character vector of length one; the path to the input file
+for mcl clustering.</p></td>
     </tr>
     <tr>
       <th>mcl_output</th>
-      <td><p>Character vector of length one; the path to the output file produced by the mcl algorithm.</p></td>
+      <td><p>Character vector of length one; the path to the output
+file produced by the mcl algorithm.</p></td>
     </tr>
     <tr>
       <th>i_value</th>
@@ -122,25 +131,26 @@
     </tr>
     <tr>
       <th>e_value</th>
-      <td><p>Numeric or character vector of length one; the minimal -log transformed evalue to be considered by the algorithm.</p></td>
+      <td><p>Numeric or character vector of length one; the minimal -log
+transformed evalue to be considered by the algorithm.</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass to mcl. Each should be an element of the vector. For example, to pass "-abc" to specify the input file format and "--te" to specify number of threads, use <code>c("--abc", "-te", "2")</code>.</p></td>
+      <td><p>Character vector; other arguments to pass to mcl. Each should
+be an element of the vector. For example, to pass "-abc" to specify the input
+file format and "--te" to specify number of threads, use <code>c("--abc", "-te", "2")</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Other arguments. Not used by this function, but meant to be used
+by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A plain text file of tab-separated values, where each value on a line belongs to the same cluster.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Calls the Markov Cluster Algorithm (mcl), a clustering algorithm for graphs. Here, it is meant to be used on genetic distances from BLAST.</p>
+    <p>A plain text file of tab-separated values, where each value on a line
+belongs to the same cluster.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -158,8 +168,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
       

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>build_blast_db — build_blast_db • baitfindR</title>
+<title>Build a BLAST database. — build_blast_db • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="build_blast_db — build_blast_db" />
+<meta property="og:title" content="Build a BLAST database. — build_blast_db" />
 
-<meta property="og:description" content="Wrapper to call makeblastdb" />
+<meta property="og:description" content="This is a wrapper for makeblastdb." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +79,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +97,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>build_blast_db</h1>
-    
+    <h1>Build a BLAST database.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/blast.R'><code>R/blast.R</code></a></small>
     <div class="hidden name"><code>build_blast_db.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper to call makeblastdb</p>
+    <p>This is a wrapper for makeblastdb.</p>
     
     </div>
 
@@ -111,33 +116,38 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_seqs</th>
-      <td><p>Character vector of length one; the path to the fasta file containing the sequences to be included in the database.</p></td>
+      <td><p>Character vector of length one; the path to the fasta
+file containing the sequences to be included in the database.</p></td>
     </tr>
     <tr>
       <th>out_name</th>
-      <td><p>Character vector of length one; name of BLAST database to be created.</p></td>
+      <td><p>Character vector of length one; name of BLAST database
+to be created.</p></td>
     </tr>
     <tr>
       <th>db_type</th>
-      <td><p>Character vector of length one; "nucl" for DNA or "prot" for amino acids (proteins).</p></td>
+      <td><p>Character vector of length one; "nucl" for DNA or "prot"
+for amino acids (proteins).</p></td>
     </tr>
     <tr>
       <th>other_args</th>
-      <td><p>Character vector; other arguments to pass on to <code>makeblastdb</code>. For a list of options, run <code>makeblastdb -help</code>.</p></td>
+      <td><p>Character vector; other arguments to pass on to
+<code>makeblastdb</code>. For a list of options, run <code>makeblastdb -help</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Additional other arguments. Not used by this function, but
+meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking
+during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A series of files starting with <code>out_name</code> and ending in .phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog, .nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in the directory specified by <code>wd</code>.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Takes a list of input sequences and makes them into a BLAST database. Assumes that all BLAST commands are in the user's <code>$PATH</code>.</p>
+    <p>A series of files starting with <code>out_name</code> and ending in
+.phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog,
+.nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in
+the working directory.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -151,8 +161,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
           </ul>

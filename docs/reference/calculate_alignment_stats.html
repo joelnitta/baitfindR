@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>calculate_alignment_stats — calculate_alignment_stats • baitfindR</title>
+<title>Calculate summary statistics for an alignment. — calculate_alignment_stats • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="calculate_alignment_stats — calculate_alignment_stats" />
+<meta property="og:title" content="Calculate summary statistics for an alignment. — calculate_alignment_stats" />
 
-<meta property="og:description" content="Calculate various summary statistics for an alignment." />
+<meta property="og:description" content="Including the original alignment in the output with include_aln
+can be useful for mapping calculate_alignment_stats over a list
+of alignments with map_df to sort and filter
+alignments by their summary statistics." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,18 +100,22 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>calculate_alignment_stats</h1>
-    
+    <h1>Calculate summary statistics for an alignment.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/calculate_alignment_stats.R'><code>R/calculate_alignment_stats.R</code></a></small>
     <div class="hidden name"><code>calculate_alignment_stats.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculate various summary statistics for an alignment.</p>
+    <p>Including the original alignment in the output with <code>include_aln</code>
+can be useful for mapping <code>calculate_alignment_stats</code> over a list
+of alignments with <code><a href='http://www.rdocumentation.org/packages/purrr/topics/map'>map_df</a></code> to sort and filter
+alignments by their summary statistics.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>calculate_alignment_stats</span>(<span class='no'>alignment</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>120</span>, <span class='kw'>cutoff_any</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>calculate_alignment_stats</span>(<span class='no'>alignment</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>120</span>, <span class='kw'>cutoff_any</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>include_aln</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -124,6 +136,11 @@ be flagged if any exons are shorter than the cutoff? The default, FALSE,
 means that the alignment will only be flagged if all exons are shorter
 than the cutoff value.</p></td>
     </tr>
+    <tr>
+      <th>include_aln</th>
+      <td><p>Logical; Should the original alignment
+be included in the output list?</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -138,7 +155,9 @@ than the cutoff value.</p></td>
   <dt>GC_content</dt><dd><p>Total %GC content</p></dd>
   <dt>pars_inf</dt><dd><p>Fraction of sites that are parsimony informative</p></dd>
   <dt>total_exon_length</dt><dd><p>Total exon length</p></dd>
-  <dt>less_than_cutoff</dt><dd><p>Logical flag indicating whether alignment passed the minimum exon length cutoff or not</p></dd>
+  <dt>less_than_cutoff</dt><dd><p>Logical flag indicating whether alignment passed
+  the minimum exon length cutoff or not</p></dd>
+  <dt>alignment</dt><dd><p>The original input alignment</p></dd>
 </dl>
 
     

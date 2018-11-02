@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>filter_fasta — filter_fasta • baitfindR</title>
+<title>Filter fasta files by ingroup/outgroup status and taxonomy. — filter_fasta • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,15 @@
 
 
 
-<meta property="og:title" content="filter_fasta — filter_fasta" />
+<meta property="og:title" content="Filter fasta files by ingroup/outgroup status and taxonomy. — filter_fasta" />
 
-<meta property="og:description" content="Filter a directory of fasta files by ingroup/outgroup status and taxonomic rank." />
+<meta property="og:description" content="Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta
+file contains more than one sequence) and a dataframe including taxonomic data and
+ingroup/outgroup status, filter_fasta() outputs a list of those fasta files
+that pass one of two filters, or a combination of both. One filter excludes fasta
+files that do not contain greater than the minimum number of ingroup sequences. The
+other filter excludes fasta files that do not contain at least one sequence per
+ingroup taxon at the specified taxonomic rank." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +85,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +103,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>filter_fasta</h1>
-    
+    <h1>Filter fasta files by ingroup/outgroup status and taxonomy.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/filter_fasta.R'><code>R/filter_fasta.R</code></a></small>
     <div class="hidden name"><code>filter_fasta.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Filter a directory of fasta files by ingroup/outgroup status and taxonomic rank.</p>
+    <p>Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta
+file contains more than one sequence) and a dataframe including taxonomic data and
+ingroup/outgroup status, <code>filter_fasta()</code> outputs a list of those fasta files
+that pass one of two filters, or a combination of both. One filter excludes fasta
+files that do not contain greater than the minimum number of ingroup sequences. The
+other filter excludes fasta files that do not contain at least one sequence per
+ingroup taxon at the specified taxonomic rank.</p>
     
     </div>
 
@@ -112,19 +129,29 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seq_folder</th>
-      <td><p>Character vector of length one; the path to the folder containing the fasta files (ending in <code>.fa</code> or <code>.fasta</code>) to filter.</p></td>
+      <td><p>Character vector of length one; the path to the folder containing
+the fasta files (ending in <code>.fa</code> or <code>.fasta</code>) to filter.</p></td>
     </tr>
     <tr>
       <th>taxonomy_data</th>
-      <td><p>Dataframe matching sequences to ingroup/outgroup status and (optionally) higher-level taxonomic ranks for filtering. The columns must follow this format:</p><dl class='dl-horizontal'>
-  <dt>sample</dt><dd><p>Unique identifier for the source of the sequence, such as transcriptome IDs or species names. All sequences names must include such an identifier.</p></dd>
-  <dt>group</dt><dd><p>Either "in" or "out" (case-insensitive) depending if that sample is in the ingroup or outgroup.</p></dd>
-  <dt>(user-selected taxonomic rank)</dt><dd><p>The user can provide any taxonomic rank they wish to filter by. For example, alignments can be filtered by having at least one representative of each ingroup genus (family, order, etc.) in the dataset.</p></dd>
+      <td><p>Dataframe matching sequences to ingroup/outgroup status and
+(optionally) higher-level taxonomic ranks for filtering. The columns must follow
+this format:</p><dl class='dl-horizontal'>
+  <dt>sample</dt><dd><p>Unique identifier for the source of the sequence, such as
+  transcriptome IDs or species names. All sequences names must include such
+  an identifier.</p></dd>
+  <dt>group</dt><dd><p>Either "in" or "out" (case-insensitive) depending if that sample
+  is in the ingroup or outgroup.</p></dd>
+  <dt>(user-selected taxonomic rank)</dt><dd><p>The user can provide any taxonomic rank
+  they wish to filter by. For example, alignments can be filtered by having at
+  least one representative of each ingroup genus (family, order, etc.) in the
+  dataset.</p></dd>
 </dl></td>
     </tr>
     <tr>
       <th>filter_col</th>
-      <td><p>Optional character; the name of the column to be used for filtering by taxonomic rank in <code>taxonomy_data</code>.</p></td>
+      <td><p>Optional character; the name of the column to be used for
+filtering by taxonomic rank in <code>taxonomy_data</code>.</p></td>
     </tr>
     <tr>
       <th>min_taxa</th>
@@ -132,30 +159,38 @@
     </tr>
     <tr>
       <th>exclude_short</th>
-      <td><p>Logical; should extremely short sequences be excluded from the alignment during filtering? If <code>TRUE</code>, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.</p></td>
+      <td><p>Logical; should extremely short sequences be excluded from
+the alignment during filtering? If <code>TRUE</code>, the minimum length is set to be
+within 1 standard deviation of the mean sequence length for a given alignment.</p></td>
     </tr>
     <tr>
       <th>sample_col</th>
-      <td><p>Optional character; user-provided column name for <code>sample</code> in <code>taxonomy_data</code>.</p></td>
+      <td><p>Optional character; user-provided column name for <code>sample</code>
+in <code>taxonomy_data</code>.</p></td>
     </tr>
     <tr>
       <th>group_col</th>
-      <td><p>Optional character; user-provided column name for <code>group</code> <code>taxonomy_data</code>.</p></td>
+      <td><p>Optional character; user-provided column name for <code>group</code>
+<code>taxonomy_data</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments. Not used by this function, but meant to be used by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
+      <td><p>Other arguments. Not used by this function, but meant to be used by
+<code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named list of DNA sequences of class <code>DNAbin</code> that passed the filter. These are not modified in any way; they simply met the requirements of the filter.</p>
+    <p>A named list of DNA sequences of class <code>DNAbin</code> that passed the filter.
+These are not modified in any way; they simply met the requirements of the filter.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta file contains more than one sequence) and a dataframe including taxonomic data and ingroup/outgroup status, <code>filter_fasta()</code> outputs a list of those fasta files that pass one of two filters, or a combination of both. One filter excludes fasta files that do not contain greater than the minimum number of ingroup sequences. The other filter excludes fasta files that do not contain at least one sequence per ingroup taxon at the specified taxonomic rank.</p>
-<p>For example, if the dataset includes multiple ingroup genera each with multiple samples per genus, we may wish to filter alignments such that we only keep those with at least one sequence per ingroup genus. To do this, include a column called <code>"genus"</code> in <code>taxonomy_data</code>, and set <code>filter_col = "genus"</code>.</p>
+    <p>For example, if the dataset includes multiple ingroup genera each with multiple
+samples per genus, we may wish to filter alignments such that we only keep those
+with at least one sequence per ingroup genus. To do this, include a column
+called <code>"genus"</code> in <code>taxonomy_data</code>, and set <code>filter_col = "genus"</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mask_tips_by_taxonID_transcripts — mask_tips_by_taxonID_transcripts • baitfindR</title>
+<title>Mask tips in tree. — mask_tips_by_taxonID_transcripts • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,16 @@
 
 
 
-<meta property="og:title" content="mask_tips_by_taxonID_transcripts — mask_tips_by_taxonID_transcripts" />
+<meta property="og:title" content="Mask tips in tree. — mask_tips_by_taxonID_transcripts" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) mask_tips_by_taxonID_transcripts.py" />
+<meta property="og:description" content="Given a folder containing phylogenetic trees and their alignments, mask monophyletic
+(and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
+to represent clades consisting of a single taxon). Tree files are assumed to end in .tt
+(the output of trim_tips), and only tree files with this ending will be included.
+Alignment files are assumed to end in .aln-cln (the output of fasta_to_tree),
+and only alignment files with this ending will be included.
+The tip with the fewest ambiguous characters in the alignment will be kept. This
+function will overwrite any output files with the same name in tree_folder." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +86,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +104,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mask_tips_by_taxonID_transcripts</h1>
-    
+    <h1>Mask tips in tree.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>mask_tips_by_taxonID_transcripts.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) <code>mask_tips_by_taxonID_transcripts.py</code></p>
+    <p>Given a folder containing phylogenetic trees and their alignments, mask monophyletic
+(and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
+to represent clades consisting of a single taxon). Tree files are assumed to end in <code>.tt</code>
+(the output of <code>trim_tips</code>), and only tree files with this ending will be included.
+Alignment files are assumed to end in <code>.aln-cln</code> (the output of <code>fasta_to_tree</code>),
+and only alignment files with this ending will be included.
+The tip with the fewest ambiguous characters in the alignment will be kept. This
+function will overwrite any output files with the same name in <code>tree_folder</code>.</p>
     
     </div>
 
@@ -146,14 +165,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing phylogenetic trees and their alignments, mask monophyletic
-(and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
-to represent clades consisting of a single taxon). Tree files are assumed to end in <code>.tt</code>
-(the output of <code>trim_tips</code>), and only tree files with this ending will be included.
-Alignment files are assumed to end in <code>.aln-cln</code> (the output of <code>fasta_to_tree</code>),
-and only alignment files with this ending will be included.
-The tip with the fewest ambiguous characters in the alignment will be kept. This
-function will overwrite any output files with the same name in <code>tree_folder</code>.</p>
+    <p>Wrapper for Yang and Smith (2014) <code>mask_tips_by_taxonID_transcripts.py</code></p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

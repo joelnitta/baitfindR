@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>write_fasta_files_from_trees — write_fasta_files_from_trees • baitfindR</title>
+<title>Write fasta files from trees. — write_fasta_files_from_trees • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="write_fasta_files_from_trees — write_fasta_files_from_trees" />
+<meta property="og:title" content="Write fasta files from trees. — write_fasta_files_from_trees" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py" />
+<meta property="og:description" content="Given a folder containing phylogenetic trees and a single concatenated fasta file
+including all the sequences used to build the trees, output one fasta file per tree
+with the sequences in that tree. This function will overwrite any output files with
+the same name in outdir." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +100,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>write_fasta_files_from_trees</h1>
-    
+    <h1>Write fasta files from trees.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>write_fasta_files_from_trees.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py</p>
+    <p>Given a folder containing phylogenetic trees and a single concatenated fasta file
+including all the sequences used to build the trees, output one fasta file per tree
+with the sequences in that tree. This function will overwrite any output files with
+the same name in <code>outdir</code>.</p>
     
     </div>
 
@@ -150,10 +161,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing phylogenetic trees and a single concatenated fasta file
-including all the sequences used to build the trees, output one fasta file per tree
-with the sequences in that tree. This function will overwrite any output files with
-the same name in <code>outdir</code>.</p>
+    <p>Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

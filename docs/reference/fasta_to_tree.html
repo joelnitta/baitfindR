@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fasta_to_tree — fasta_to_tree • baitfindR</title>
+<title>Infer trees from fasta files. — fasta_to_tree • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,13 @@
 
 
 
-<meta property="og:title" content="fasta_to_tree — fasta_to_tree" />
+<meta property="og:title" content="Infer trees from fasta files. — fasta_to_tree" />
 
-<meta property="og:description" content="Wrapper for Yang and Smith (2014) fasta_to_tree.py" />
+<meta property="og:description" content="Given a folder containing unaligned sequences in fasta format (i.e., clusters),
+aligns each cluster with mafft (small clusters) or pasta (large clusters),
+excludes poorly aligned sites with phyutility, and infers a maximum-likelihood
+tree with RAxML (small clusters) or fasttree (large clusters). Requires all
+of these programs to be installed and included in the user's $PATH. Assumes clusters are named &quot;cluster1.fa&quot;, &quot;cluster2.fa&quot;, etc. Clusters with fewer than 1,000 sequences are considered &quot;small,&quot; and those with more are considered &quot;large.&quot;" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +83,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/joelnitta/baitfindR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -92,14 +101,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fasta_to_tree</h1>
-    
+    <h1>Infer trees from fasta files.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/yang_and_smith.R'><code>R/yang_and_smith.R</code></a></small>
     <div class="hidden name"><code>fasta_to_tree.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for Yang and Smith (2014) <code>fasta_to_tree.py</code></p>
+    <p>Given a folder containing unaligned sequences in fasta format (i.e., clusters),
+aligns each cluster with <code>mafft</code> (small clusters) or <code>pasta</code> (large clusters),
+excludes poorly aligned sites with <code>phyutility</code>, and infers a maximum-likelihood
+tree with <code>RAxML</code> (small clusters) or <code>fasttree</code> (large clusters). Requires all
+of these programs to be installed and included in the user's <code>$PATH</code>. Assumes clusters are named <code>"cluster1.fa"</code>, <code>"cluster2.fa"</code>, etc. Clusters with fewer than 1,000 sequences are considered "small," and those with more are considered "large."</p>
     
     </div>
 
@@ -150,11 +163,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Given a folder containing unaligned sequences in fasta format (i.e., clusters),
-aligns each cluster with <code>mafft</code> (small clusters) or <code>pasta</code> (large clusters),
-excludes poorly aligned sites with <code>phyutility</code>, and infers a maximum-likelihood
-tree with <code>RAxML</code> (small clusters) or <code>fasttree</code> (large clusters). Requires all
-of these programs to be installed and included in the user's <code>$PATH</code>. Assumes clusters are named <code>"cluster1.fa"</code>, <code>"cluster2.fa"</code>, etc. Clusters with fewer than 1,000 sequences are considered "small," and those with more are considered "large."</p>
+    <p>Wrapper for Yang and Smith (2014) <code>fasta_to_tree.py</code></p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
