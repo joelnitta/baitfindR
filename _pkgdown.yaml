@@ -7,45 +7,48 @@ reference:
 - title: BLAST
   desc: Functions relating to building and querying BLAST databases.
   contents:
-  - '`blast_n`'
-  - '`blast_p`'
-  - '`build_blast_db`'
+  - blast_n
+  - blast_p
+  - build_blast_db
 - title: Y&S workflow
   desc: Wrappers for functions used in the Y&S workflow.
   contents:
-  - '`blast_to_mcl`'
-  - '`cd_hit_est`'
-  - '`cut_long_internal_branches`'
-  - '`fasta_to_tree`'
-  - '`filter_1to1_orthologs`'
-  - '`fix_names_from_transdecoder`'
-  - '`mafft_wrapper`'
-  - '`mask_tips_by_taxonID_transcripts`'
-  - '`mcl`'
-  - '`phyutility_wrapper`'
-  - '`prune_paralogs_MI`'
-  - '`prune_paralogs_MO`'
-  - '`prune_paralogs_RT`'
-  - '`transdecoder_long_orfs`'
-  - '`transdecoder_predict`'
-  - '`trim_tips`'
-  - '`write_fasta_files_from_mcl`'
-  - '`write_fasta_files_from_trees`'
-  - '`write_ortholog_fasta_files`'
+  - blast_to_mcl
+  - cd_hit_est
+  - cut_long_internal_branches
+  - fasta_to_tree
+  - filter_1to1_orthologs
+  - fix_names_from_transdecoder
+  - mafft_wrapper
+  - mask_tips_by_taxonID_transcripts
+  - mcl
+  - phyutility_wrapper
+  - prune_paralogs_MI
+  - prune_paralogs_MO
+  - prune_paralogs_RT
+  - transdecoder_long_orfs
+  - transdecoder_predict
+  - trim_tips
+  - write_fasta_files_from_mcl
+  - write_fasta_files_from_trees
+  - write_ortholog_fasta_files
 - title: Bait filtering
   desc: Functions to help choose a final set of baits from the pool of candidate low copy orthologs produced by the Y&S workflow.
   contents:
-  - '`calculate_alignment_stats`'
-  - '`cat_files`'
-  - '`filter_fasta`'
+  - calculate_alignment_stats
+  - filter_fasta
 - title: Miscellaneous
   desc: ~
   contents:
-  - '`make_dir`'
-  - '`onekp_data`'
-  - '`set_ys_path`'
+  - cat_files
+  - make_dir
+  - set_ys_path
+- title: Example data
+  desc: ~
+  contents:
+  - onekp_data
 - title: Deprecated
   desc: Functions that aren't used anymore.
   contents:
-  - '`tcs`'
-  - '`tcs_loop`'
+  - tcs
+  - tcs_loop
