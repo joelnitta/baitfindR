@@ -2,9 +2,10 @@
 % Please edit documentation in R/calculate_alignment_stats.R
 \name{calculate_alignment_stats}
 \alias{calculate_alignment_stats}
-\title{calculate_alignment_stats}
+\title{Calculate summary statistics for an alignment.}
 \usage{
-calculate_alignment_stats(alignment, cutoff = 120, cutoff_any = FALSE)
+calculate_alignment_stats(alignment, cutoff = 120, cutoff_any = FALSE,
+  include_aln = FALSE)
 }
 \arguments{
 \item{alignment}{Input alignment; must be a matrix of class "DNAbin".}
@@ -16,6 +17,9 @@ flag this alignment if any/all exons are less than the cutoff length.}
 be flagged if any exons are shorter than the cutoff? The default, FALSE,
 means that the alignment will only be flagged if all exons are shorter
 than the cutoff value.}
+
+\item{include_aln}{Logical; Should the original alignment
+be included in the output list?}
 }
 \value{
 A list including the following summary statistics: \describe{
@@ -28,9 +32,14 @@ A list including the following summary statistics: \describe{
   \item{GC_content}{Total \%GC content}
   \item{pars_inf}{Fraction of sites that are parsimony informative}
   \item{total_exon_length}{Total exon length}
-  \item{less_than_cutoff}{Logical flag indicating whether alignment passed the minimum exon length cutoff or not}
+  \item{less_than_cutoff}{Logical flag indicating whether alignment passed
+  the minimum exon length cutoff or not}
+  \item{alignment}{The original input alignment}
 }
 }
 \description{
-Calculate various summary statistics for an alignment.
+Including the original alignment in the output with \code{include_aln}
+can be useful for mapping \code{calculate_alignment_stats} over a list
+of alignments with \code{\link[purrr]{map_df}} to sort and filter
+alignments by their summary statistics.
 }

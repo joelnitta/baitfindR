@@ -2,7 +2,7 @@
 % Please edit documentation in R/blast.R
 \name{blast_n}
 \alias{blast_n}
-\title{Run blastn query}
+\title{Run a blastn query.}
 \usage{
 blast_n(query, database, out_file,
   outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'",

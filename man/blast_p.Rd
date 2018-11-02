@@ -2,7 +2,7 @@
 % Please edit documentation in R/blast.R
 \name{blast_p}
 \alias{blast_p}
-\title{Run blastp query}
+\title{Run a blastp query.}
 \usage{
 blast_p(query, database, out_file, outfmt = "6", other_args = NULL,
   ...)

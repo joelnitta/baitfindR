@@ -2,7 +2,7 @@
 % Please edit documentation in R/blast.R
 \name{build_blast_db}
 \alias{build_blast_db}
-\title{Build a BLAST database}
+\title{Build a BLAST database.}
 \usage{
 build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL,
   ...)

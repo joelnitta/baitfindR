@@ -1,6 +1,9 @@
-#' calculate_alignment_stats
+#' Calculate summary statistics for an alignment.
 #'
-#' Calculate various summary statistics for an alignment.
+#' Including the original alignment in the output with \code{include_aln}
+#' can be useful for mapping \code{calculate_alignment_stats} over a list
+#' of alignments with \code{\link[purrr]{map_df}} to sort and filter
+#' alignments by their summary statistics.
 #'
 #' @param alignment Input alignment; must be a matrix of class "DNAbin".
 #' @param cutoff Numeric value indicating minimum exon length (optional);
@@ -9,6 +12,8 @@
 #' be flagged if any exons are shorter than the cutoff? The default, FALSE,
 #' means that the alignment will only be flagged if all exons are shorter
 #' than the cutoff value.
+#' @param include_aln Logical; Should the original alignment
+#' be included in the output list?
 #' @return A list including the following summary statistics: \describe{
 #'   \item{intron_lengths}{List including vector of intron lengths}
 #'   \item{exon_lengths}{List including vector of exon lengths}
@@ -19,10 +24,12 @@
 #'   \item{GC_content}{Total \%GC content}
 #'   \item{pars_inf}{Fraction of sites that are parsimony informative}
 #'   \item{total_exon_length}{Total exon length}
-#'   \item{less_than_cutoff}{Logical flag indicating whether alignment passed the minimum exon length cutoff or not}
+#'   \item{less_than_cutoff}{Logical flag indicating whether alignment passed
+#'   the minimum exon length cutoff or not}
+#'   \item{alignment}{The original input alignment}
 #' }
 #' @export
-calculate_alignment_stats <- function (alignment, cutoff = 120, cutoff_any = FALSE) {
+calculate_alignment_stats <- function (alignment, cutoff = 120, cutoff_any = FALSE, include_aln = FALSE) {
 
   ### Error-checking
   assertthat::assert_that(any("DNAbin" %in% class(alignment)),
@@ -92,7 +99,7 @@ calculate_alignment_stats <- function (alignment, cutoff = 120, cutoff_any = FAL
     }
   }
 
-  list(
+  results <- list(
     intron_lengths = list(intron_lengths),
     exon_lengths = list(exon_lengths),
     num_introns = num_introns,
@@ -104,5 +111,11 @@ calculate_alignment_stats <- function (alignment, cutoff = 120, cutoff_any = FAL
     total_exon_length = total_exon_length,
     less_than_cutoff = less_than_cutoff
   )
+
+  if (isTRUE(include_aln)) {
+    results <- c(results, alignment = alignment)
+  }
+
+  return(results)
 
 }
