@@ -2,29 +2,37 @@
 % Please edit documentation in R/blast.R
 \name{blast_p}
 \alias{blast_p}
-\title{blast_p}
+\title{Run blastp query}
 \usage{
 blast_p(query, database, out_file, outfmt = "6", other_args = NULL,
   ...)
 }
 \arguments{
-\item{query}{Character vector of length one; the path to the fasta file to use as the query sequence(s).}
+\item{query}{Character vector of length one; the path to the fasta file
+to use as the query sequence(s).}
 
-\item{database}{Character vector of length one; the name of the blast database.}
+\item{database}{Character vector of length one; the name of the blast
+database.}
 
-\item{out_file}{Character vector of length one; the name to use for the results file.}
+\item{out_file}{Character vector of length one; the name to use for the
+results file.}
 
-\item{outfmt}{Character vector of length one; value to pass to \code{blastp} \code{outfmt} argument. Default = "6".}
+\item{outfmt}{Character vector of length one; value to pass to
+\code{blastp} \code{outfmt} argument. Default = "6".}
 
-\item{other_args}{Character vector; other arguments to pass on to \code{blastp}. For a list of options, run \code{blastp -help}.}
+\item{other_args}{Character vector; other arguments to pass on to
+\code{blastp}. For a list of options, run \code{blastp -help}.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function,
+but meant to be used by \code{\link[drake]{drake_plan}} for tracking
+during workflows.}
 }
 \value{
-A tab-separated text file with the results of the blastp search, named with the value of \code{out_file}.
+A tab-separated text file with the results of the blastp
+search, named with the value of \code{out_file}.
 }
 \description{
-Wrapper to call blastp
+This is a wrapper for blastp.
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}

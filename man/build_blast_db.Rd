@@ -2,30 +2,36 @@
 % Please edit documentation in R/blast.R
 \name{build_blast_db}
 \alias{build_blast_db}
-\title{build_blast_db}
+\title{Build a BLAST database}
 \usage{
 build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL,
   ...)
 }
 \arguments{
-\item{in_seqs}{Character vector of length one; the path to the fasta file containing the sequences to be included in the database.}
+\item{in_seqs}{Character vector of length one; the path to the fasta
+file containing the sequences to be included in the database.}
 
-\item{out_name}{Character vector of length one; name of BLAST database to be created.}
+\item{out_name}{Character vector of length one; name of BLAST database
+to be created.}
 
-\item{db_type}{Character vector of length one; "nucl" for DNA or "prot" for amino acids (proteins).}
+\item{db_type}{Character vector of length one; "nucl" for DNA or "prot"
+for amino acids (proteins).}
 
-\item{other_args}{Character vector; other arguments to pass on to \code{makeblastdb}. For a list of options, run \code{makeblastdb -help}.}
+\item{other_args}{Character vector; other arguments to pass on to
+\code{makeblastdb}. For a list of options, run \code{makeblastdb -help}.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but
+meant to be used by \code{\link[drake]{drake_plan}} for tracking
+during workflows.}
 }
 \value{
-A series of files starting with \code{out_name} and ending in .phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog, .nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in the directory specified by \code{wd}.
+A series of files starting with \code{out_name} and ending in
+.phr, .pin, .pog, .psd, .psi, psq (for proteins) or .nhr, .nin, .nog,
+.nsd, .nsi, and .nsq (for DNA) that constitute the BLAST database in
+the working directory.
 }
 \description{
-Wrapper to call makeblastdb
-}
-\details{
-Takes a list of input sequences and makes them into a BLAST database. Assumes that all BLAST commands are in the user's \code{$PATH}.
+This is a wrapper for makeblastdb.
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
