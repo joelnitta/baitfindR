@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{filter_1to1_orthologs}
 \alias{filter_1to1_orthologs}
-\title{filter_1to1_orthologs}
+\title{Identify orthologs using the "one-to-one" method.}
 \usage{
 
   filter_1to1_orthologs(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,13 +30,13 @@
 For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs with the file ending \code{.1to1ortho.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py
-}
-\details{
 Given a folder containing homolog trees, filter the trees to only those
 containing one-to-one orthologs (i.e., no duplications within a sample).
 This function will overwrite any output files with the same name in
 \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py
 }
 \examples{
 \dontrun{filter_1to1_orthologs(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}

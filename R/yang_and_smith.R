@@ -1,12 +1,12 @@
-#' fasta_to_tree
-#'
-#' Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
+#' Infer trees from fasta files.
 #'
 #' Given a folder containing unaligned sequences in fasta format (i.e., clusters),
 #' aligns each cluster with \code{mafft} (small clusters) or \code{pasta} (large clusters),
 #' excludes poorly aligned sites with \code{phyutility}, and infers a maximum-likelihood
 #' tree with \code{RAxML} (small clusters) or \code{fasttree} (large clusters). Requires all
 #' of these programs to be installed and included in the user's \code{$PATH}. Assumes clusters are named \code{"cluster1.fa"}, \code{"cluster2.fa"}, etc. Clusters with fewer than 1,000 sequences are considered "small," and those with more are considered "large."
+#'
+#' Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param seq_folder Character vector of length one; the path to the folder containing the fasta files.
@@ -63,13 +63,13 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   }
 }
 
-#' write_fasta_files_from_mcl
-#'
-#' Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
+#' Write fasta files from MCL results.
 #'
 #' Given the output from the mcl clustering algorthim and a concatenated fasta file
 #' including all sequences used for clustering, outputs one fasta file per cluster
 #' including the sequences in that cluster.
+#'
+#' Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param all_fasta Character vector of length one; the path to the fasta file including all query sequences concatenated together, i.e., the fasta file used to create the "all-by-all" blast database.
@@ -121,11 +121,11 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   }
 }
 
-#' blast_to_mcl
+#' Prepare BLAST results for MCL.
 #'
-#'Wrapper for Yang and Smith (2014) blast_to_mcl.py
+#' Converts the output of an all-by-all blast query into a format that can be parsed by mcl to find clusters.
 #'
-#'Converts the output of an all-by-all blast query into a format that can be parsed by mcl to find clusters.
+#' Wrapper for Yang and Smith (2014) blast_to_mcl.py
 #'
 #' @param path_to_ys Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param blast_results Character vector of length one; the complete path to the tab-separated text file containing the results from an all-by-all blast search. If blast searches were run separately (i.e., one for each sample), the results should be concatenated into a single file. For the blast search, the output format should specified as: -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'
@@ -158,9 +158,7 @@ blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to
   }
 }
 
-#' fix_names_from_transdecoder
-#'
-#' Shortens names in fasta headers.
+#' Shorten names in fasta headers.
 #'
 #' Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time.
 #'
@@ -212,9 +210,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 
 }
 
-#' trim_tips
-#'
-#' Wrapper for Yang and Smith (2014) \code{trim_tips.py}
+#' Trim tips.
 #'
 #' Given a folder containing phylogenetic trees, exclude (i.e., "trim"),
 #' tips on unusually long branches. Tips on a branch 10 times longer
@@ -222,6 +218,8 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' that are longer than \code{absolute_cutoff} will be trimmed. This
 #' function will overwrite any output files with the same name in
 #' \code{tree_folder}.
+#'
+#' Wrapper for Yang and Smith (2014) \code{trim_tips.py}
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to trim.
@@ -273,9 +271,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   }
 }
 
-#' mask_tips_by_taxonID_transcripts
-#'
-#' Wrapper for Yang and Smith (2014) \code{mask_tips_by_taxonID_transcripts.py}
+#' Mask tips in tree.
 #'
 #' Given a folder containing phylogenetic trees and their alignments, mask monophyletic
 #' (and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
@@ -285,6 +281,8 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' and only alignment files with this ending will be included.
 #' The tip with the fewest ambiguous characters in the alignment will be kept. This
 #' function will overwrite any output files with the same name in \code{tree_folder}.
+#'
+#' Wrapper for Yang and Smith (2014) \code{mask_tips_by_taxonID_transcripts.py}
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to mask.
@@ -337,14 +335,14 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   }
 }
 
-#' cut_long_internal_branches
-#'
-#' Wrapper for Yang and Smith (2014) \code{cut_long_internal_branches.py}
+#' Cut long internal branches in tree.
 #'
 #' Given a folder containing phylogenetic trees, split the trees into multiple subtrees
 #' for nodes that bifurcate deeper than \code{internal_branch_length_cutoff}.
 #' \code{tree_folder} and \code{outdir} should be different to avoid writing over input trees.
 #' This function will overwrite any output files with the same name in \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) \code{cut_long_internal_branches.py}
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to cut.
@@ -403,14 +401,14 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
   }
 }
 
-#' write_fasta_files_from_trees
-#'
-#' Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py
+#' Write fasta files from trees.
 #'
 #' Given a folder containing phylogenetic trees and a single concatenated fasta file
 #' including all the sequences used to build the trees, output one fasta file per tree
 #' with the sequences in that tree. This function will overwrite any output files with
 #' the same name in \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param all_fasta Character vector of length one; the path to the fasta file including all the sequences that were originally used to build the trees.
@@ -463,14 +461,14 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   }
 }
 
-#' filter_1to1_orthologs
-#'
-#' Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py
+#' Identify orthologs using the "one-to-one" method.
 #'
 #' Given a folder containing homolog trees, filter the trees to only those
 #' containing one-to-one orthologs (i.e., no duplications within a sample).
 #' This function will overwrite any output files with the same name in
 #' \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) filter_1to1_orthologs.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for filtering.
@@ -523,9 +521,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   }
 }
 
-#' prune_paralogs_MI
-#'
-#' Wrapper for Yang and Smith (2014) prune_paralogs_MI.py
+#' Identify orthologs using the "MI" method.
 #'
 #' Given a folder containing homolog trees, prune paralogs from the trees
 #' using the maximum inclusion (MI) method. This method iteratively
@@ -535,6 +531,8 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
 #' will also be retained. This function will overwrite any output files with
 #' the same name in \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_MI.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
@@ -589,9 +587,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 }
 
-#' prune_paralogs_MO
-#'
-#' Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
+#' Identify orthologs using the "MO" method.
 #'
 #' Given a folder containing homolog trees, prune paralogs from the trees
 #' using the monophyletic outgroups (MO) method. For trees that have non-repeating, monophyletic
@@ -599,6 +595,8 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' that consist solely of one-to-one orthologs (i.e., no duplications within a sample/taxon)
 #' will also be retained. This function will overwrite any output files with the same
 #' name in \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
@@ -695,15 +693,15 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 }
 
-#' prune_paralogs_RT
-#'
-#' Wrapper for Yang and Smith (2014) prune_paralogs_RT.py
+#' Identify orthologs using the "RT" method.
 #'
 #' Given a folder containing homolog trees, prune paralogs from the trees
 #' using the rooted ingroups (RT) method. For trees that have outgroups, this
 #' method iteratively extracts subtrees with the highest number of ingroup taxa/samples.
 #' This function will overwrite any output files with the same
 #' name in \code{outdir}.
+#'
+#' Wrapper for Yang and Smith (2014) prune_paralogs_RT.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param tree_folder Character vector of length one; the path to the folder containing the trees to be used for pruning.
@@ -773,12 +771,12 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 }
 
-#' write_ortholog_fasta_files
-#'
-#' Wrapper for Yang and Smith (2014) write_ortholog_fasta_files.py
+#' Write fasta files from ortholog trees.
 #'
 #' Given a folder containing ortholog trees, write out the fasta files
 #' that correspond to the sequences in the trees.
+#'
+#' Wrapper for Yang and Smith (2014) write_ortholog_fasta_files.py
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param all_fasta Character vector of length one; the path to the fasta file including all the sequences that were originally used to build the trees.
@@ -831,11 +829,14 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
   }
 }
 
-#' mafft_wrapper
+#' Align all fasta files in a directory.
+#'
+#' Given a directory containing unaligned fasta files, align all fasta files in
+#' the directory. If there are > 1000 sequences in the directory, use the
+#' mafft \code{--auto} algorithm. If less, use the \code{--genafpair}
+#' algorithm.
 #'
 #' Wrapper for Yang and Smith (2014) mafft_wrapper.py
-#'
-#' Given a directory containing unaligned fasta files, align all fasta files in the directory. If there are > 1000 sequences in the directory, use the mafft \code{--auto} algorithm. If less, use the \code{--genafpair} algorithm.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param fasta_folder Character vector of length one; the path to the folder containing the fasta files to be aligned.
@@ -887,11 +888,12 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   }
 }
 
-#' phyutility_wrapper
+#' Clean all alignments in a directory.
+#'
+#' Given a directory containing aligned fasta files, clean the alignments
+#' by removing columns below the specified occupancy cutoff.
 #'
 #' Wrapper for Yang and Smith (2014) phyutility_wrapper.py
-#'
-#' Given a directory containing aligned fasta files, clean the alignments by removing columns below the specified occupancy cutoff.
 #'
 #' @param path_to_ys Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param fasta_folder Character vector of length one; the path to the folder containing the alignments (fasta files) to be cleaned. Alignment files must end in \code{.aln}.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{cut_long_internal_branches}
 \alias{cut_long_internal_branches}
-\title{cut_long_internal_branches}
+\title{Cut long internal branches in tree.}
 \usage{
 
   cut_long_internal_branches(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -32,13 +32,13 @@
 For each input tree with a file ending in \code{tree_file_ending} in \code{tree_folder}, one or more subtrees with a file ending in \code{.subtree} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all subtree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) \code{cut_long_internal_branches.py}
-}
-\details{
 Given a folder containing phylogenetic trees, split the trees into multiple subtrees
 for nodes that bifurcate deeper than \code{internal_branch_length_cutoff}.
 \code{tree_folder} and \code{outdir} should be different to avoid writing over input trees.
 This function will overwrite any output files with the same name in \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) \code{cut_long_internal_branches.py}
 }
 \examples{
 \dontrun{cut_long_internal_branches(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".mm", internal_branch_length_cutoff = 0.3, outdir = "some/other/folder/")}

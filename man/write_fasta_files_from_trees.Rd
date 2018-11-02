@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{write_fasta_files_from_trees}
 \alias{write_fasta_files_from_trees}
-\title{write_fasta_files_from_trees}
+\title{Write fasta files from trees.}
 \usage{
 
   write_fasta_files_from_trees(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,13 +30,13 @@
 One fasta file per tree file ending in \code{tree_file_ending} in \code{tree_folder} will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all output fasta files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py
-}
-\details{
 Given a folder containing phylogenetic trees and a single concatenated fasta file
 including all the sequences used to build the trees, output one fasta file per tree
 with the sequences in that tree. This function will overwrite any output files with
 the same name in \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) write_fasta_files_from_trees.py
 }
 \examples{
 \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}

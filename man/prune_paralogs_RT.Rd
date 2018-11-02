@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{prune_paralogs_RT}
 \alias{prune_paralogs_RT}
-\title{prune_paralogs_RT}
+\title{Identify orthologs using the "RT" method.}
 \usage{
 
   prune_paralogs_RT(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -40,14 +40,14 @@ For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, the 
 If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) prune_paralogs_RT.py
-}
-\details{
 Given a folder containing homolog trees, prune paralogs from the trees
 using the rooted ingroups (RT) method. For trees that have outgroups, this
 method iteratively extracts subtrees with the highest number of ingroup taxa/samples.
 This function will overwrite any output files with the same
 name in \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) prune_paralogs_RT.py
 }
 \examples{
 \dontrun{prune_paralogs_RT(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}

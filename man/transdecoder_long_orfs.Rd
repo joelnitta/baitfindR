@@ -2,30 +2,37 @@
 % Please edit documentation in R/transdecoder.R
 \name{transdecoder_long_orfs}
 \alias{transdecoder_long_orfs}
-\title{transdecoder_long_orfs}
+\title{Find long open reading frames.}
 \usage{
 transdecoder_long_orfs(transcriptome_file, wd = here::here(),
   other_args = NULL, ...)
 }
 \arguments{
-\item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
+\item{transcriptome_file}{Character vector of length one; the path to the
+fasta file containing transcript sequences (i.e., the transcriptome).}
 
-\item{wd}{Character vector of length one; the directory where the command will be run, and the output folder created.}
+\item{wd}{Character vector of length one; the directory where the command
+will be run, and the output folder created.}
 
-\item{other_args}{Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.}
+\item{other_args}{Character vector; other arguments to pass to TransDecoder.
+Each should be an element of the vector.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to
+be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
-Within the R environment, a list with components specified in \code{\link[processx]{run}}.
+Within the R environment, a list with components specified in
+\code{\link[processx]{run}}.
 
-Externally, an output folder in the working directory containing base frequencies and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named \code{<transcriptome>.transdecoder_dir}, where \code{<transcriptome>} is the value of that argument.
+Externally, an output folder in the working directory containing base frequencies
+and .cds, .gff3, and .pep files for the recovered ORFs. The folder will be named
+\code{<transcriptome>.transdecoder_dir}, where \code{<transcriptome>} is the value
+of that argument.
 }
 \description{
-Wrapper to call TransDecoder.LongOrfs
-}
-\details{
-Extracts long open reading frames (ORFs) from a fasta file containing transcript sequences (i.e., the transcriptome).
+Extracts long open reading frames (ORFs) from a fasta file containing transcript
+sequences (i.e., the transcriptome). This is a wrapper that calls
+\code{TransDecoder.LongOrfs}.
 }
 \examples{
 \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}

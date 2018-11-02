@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{fix_names_from_transdecoder}
 \alias{fix_names_from_transdecoder}
-\title{fix_names_from_transdecoder}
+\title{Shorten names in fasta headers.}
 \usage{
 fix_names_from_transdecoder(transdecoder_output, mol_type = "dna")
 }
@@ -15,9 +15,6 @@ fix_names_from_transdecoder(transdecoder_output, mol_type = "dna")
 Object of class \code{DNAbin} or \code{AAbin} with names shortened to \code{sample_code`"@"`gene}
 }
 \description{
-Shortens names in fasta headers.
-}
-\details{
 Does the same thing as Yang and Smith (2014) fix_names_from_transdecoder.py, but works on one fasta file at at time.
 }
 \examples{

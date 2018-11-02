@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{prune_paralogs_MO}
 \alias{prune_paralogs_MO}
-\title{prune_paralogs_MO}
+\title{Identify orthologs using the "MO" method.}
 \usage{
 
   prune_paralogs_MO(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -34,15 +34,15 @@
 For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir} with the file ending \code{.ortho.tre}; re-rooted trees will also be written with the file ending \code{.reroot}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
-}
-\details{
 Given a folder containing homolog trees, prune paralogs from the trees
 using the monophyletic outgroups (MO) method. For trees that have non-repeating, monophyletic
 outgroups, this method extracts the largest subtree containing the outgroup. Trees
 that consist solely of one-to-one orthologs (i.e., no duplications within a sample/taxon)
 will also be retained. This function will overwrite any output files with the same
 name in \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) prune_paralogs_MO.py
 }
 \examples{
 \dontrun{prune_paralogs_MO(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}

@@ -2,31 +2,36 @@
 % Please edit documentation in R/mcl.R
 \name{mcl}
 \alias{mcl}
-\title{mcl}
+\title{Run mcl.}
 \usage{
 mcl(mcl_input, mcl_output, i_value, e_value, other_args = NULL, ...)
 }
 \arguments{
-\item{mcl_input}{Character vector of length one; the path to the input file for mcl clustering.}
+\item{mcl_input}{Character vector of length one; the path to the input file
+for mcl clustering.}
 
-\item{mcl_output}{Character vector of length one; the path to the output file produced by the mcl algorithm.}
+\item{mcl_output}{Character vector of length one; the path to the output
+file produced by the mcl algorithm.}
 
 \item{i_value}{Numeric or character vector of length one; the inflation value.}
 
-\item{e_value}{Numeric or character vector of length one; the minimal -log transformed evalue to be considered by the algorithm.}
+\item{e_value}{Numeric or character vector of length one; the minimal -log
+transformed evalue to be considered by the algorithm.}
 
-\item{other_args}{Character vector; other arguments to pass to mcl. Each should be an element of the vector. For example, to pass "-abc" to specify the input file format and "--te" to specify number of threads, use \code{c("--abc", "-te", "2")}.}
+\item{other_args}{Character vector; other arguments to pass to mcl. Each should
+be an element of the vector. For example, to pass "-abc" to specify the input
+file format and "--te" to specify number of threads, use \code{c("--abc", "-te", "2")}.}
 
-\item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Other arguments. Not used by this function, but meant to be used
+by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
-A plain text file of tab-separated values, where each value on a line belongs to the same cluster.
+A plain text file of tab-separated values, where each value on a line
+belongs to the same cluster.
 }
 \description{
-Wrapper to call mcl
-}
-\details{
-Calls the Markov Cluster Algorithm (mcl), a clustering algorithm for graphs. Here, it is meant to be used on genetic distances from BLAST.
+This is a wrapper for the Markov Cluster Algorithm (mcl), a clustering algorithm
+for graphs. Here, it is meant to be used on genetic distances from BLAST.
 }
 \examples{
 \dontrun{mcl(mcl_input = "some/folder/distance.file", mcl_output = "some/folder/mcl_output.txt", i_value = 1.4, evalue = 5)}

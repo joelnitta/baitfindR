@@ -2,35 +2,45 @@
 % Please edit documentation in R/transdecoder.R
 \name{transdecoder_predict}
 \alias{transdecoder_predict}
-\title{transdecoder_predict}
+\title{Predict coding regions.}
 \usage{
 transdecoder_predict(transcriptome_file, blast_result = NULL,
   wd = here::here(), other_args = NULL, ...)
 }
 \arguments{
-\item{transcriptome_file}{Character vector of length one; the path to the fasta file containing transcript sequences (i.e., the transcriptome).}
+\item{transcriptome_file}{Character vector of length one; the path to the fasta
+file containing transcript sequences (i.e., the transcriptome).}
 
-\item{blast_result}{Character vector of length one; the path to the tab-separated text file containing the results from a blastp search of the transcriptome against a reference blast protein database. For the blast search, the output format should specified as: -outfmt 6.}
+\item{blast_result}{Character vector of length one; the path to the tab-separated
+text file containing the results from a blastp search of the transcriptome against
+a reference blast protein database. For the blast search, the output format should
+specified as: -outfmt 6.}
 
-\item{wd}{Character vector of length one; the directory where the command will be run. Must contain .transdecoder_dir folder with results from \code{\link{transdecoder_long_orfs}}.}
+\item{wd}{Character vector of length one; the directory where the command will be
+run. Must contain .transdecoder_dir folder with results from
+\code{\link{transdecoder_long_orfs}}.}
 
-\item{other_args}{Character vector; other arguments to pass to TransDecoder. Each should be an element of the vector.}
+\item{other_args}{Character vector; other arguments to pass to TransDecoder. Each
+should be an element of the vector.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant to be
+used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 Within the R environment, a list with components specified in \code{\link[processx]{run}}.
 
-Externally, four output files (.cds, .pep, .bed, and .gff3) for each input transcriptome file will be written to the working directory.
+Externally, four output files (.cds, .pep, .bed, and .gff3) for each input
+transcriptome file will be written to the working directory.
 }
 \description{
-Wrapper to call transdecoder.predict
-}
-\details{
-This has to be run in the same directory containing the .transdecoder_dir output folders from \code{\link{transdecoder_long_orfs}}. Optionally include the results of a blastp search to make sure that peptides with a blastp hit against the reference database are retained in the TransDecoder output.
+This is a wrapper for transdecoder.predict. It must be run in the same directory
+containing the .transdecoder_dir output folders from
+\code{\link{transdecoder_long_orfs}}. Optionally include the results of a
+blastp search to make sure that peptides with a blastp hit against the
+reference database are retained in the TransDecoder output.
 }
 \examples{
-\dontrun{transdecoder_predict_with_blast("some/transcriptome_file.fa", "some/blast_result.txt")}
+\dontrun{transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")}
 
 }
 \references{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{blast_to_mcl}
 \alias{blast_to_mcl}
-\title{blast_to_mcl}
+\title{Prepare BLAST results for MCL.}
 \usage{
 
   blast_to_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -21,10 +21,10 @@
 A tab-separated text file with three columns: the first two are the matching query and target from the all-by-all blast, and the third is the negative log e-value for that match. This file is named \code{<blast_results>.hit-frac<hit_fraction_cutoff>.minusLogEvalue}, where \code{<blast_results>} and \code{<hit_fraction_cutoff>} correspond to the values of those arguments. If possible contaminants (i.e., identical sequences between different samples) were found, these are written to \code{<blast_results>.ident.hit-frac<hit_fraction_cutoff>}. Output files will be written to the same folder containing \code{blast_results}.
 }
 \description{
-Wrapper for Yang and Smith (2014) blast_to_mcl.py
+Converts the output of an all-by-all blast query into a format that can be parsed by mcl to find clusters.
 }
 \details{
-Converts the output of an all-by-all blast query into a format that can be parsed by mcl to find clusters.
+Wrapper for Yang and Smith (2014) blast_to_mcl.py
 }
 \examples{
 \dontrun{blast_to_mcl(blast_results = "some/folder/blastresults.tab", hit_fraction_cutoff = 0.5)}

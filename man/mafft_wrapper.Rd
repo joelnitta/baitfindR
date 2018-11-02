@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{mafft_wrapper}
 \alias{mafft_wrapper}
-\title{mafft_wrapper}
+\title{Align all fasta files in a directory.}
 \usage{
 
   mafft_wrapper(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,10 +30,13 @@
 Aligned fasta files will be written to \code{fasta_folder} with the file ending \code{.aln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) mafft_wrapper.py
+Given a directory containing unaligned fasta files, align all fasta files in
+the directory. If there are > 1000 sequences in the directory, use the
+mafft \code{--auto} algorithm. If less, use the \code{--genafpair}
+algorithm.
 }
 \details{
-Given a directory containing unaligned fasta files, align all fasta files in the directory. If there are > 1000 sequences in the directory, use the mafft \code{--auto} algorithm. If less, use the \code{--genafpair} algorithm.
+Wrapper for Yang and Smith (2014) mafft_wrapper.py
 }
 \examples{
 \dontrun{mafft_wrapper(fasta_folder = "some/folder/with/fasta/files", number_cores = 2, seq_type = "dna")}

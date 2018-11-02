@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{phyutility_wrapper}
 \alias{phyutility_wrapper}
-\title{phyutility_wrapper}
+\title{Clean all alignments in a directory.}
 \usage{
 
   phyutility_wrapper(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -28,10 +28,11 @@
 Cleaned alignments will be written to \code{fasta_folder} with the file ending \code{.aln-cln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln-cln} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) phyutility_wrapper.py
+Given a directory containing aligned fasta files, clean the alignments
+by removing columns below the specified occupancy cutoff.
 }
 \details{
-Given a directory containing aligned fasta files, clean the alignments by removing columns below the specified occupancy cutoff.
+Wrapper for Yang and Smith (2014) phyutility_wrapper.py
 }
 \examples{
 \dontrun{phyutility_wrapper(fasta_folder = "some/folder/with/alignments/", min_col_occup = 0.3, seq_type = "dna")}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{write_fasta_files_from_mcl}
 \alias{write_fasta_files_from_mcl}
-\title{write_fasta_files_from_mcl}
+\title{Write fasta files from MCL results.}
 \usage{
 
   write_fasta_files_from_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,12 +30,12 @@
 One fasta file per cluster (\code{cluster1.fa}, \code{cluster2.fa}, etc.) will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
-}
-\details{
 Given the output from the mcl clustering algorthim and a concatenated fasta file
 including all sequences used for clustering, outputs one fasta file per cluster
 including the sequences in that cluster.
+}
+\details{
+Wrapper for Yang and Smith (2014) write_fasta_files_from_mcl.py
 }
 \examples{
 \dontrun{write_fasta_files_from_mcl(all_fasta = "some/folder/all.fasta", mcl_outfile = "some/folder/hit-frac0.4_I1.4_e5", minimal_taxa = 5, outdir = "some/folder")}

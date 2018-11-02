@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{mask_tips_by_taxonID_transcripts}
 \alias{mask_tips_by_taxonID_transcripts}
-\title{mask_tips_by_taxonID_transcripts}
+\title{Mask tips in tree.}
 \usage{
 
   mask_tips_by_taxonID_transcripts(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -28,9 +28,6 @@
 For each input tree with a file ending in \code{.tt} in \code{tree_folder}, a trimmed tree with a file ending in \code{.mm} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all masked tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) \code{mask_tips_by_taxonID_transcripts.py}
-}
-\details{
 Given a folder containing phylogenetic trees and their alignments, mask monophyletic
 (and optionally, paraphyletic) tips belonging to the same taxon (i.e., keep only a single tip
 to represent clades consisting of a single taxon). Tree files are assumed to end in \code{.tt}
@@ -39,6 +36,9 @@ Alignment files are assumed to end in \code{.aln-cln} (the output of \code{fasta
 and only alignment files with this ending will be included.
 The tip with the fewest ambiguous characters in the alignment will be kept. This
 function will overwrite any output files with the same name in \code{tree_folder}.
+}
+\details{
+Wrapper for Yang and Smith (2014) \code{mask_tips_by_taxonID_transcripts.py}
 }
 \examples{
 \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}

@@ -1,25 +1,48 @@
-#' filter_fasta
+#' Filter fasta files by ingroup/outgroup status and taxonomy.
 #'
-#' Filter a directory of fasta files by ingroup/outgroup status and taxonomic rank.
+#' Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta
+#' file contains more than one sequence) and a dataframe including taxonomic data and
+#' ingroup/outgroup status, \code{filter_fasta()} outputs a list of those fasta files
+#' that pass one of two filters, or a combination of both. One filter excludes fasta
+#' files that do not contain greater than the minimum number of ingroup sequences. The
+#' other filter excludes fasta files that do not contain at least one sequence per
+#' ingroup taxon at the specified taxonomic rank.
 #'
-#' Given a folder containing DNA sequences in multi-fasta format (i.e., each fasta file contains more than one sequence) and a dataframe including taxonomic data and ingroup/outgroup status, \code{filter_fasta()} outputs a list of those fasta files that pass one of two filters, or a combination of both. One filter excludes fasta files that do not contain greater than the minimum number of ingroup sequences. The other filter excludes fasta files that do not contain at least one sequence per ingroup taxon at the specified taxonomic rank.
+#' For example, if the dataset includes multiple ingroup genera each with multiple
+#' samples per genus, we may wish to filter alignments such that we only keep those
+#' with at least one sequence per ingroup genus. To do this, include a column
+#' called \code{"genus"} in \code{taxonomy_data}, and set \code{filter_col = "genus"}.
 #'
-#' For example, if the dataset includes multiple ingroup genera each with multiple samples per genus, we may wish to filter alignments such that we only keep those with at least one sequence per ingroup genus. To do this, include a column called \code{"genus"} in \code{taxonomy_data}, and set \code{filter_col = "genus"}.
-#'
-#' @param seq_folder Character vector of length one; the path to the folder containing the fasta files (ending in \code{.fa} or \code{.fasta}) to filter.
-#' @param taxonomy_data Dataframe matching sequences to ingroup/outgroup status and (optionally) higher-level taxonomic ranks for filtering. The columns must follow this format:
+#' @param seq_folder Character vector of length one; the path to the folder containing
+#' the fasta files (ending in \code{.fa} or \code{.fasta}) to filter.
+#' @param taxonomy_data Dataframe matching sequences to ingroup/outgroup status and
+#' (optionally) higher-level taxonomic ranks for filtering. The columns must follow
+#' this format:
 #' \describe{
-#'   \item{sample}{Unique identifier for the source of the sequence, such as transcriptome IDs or species names. All sequences names must include such an identifier.}
-#'   \item{group}{Either "in" or "out" (case-insensitive) depending if that sample is in the ingroup or outgroup.}
-#'   \item{(user-selected taxonomic rank)}{The user can provide any taxonomic rank they wish to filter by. For example, alignments can be filtered by having at least one representative of each ingroup genus (family, order, etc.) in the dataset.}
+#'   \item{sample}{Unique identifier for the source of the sequence, such as
+#'   transcriptome IDs or species names. All sequences names must include such
+#'   an identifier.}
+#'   \item{group}{Either "in" or "out" (case-insensitive) depending if that sample
+#'   is in the ingroup or outgroup.}
+#'   \item{(user-selected taxonomic rank)}{The user can provide any taxonomic rank
+#'   they wish to filter by. For example, alignments can be filtered by having at
+#'   least one representative of each ingroup genus (family, order, etc.) in the
+#'   dataset.}
 #' }
-#' @param sample_col Optional character; user-provided column name for \code{sample} in \code{taxonomy_data}.
-#' @param group_col Optional character; user-provided column name for \code{group} \code{taxonomy_data}.
-#' @param filter_col Optional character; the name of the column to be used for filtering by taxonomic rank in \code{taxonomy_data}.
+#' @param sample_col Optional character; user-provided column name for \code{sample}
+#' in \code{taxonomy_data}.
+#' @param group_col Optional character; user-provided column name for \code{group}
+#' \code{taxonomy_data}.
+#' @param filter_col Optional character; the name of the column to be used for
+#' filtering by taxonomic rank in \code{taxonomy_data}.
 #' @param min_taxa Minimum number of ingroup samples required to pass the filter.
-#' @param exclude_short Logical; should extremely short sequences be excluded from the alignment during filtering? If \code{TRUE}, the minimum length is set to be within 1 standard deviation of the mean sequence length for a given alignment.
-#' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
-#' @return A named list of DNA sequences of class \code{DNAbin} that passed the filter. These are not modified in any way; they simply met the requirements of the filter.
+#' @param exclude_short Logical; should extremely short sequences be excluded from
+#' the alignment during filtering? If \code{TRUE}, the minimum length is set to be
+#' within 1 standard deviation of the mean sequence length for a given alignment.
+#' @param ... Other arguments. Not used by this function, but meant to be used by
+#' \code{\link[drake]{drake_plan}} for tracking during workflows.
+#' @return A named list of DNA sequences of class \code{DNAbin} that passed the filter.
+#' These are not modified in any way; they simply met the requirements of the filter.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
 #' \dontrun{filter_fasta(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{fasta_to_tree}
 \alias{fasta_to_tree}
-\title{fasta_to_tree}
+\title{Infer trees from fasta files.}
 \usage{
 
   fasta_to_tree(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,14 +30,14 @@
 For each input cluster \code{cluster1.fa} in \code{seq_folder}, \code{cluster1.fa.mafft.aln} (small clusters) or \code{cluster1.pasta.aln} (large clusters), \code{cluster1.fa.mafft.aln-cln} (small clusters) or \code{cluster1.fa.pasta.aln-cln} (large clusters), and \code{cluster1.raxml.tre} (small clusters) or \code{cluster1.fasttree.tre} (large clusters) will be written to \code{seq_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.tre} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
-}
-\details{
 Given a folder containing unaligned sequences in fasta format (i.e., clusters),
 aligns each cluster with \code{mafft} (small clusters) or \code{pasta} (large clusters),
 excludes poorly aligned sites with \code{phyutility}, and infers a maximum-likelihood
 tree with \code{RAxML} (small clusters) or \code{fasttree} (large clusters). Requires all
 of these programs to be installed and included in the user's \code{$PATH}. Assumes clusters are named \code{"cluster1.fa"}, \code{"cluster2.fa"}, etc. Clusters with fewer than 1,000 sequences are considered "small," and those with more are considered "large."
+}
+\details{
+Wrapper for Yang and Smith (2014) \code{fasta_to_tree.py}
 }
 \examples{
 \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}

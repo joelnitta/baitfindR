@@ -1,4 +1,4 @@
-#' tcs
+#' Calculate TCS.
 #'
 #' Wrapper to call t_coffee to calculate Transitive Consistency Score (TCS)
 #'

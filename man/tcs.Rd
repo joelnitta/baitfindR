@@ -2,7 +2,7 @@
 % Please edit documentation in R/t_coffee.R
 \name{tcs}
 \alias{tcs}
-\title{tcs}
+\title{Calculate TCS.}
 \usage{
 tcs(alignment, number_cores = 1, other_args = NULL,
   wd = here::here(), ...)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{prune_paralogs_MI}
 \alias{prune_paralogs_MI}
-\title{prune_paralogs_MI}
+\title{Identify orthologs using the "MI" method.}
 \usage{
 
   prune_paralogs_MI(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -34,9 +34,6 @@
 For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir} with the file ending \code{.MIortho1.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) prune_paralogs_MI.py
-}
-\details{
 Given a folder containing homolog trees, prune paralogs from the trees
 using the maximum inclusion (MI) method. This method iteratively
 extracts subtrees containing the greatest number of samples (taxa)
@@ -45,6 +42,9 @@ according to \code{relative_cutoff} and \code{absolute_cutoff} values. Trees
 that consist solely of one-to-one orthologs (i.e., no duplications within a sample)
 will also be retained. This function will overwrite any output files with
 the same name in \code{outdir}.
+}
+\details{
+Wrapper for Yang and Smith (2014) prune_paralogs_MI.py
 }
 \examples{
 \dontrun{prune_paralogs_MI(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4, outdir = "some/folder")}

@@ -2,33 +2,42 @@
 % Please edit documentation in R/transdecoder.R
 \name{cd_hit_est}
 \alias{cd_hit_est}
-\title{cd_hit_est}
+\title{Cluster DNA sequences.}
 \usage{
 cd_hit_est(input, output, wd = here::here(), other_args = NULL, ...)
 }
 \arguments{
-\item{input}{Character vector of length one; the path to the input file for cd-hit-est. Should be DNA or AA sequences in fasta format.}
+\item{input}{Character vector of length one; the path to the input file for
+cd-hit-est. Should be DNA or AA sequences in fasta format.}
 
-\item{output}{Character vector of length one; the name to assign to the output. Can include a path, in which case the output will be written there.}
+\item{output}{Character vector of length one; the name to assign to the output.
+Can include a path, in which case the output will be written there.}
 
-\item{wd}{Character vector of length one; the directory where the command will be run.}
+\item{wd}{Character vector of length one; the directory where the command
+will be run.}
 
-\item{other_args}{Character vector; other arguments to pass to cd-hit-est. Each should be an element of the vector.}
+\item{other_args}{Character vector; other arguments to pass to cd-hit-est.
+Each should be an element of the vector.}
 
-\item{...}{Additional other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
+\item{...}{Additional other arguments. Not used by this function, but meant
+to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
-Within the R environment, a list with components specified in \code{\link[processx]{run}}.
+Within the R environment, a list with components specified in
+\code{\link[processx]{run}}.
 
-Externally, two files will be written: according to the CD-HIT user's guide, "The output are two files: a fasta file of representative sequences and a text file of list of clusters."
+Externally, two files will be written: according to the CD-HIT user's guide,
+"The output are two files: a fasta file of representative sequences and a text
+file of list of clusters."
 
-The fasta file will be named with the value of \code{output}; the list of clusters will be the same, with \code{.clstr} appended.
+The fasta file will be named with the value of \code{output}; the list of clusters
+will be the same, with \code{.clstr} appended.
 }
 \description{
-Wrapper for CD-HIT-EST
-}
-\details{
-According to the CD-HIT user's guide, "CD-HIT-EST clusters a nucleotide dataset into clusters that meet a user-defined similarity threshold, usually a sequence identity." cd-hit-est comes bundled with transdecoder, so it is run from there.
+This is a wrapper for the CD-HIT-EST algorithm. According to the CD-HIT user's guide,
+"CD-HIT-EST clusters a nucleotide dataset into clusters that meet a user-defined
+similarity threshold, usually a sequence identity." cd-hit-est comes bundled with
+transdecoder, so it is run from there.
 }
 \examples{
 \dontrun{cd_hit_est("some/transcriptome_file.cds", "some/result.cds.cdhitest")}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{write_ortholog_fasta_files}
 \alias{write_ortholog_fasta_files}
-\title{write_ortholog_fasta_files}
+\title{Write fasta files from ortholog trees.}
 \usage{
 
   write_ortholog_fasta_files(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
@@ -30,11 +30,11 @@
 One fasta file per tree will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) write_ortholog_fasta_files.py
-}
-\details{
 Given a folder containing ortholog trees, write out the fasta files
 that correspond to the sequences in the trees.
+}
+\details{
+Wrapper for Yang and Smith (2014) write_ortholog_fasta_files.py
 }
 \examples{
 \dontrun{write_ortholog_fasta_files(all_fasta = "some/folder/all.fasta", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder", minimal_taxa = 5)}

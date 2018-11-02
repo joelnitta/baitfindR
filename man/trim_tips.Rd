@@ -2,7 +2,7 @@
 % Please edit documentation in R/yang_and_smith.R
 \name{trim_tips}
 \alias{trim_tips}
-\title{trim_tips}
+\title{Trim tips.}
 \usage{
 trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff,
@@ -29,15 +29,15 @@ trim_tips(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
 For each input tree with a file ending matching \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.tt} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all trimmed tree files concatenated together will be returned.
 }
 \description{
-Wrapper for Yang and Smith (2014) \code{trim_tips.py}
-}
-\details{
 Given a folder containing phylogenetic trees, exclude (i.e., "trim"),
 tips on unusually long branches. Tips on a branch 10 times longer
 than their sister AND longer than \code{relative_cutoff}, OR tips
 that are longer than \code{absolute_cutoff} will be trimmed. This
 function will overwrite any output files with the same name in
 \code{tree_folder}.
+}
+\details{
+Wrapper for Yang and Smith (2014) \code{trim_tips.py}
 }
 \examples{
 \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
