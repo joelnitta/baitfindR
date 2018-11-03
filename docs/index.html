@@ -66,18 +66,22 @@
     <div id="baitfindr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#baitfindr" class="anchor"></a>baitfindR</h1></div>
-<p><code>baitfindR</code> extends the Yang and Smith (2014 Mol. Biol. Evol. 31:3081-3092) <a href="https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview">orthology inference pipeline</a> to find appropriate loci for use as baits in sequence capture.</p>
+<p><code>baitfindR</code> is an R package that extends the <a href="https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview">Yang and Smith orthology inference pipeline</a> (2014 Mol. Biol. Evol. 31:3081-3092) to find appropriate loci for use as baits in sequence capture.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the development version of baitfindR from this repository using:</p>
+<p>You can install <code>baitfindR</code> as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
 devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"joelnitta/baitfindR"</span>)</code></pre></div>
 </div>
-<div id="example" class="section level2">
+<div id="examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
-<p>Please see <a href="https://github.com/joelnitta/baitfindR_drake">this example R project</a> for how <code>baitfindR</code> works.</p>
+<a href="#examples" class="anchor"></a>Examples</h2>
+<p><code>baitfindR</code> works best in conjunction with <a href="https://ropensci.github.io/drake/">drake</a> to manage a bait-finding workflow. There are two examples of such workflows available:</p>
+<ul>
+<li><p><a href="https://github.com/joelnitta/baitfindR_simple">A simple workflow</a> that uses several pre-set parameters in a single plan.</p></li>
+<li><p><a href="https://github.com/joelnitta/baitfindR_complex">A more complicated workflow</a> comprised of multiple plans allowing the user to test different parameter combinations.</p></li>
+</ul>
 </div>
 </div>
   </div>

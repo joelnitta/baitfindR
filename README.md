@@ -1,16 +1,20 @@
 # baitfindR
 
-`baitfindR` extends the Yang and Smith (2014 Mol. Biol. Evol. 31:3081-3092) [orthology inference pipeline](https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview) to find appropriate loci for use as baits in sequence capture.
+`baitfindR` is an R package that extends the [Yang and Smith orthology inference pipeline](https://bitbucket.org/yangya/phylogenomic_dataset_construction/overview) (2014 Mol. Biol. Evol. 31:3081-3092) to find appropriate loci for use as baits in sequence capture.
 
 ## Installation
 
-You can install the development version of baitfindR from this repository using:
+You can install `baitfindR` as follows:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("joelnitta/baitfindR")
 ```
 
-## Example
+## Examples
 
-Please see [this example R project](https://github.com/joelnitta/baitfindR_drake) for how `baitfindR` works.
+`baitfindR` works best in conjunction with [drake](https://ropensci.github.io/drake/) to manage a bait-finding workflow. There are two examples of such workflows available:
+
+- [A simple workflow](https://github.com/joelnitta/baitfindR_simple) that uses several pre-set parameters in a single plan.
+
+- [A more complicated workflow](https://github.com/joelnitta/baitfindR_complex) comprised of multiple plans allowing the user to test different parameter combinations.
