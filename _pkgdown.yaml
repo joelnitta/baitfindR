@@ -7,31 +7,31 @@ reference:
 - title: BLAST
   desc: Functions relating to building and querying BLAST databases.
   contents:
+  - build_blast_db
   - blast_n
   - blast_p
-  - build_blast_db
 - title: Y&S workflow
   desc: Wrappers for functions used in the Y&S workflow.
   contents:
-  - blast_to_mcl
-  - cd_hit_est
-  - cut_long_internal_branches
-  - fasta_to_tree
-  - filter_1to1_orthologs
+  - transdecoder_long_orfs
+  - transdecoder_predict
   - fix_names_from_transdecoder
-  - mafft_wrapper
-  - mask_tips_by_taxonID_transcripts
+  - cd_hit_est
+  - blast_to_mcl
   - mcl
-  - phyutility_wrapper
+  - write_fasta_files_from_mcl
+  - fasta_to_tree
+  - trim_tips
+  - mask_tips_by_taxonID_transcripts
+  - cut_long_internal_branches
+  - write_fasta_files_from_trees
+  - filter_1to1_orthologs
   - prune_paralogs_MI
   - prune_paralogs_MO
   - prune_paralogs_RT
-  - transdecoder_long_orfs
-  - transdecoder_predict
-  - trim_tips
-  - write_fasta_files_from_mcl
-  - write_fasta_files_from_trees
   - write_ortholog_fasta_files
+  - mafft_wrapper
+  - phyutility_wrapper
 - title: Bait filtering
   desc: Functions to help choose a final set of baits from the pool of candidate low copy orthologs produced by the Y&S workflow.
   contents:
@@ -48,7 +48,7 @@ reference:
   contents:
   - onekp_data
 - title: Deprecated
-  desc: Functions that aren't used anymore.
+  desc: ~
   contents:
   - tcs
   - tcs_loop
