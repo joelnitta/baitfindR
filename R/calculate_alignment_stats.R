@@ -29,93 +29,99 @@
 #'   \item{alignment}{The original input alignment}
 #' }
 #' @export
-calculate_alignment_stats <- function (alignment, cutoff = 120, cutoff_any = FALSE, include_aln = FALSE) {
+calculate_alignment_stats <-
+  function (alignment, cutoff = 120, cutoff_any = FALSE, include_aln = FALSE) {
 
-  ### Error-checking
-  assertthat::assert_that(any("DNAbin" %in% class(alignment)),
-                          msg = "alignment must be of class 'DNAbin'")
+    ### Error-checking
+    assertthat::assert_that(any("DNAbin" %in% class(alignment)),
+                            msg = "alignment must be of class 'DNAbin'")
 
-  assertthat::assert_that(is.matrix(alignment),
-                          msg = "alignment must be matrix")
-  ### Setup
-  # exon columns are columns that are NOT all 'n'
-  exon_cols <- !(apply(as.character(alignment), 2, function (x) all(x == "n")))
+    assertthat::assert_that(is.matrix(alignment),
+                            msg = "alignment must be matrix")
+    ### Setup
+    # exon columns are columns that are NOT all 'n'
+    exon_cols <- !(apply(as.character(alignment), 2, function (x) all(x == "n")))
 
-  # intron columns are columns that ARE all 'n'
-  intron_cols <- apply(as.character(alignment), 2, function (x) all(x == "n"))
+    # intron columns are columns that ARE all 'n'
+    intron_cols <- apply(as.character(alignment), 2, function (x) all(x == "n"))
 
-  # make exon-only alignment to calculate various stats
-  alignment_exons <- alignment[,exon_cols]
+    # make exon-only alignment to calculate various stats
+    alignment_exons <- alignment[,exon_cols]
 
-  ### Simple stats
-  # Calculate mean DNA distance (missing values ignored, so introns don't matter)
-  mean_dist <- mean(ape::dist.dna(alignment, model="raw", pairwise.deletion=TRUE), na.rm=TRUE)
-  max_dist <- max(ape::dist.dna(alignment, model="raw", pairwise.deletion=TRUE), na.rm=TRUE)
+    ### Simple stats
+    # Calculate mean DNA distance
+    # (missing values ignored, so introns don't matter)
+    mean_dist <- mean(ape::dist.dna(alignment, model="raw",
+                                    pairwise.deletion=TRUE), na.rm=TRUE)
+    max_dist <- max(ape::dist.dna(alignment, model="raw",
+                                  pairwise.deletion=TRUE), na.rm=TRUE)
 
-  # Calculate % pars. inf. chars (introns DO matter, so use exon-only alignment)
-  pars_inf <- ips::pis(alignment_exons, what="frac")
+    # Calculate % pars. inf. chars
+    # (introns DO matter, so use exon-only alignment)
+    pars_inf <- ips::pis(alignment_exons, what="frac")
 
-  # Calculate %GC content (missing values ignored, so introns don't matter)
-  GC_content <- ape::GC.content(alignment)
+    # Calculate %GC content (missing values ignored, so introns don't matter)
+    GC_content <- ape::GC.content(alignment)
 
-  ### Count number and length of exons, introns
-  # Convert from true/false vector to number of each column that is an exon
-  exons <- which(exon_cols)
-  introns <- which(intron_cols)
+    ### Count number and length of exons, introns
+    # Convert from true/false vector to number of each column that is an exon
+    exons <- which(exon_cols)
+    introns <- which(intron_cols)
 
-  # Get length of regions that consecutively increase by 1
-  # https://stackoverflow.com/questions/16118050/how-to-check-if-a-vector-contains-n-consecutive-numbers
-  exon_lengths <- rle(diff(exons))[["lengths"]]
-  # also returns a bunch of 1s; get rid of these
-  exon_lengths <- exon_lengths[exon_lengths > 1]
+    # Get length of regions that consecutively increase by 1
+    # https://stackoverflow.com/questions/16118050/how-to-check-if-a-vector-contains-n-consecutive-numbers
+    exon_lengths <- rle(diff(exons))[["lengths"]]
+    # also returns a bunch of 1s; get rid of these
+    exon_lengths <- exon_lengths[exon_lengths > 1]
 
-  # Do same for introns
-  intron_lengths <- rle(diff(introns))[["lengths"]]
-  intron_lengths <- intron_lengths[intron_lengths > 1]
+    # Do same for introns
+    intron_lengths <- rle(diff(introns))[["lengths"]]
+    intron_lengths <- intron_lengths[intron_lengths > 1]
 
-  # Use this to calculate total number of exons and introns
-  num_introns <- length(intron_lengths)
-  num_exons <- length(exon_lengths)
+    # Use this to calculate total number of exons and introns
+    num_introns <- length(intron_lengths)
+    num_exons <- length(exon_lengths)
 
-  ### Calculate total length including only exons
-  # (since don't know what intron length will be in target seq)
-  total_exon_length <- sum(exon_lengths)
+    ### Calculate total length including only exons
+    # (since don't know what intron length will be in target seq)
+    total_exon_length <- sum(exon_lengths)
 
-  ### Cutoff flag
-  # Optionally flag gene if any (or all) exons are less than cutoff length
-  if (is.null(cutoff) | is.null(cutoff_any)) less_than_cutoff <- NA
+    ### Cutoff flag
+    # Optionally flag gene if any (or all) exons are less than cutoff length
+    if (is.null(cutoff) | is.null(cutoff_any)) less_than_cutoff <- NA
 
-  if (cutoff_any == TRUE) {
-    if ((any(exon_lengths < cutoff))) {
-      less_than_cutoff <- TRUE
-    } else {
-      less_than_cutoff <- FALSE
+    if (cutoff_any == TRUE) {
+      if ((any(exon_lengths < cutoff))) {
+        less_than_cutoff <- TRUE
+      } else {
+        less_than_cutoff <- FALSE
+      }
+    } else if (cutoff_any == FALSE) {
+      if (!(any(exon_lengths > cutoff))) {
+        less_than_cutoff <- TRUE
+      } else {
+        less_than_cutoff <- FALSE
+      }
     }
-  } else if (cutoff_any == FALSE) {
-    if (!(any(exon_lengths > cutoff))) {
-      less_than_cutoff <- TRUE
-    } else {
-      less_than_cutoff <- FALSE
+
+    results <- list(
+      intron_lengths = list(intron_lengths),
+      exon_lengths = list(exon_lengths),
+      num_introns = num_introns,
+      num_exons = num_exons,
+      mean_dist = mean_dist,
+      max_dist = max_dist,
+      GC_content = GC_content,
+      pars_inf = pars_inf,
+      total_exon_length = total_exon_length,
+      less_than_cutoff = less_than_cutoff,
+      alignment = list(alignment)
+    )
+
+    if (!isTRUE(include_aln)) {
+      results[["alignment"]] <- NULL
     }
+
+    return(results)
+
   }
-
-  results <- list(
-    intron_lengths = list(intron_lengths),
-    exon_lengths = list(exon_lengths),
-    num_introns = num_introns,
-    num_exons = num_exons,
-    mean_dist = mean_dist,
-    max_dist = max_dist,
-    GC_content = GC_content,
-    pars_inf = pars_inf,
-    total_exon_length = total_exon_length,
-    less_than_cutoff = less_than_cutoff
-  )
-
-  if (isTRUE(include_aln)) {
-    results <- c(results, alignment = alignment)
-  }
-
-  return(results)
-
-}
