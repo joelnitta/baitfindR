@@ -5,7 +5,7 @@
 \title{Predict coding regions.}
 \usage{
 transdecoder_predict(transcriptome_file, blast_result = NULL,
-  wd = here::here(), other_args = NULL, ...)
+  wd = here::here(), other_args = NULL, echo = FALSE, ...)
 }
 \arguments{
 \item{transcriptome_file}{Character vector of length one; the path to the fasta
@@ -22,6 +22,8 @@ run. Must contain .transdecoder_dir folder with results from
 
 \item{other_args}{Character vector; other arguments to pass to TransDecoder. Each
 should be an element of the vector.}
+
+\item{echo}{Logical; should the standard output and error be printed to the screen?}
 
 \item{...}{Additional other arguments. Not used by this function, but meant to be
 used by \code{\link[drake]{drake_plan}} for tracking during workflows.}

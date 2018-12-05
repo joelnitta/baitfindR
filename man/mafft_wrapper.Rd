@@ -7,7 +7,7 @@
 
   mafft_wrapper(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
   fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna",
-  overwrite = FALSE, get_hash = TRUE, ...)
+  overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}
@@ -23,6 +23,8 @@
 \item{overwrite}{Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!}
 
 \item{get_hash}{Logical; should the 32-byte MD5 hash be computed for all aligned fasta files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.}
+
+\item{echo}{Logical; should the standard output and error be printed to the screen?}
 
 \item{...}{Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }

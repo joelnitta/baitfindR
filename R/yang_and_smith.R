@@ -15,6 +15,7 @@
 #' @param bootstrap Logical; should run a bootstrap analysis be run for the trees?
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each input cluster \code{cluster1.fa} in \code{seq_folder}, \code{cluster1.fa.mafft.aln} (small clusters) or \code{cluster1.pasta.aln} (large clusters), \code{cluster1.fa.mafft.aln-cln} (small clusters) or \code{cluster1.fa.pasta.aln-cln} (large clusters), and \code{cluster1.raxml.tre} (small clusters) or \code{cluster1.fasttree.tre} (large clusters) will be written to \code{seq_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.tre} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -22,7 +23,7 @@
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE, get_hash = TRUE, ...) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -52,7 +53,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 
   # call command
   arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
-  processx::run("python", arguments, wd = seq_folder)
+  processx::run("python", arguments, wd = seq_folder, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -78,6 +79,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @param outdir Character vector of length one; the path to the folder where the clusters should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all clusters concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return One fasta file per cluster (\code{cluster1.fa}, \code{cluster2.fa}, etc.) will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -85,7 +87,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{write_fasta_files_from_mcl(all_fasta = "some/folder/all.fasta", mcl_outfile = "some/folder/hit-frac0.4_I1.4_e5", minimal_taxa = 5, outdir = "some/folder")}
 #' @export
-write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -110,7 +112,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 
   # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -130,6 +132,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 #' @param path_to_ys Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"
 #' @param blast_results Character vector of length one; the complete path to the tab-separated text file containing the results from an all-by-all blast search. If blast searches were run separately (i.e., one for each sample), the results should be concatenated into a single file. For the blast search, the output format should specified as: -outfmt '6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'
 #' @param hit_fraction_cutoff Numeric between 0 and 1. Indicates the minimum percentage overlap between query and target in blast results to be retained in the output. According to Y&S, "A low hit-fraction cutoff will output clusters with more incomplete sequences and much larger and sparser alignments, whereas a high hit-fraction cutoff gives tighter clusters but ignores incomplete or divergent sequences."
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return A tab-separated text file with three columns: the first two are the matching query and target from the all-by-all blast, and the third is the negative log e-value for that match. This file is named \code{<blast_results>.hit-frac<hit_fraction_cutoff>.minusLogEvalue}, where \code{<blast_results>} and \code{<hit_fraction_cutoff>} correspond to the values of those arguments. If possible contaminants (i.e., identical sequences between different samples) were found, these are written to \code{<blast_results>.ident.hit-frac<hit_fraction_cutoff>}. Output files will be written to the same folder containing \code{blast_results}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -137,14 +140,14 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{blast_to_mcl(blast_results = "some/folder/blastresults.tab", hit_fraction_cutoff = 0.5)}
 #' @export
-blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, ...) {
+blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, echo = FALSE, ...) {
 
   # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
   arguments <- c(paste0(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
 
   # call command
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # Normally, the warning file with sequences that are identical between
   # samples (possible contamination) is output as "blast_output.ident",
@@ -228,6 +231,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @param absolute_cutoff Numeric vector of length one; tips on branches longer than this value will be trimmed.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output trimmed tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each input tree with a file ending matching \code{tree_file_ending} in \code{tree_folder}, a trimmed tree with a file ending in \code{.tt} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all trimmed tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -235,7 +239,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @examples
 #' \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
 #' @export
-trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, overwrite = FALSE, get_hash = TRUE, ...) {
+trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -260,7 +264,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 
   # call command
   arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -290,6 +294,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @param mask_paraphyletic Logical; should paraphyletic tips belonging to the same taxon be masked?
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output masked tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each input tree with a file ending in \code{.tt} in \code{tree_folder}, a trimmed tree with a file ending in \code{.mm} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all masked tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -297,7 +302,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @examples
 #' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
 #' @export
-mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, overwrite = FALSE, get_hash = TRUE, ...) {
+mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -324,7 +329,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 
   # call command
   arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -352,6 +357,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @param outdir Character vector of length one; the path to the folder where the subtrees should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output subtree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each input tree with a file ending in \code{tree_file_ending} in \code{tree_folder}, one or more subtrees with a file ending in \code{.subtree} will be written to \code{tree_folder}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all subtree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -359,7 +365,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @examples
 #' \dontrun{cut_long_internal_branches(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".mm", internal_branch_length_cutoff = 0.3, outdir = "some/other/folder/")}
 #' @export
-cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -390,7 +396,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 
   # call command
   arguments <- c(paste0(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -417,6 +423,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @param outdir Character vector of length one; the path to the folder where the fasta files should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all output fasta files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return One fasta file per tree file ending in \code{tree_file_ending} in \code{tree_folder} will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all output fasta files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -424,7 +431,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -450,7 +457,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 
   # call command
   arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -477,6 +484,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @param outdir Character vector of length one; the path to the folder where the filtered trees should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all filtered tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, that tree will be written to \code{outdir} if it consists solely of one-to-one orthologs with the file ending \code{.1to1ortho.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all filtered tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -484,7 +492,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @examples
 #' \dontrun{filter_1to1_orthologs(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -510,7 +518,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 
   # call command
   arguments <- c(paste0(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -543,6 +551,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MI method and written to \code{outdir} with the file ending \code{.MIortho1.tre}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -550,7 +559,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @examples
 #' \dontrun{prune_paralogs_MI(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4, outdir = "some/folder")}
 #' @export
-prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -576,7 +585,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 
   # call command
   arguments <- c(paste0(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -607,6 +616,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, putative orthologs will be extracted from the tree using the MO method and written to \code{outdir} with the file ending \code{.ortho.tre}; re-rooted trees will also be written with the file ending \code{.reroot}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all extracted tree files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -614,7 +624,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{prune_paralogs_MO(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
 #' @export
-prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -679,7 +689,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 
   # call command
   arguments <- c(paste0(path_to_ys, "prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # delete temporary script
   file.remove(paste0(path_to_ys, "prune_paralogs_MO_temp.py"))
@@ -712,6 +722,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @param outdir Character vector of length one; the path to the folder where the pruned trees should be written.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return For each tree file ending in \code{tree_file_ending} in \code{tree_folder}, the following outputs are possible depending on the presence of outgroups in the homolog tree:
 #' \describe{
@@ -725,7 +736,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{prune_paralogs_RT(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
 #' @export
-prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, min_ingroup_taxa = 2, outdir, overwrite = FALSE, get_hash = TRUE, ...) {
+prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, min_ingroup_taxa = 2, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -757,7 +768,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 
   # call command
   arguments <- c(paste0(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # delete temporary in_out file
   file.remove(here::here("in_out_temp"))
@@ -785,6 +796,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @param minimal_taxa Numeric; minimal number of taxa required for output sequences to be written (regardless of ingroup/outgroup status).
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all fasta files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return One fasta file per tree will be written to \code{outdir}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.fa} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -792,7 +804,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{write_ortholog_fasta_files(all_fasta = "some/folder/all.fasta", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder", minimal_taxa = 5)}
 #' @export
-write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, outdir, minimal_taxa = 4, overwrite = FALSE, get_hash = TRUE, ...) {
+write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, outdir, minimal_taxa = 4, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -818,7 +830,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
 
   # call command
   arguments <- c(paste0(path_to_ys, "write_ortholog_fasta_files.py"), all_fasta, tree_folder, outdir, minimal_taxa)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -845,6 +857,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
 #' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all aligned fasta files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return Aligned fasta files will be written to \code{fasta_folder} with the file ending \code{.aln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -852,7 +865,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{mafft_wrapper(fasta_folder = "some/folder/with/fasta/files", number_cores = 2, seq_type = "dna")}
 #' @export
-mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, ...) {
+mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -877,7 +890,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 
   # call command
   arguments <- c(paste0(path_to_ys, "mafft_wrapper.py"), fasta_folder, infile_ending, number_cores, seq_type)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -901,6 +914,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @param seq_type Character vector of length one indicating type of sequences. Should either be \code{"dna"} for DNA or \code{"aa"} for proteins.
 #' @param overwrite Logical; should previous output of this command be erased so new output can be written? Once erased it cannot be restored, so use with caution!
 #' @param get_hash Logical; should the 32-byte MD5 hash be computed for all result files concatenated together? Used for by \code{\link[drake]{drake_plan}} for tracking during workflows. If \code{TRUE}, this function will return the hash.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Other arguments. Not used by this function, but meant to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return Cleaned alignments will be written to \code{fasta_folder} with the file ending \code{.aln-cln}. If \code{get_hash} is \code{TRUE}, the 32-byte MD5 hash be computed for all \code{.aln-cln} files concatenated together will be returned.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
@@ -908,7 +922,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{phyutility_wrapper(fasta_folder = "some/folder/with/alignments/", min_col_occup = 0.3, seq_type = "dna")}
 #' @export
-phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, ...) {
+phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
 
   # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
@@ -937,7 +951,7 @@ phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::p
 
   # call command
   arguments <- c(paste0(path_to_ys, "phyutility_wrapper.py"), fasta_folder, min_col_occup, seq_type)
-  processx::run("python", arguments)
+  processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {

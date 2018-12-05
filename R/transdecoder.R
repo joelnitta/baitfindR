@@ -10,6 +10,7 @@
 #' will be run, and the output folder created.
 #' @param other_args Character vector; other arguments to pass to TransDecoder.
 #' Each should be an element of the vector.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param ... Additional other arguments. Not used by this function, but meant to
 #' be used by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #'
@@ -28,13 +29,13 @@
 #' \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
 #'
 #' @export
-transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other_args = NULL, ...) {
+transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
 
   # modify arguments
   arguments <- c("-t", transcriptome_file, other_args)
 
   # run command
-  processx::run("TransDecoder.LongOrfs", arguments, wd = wd)
+  processx::run("TransDecoder.LongOrfs", arguments, wd = wd, echo = echo)
 }
 
 #' Predict coding regions.
@@ -54,6 +55,7 @@ transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other
 #' @param wd Character vector of length one; the directory where the command will be
 #' run. Must contain .transdecoder_dir folder with results from
 #' \code{\link{transdecoder_long_orfs}}.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param other_args Character vector; other arguments to pass to TransDecoder. Each
 #' should be an element of the vector.
 #' @param ... Additional other arguments. Not used by this function, but meant to be
@@ -71,7 +73,7 @@ transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other
 #' \dontrun{transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")}
 #'
 #' @export
-transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, ...) {
+transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
 
   # modify arguments
   blast_argument <- if(is.null(blast_result)) {NULL} else {c("--retain_blastp_hits", blast_result)}
@@ -79,7 +81,7 @@ transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = 
   arguments <- c("-t", transcriptome_file, blast_argument, other_args)
 
   # run command
-  processx::run("TransDecoder.Predict", arguments, wd = wd)
+  processx::run("TransDecoder.Predict", arguments, wd = wd, echo = echo)
 
 }
 
@@ -96,6 +98,7 @@ transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = 
 #' Can include a path, in which case the output will be written there.
 #' @param wd Character vector of length one; the directory where the command
 #' will be run.
+#' @param echo Logical; should the standard output and error be printed to the screen?
 #' @param other_args Character vector; other arguments to pass to cd-hit-est.
 #' Each should be an element of the vector.
 #' @param ... Additional other arguments. Not used by this function, but meant
@@ -118,12 +121,12 @@ transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = 
 #' \dontrun{cd_hit_est("some/transcriptome_file.cds", "some/result.cds.cdhitest")}
 #'
 #' @export
-cd_hit_est <- function (input, output, wd = here::here(), other_args = NULL, ...) {
+cd_hit_est <- function (input, output, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
 
   # modify arguments
   arguments <- c("-i", input, "-o", output, other_args)
 
   # run command
-  processx::run("cd-hit-est", arguments, wd = wd)
+  processx::run("cd-hit-est", arguments, wd = wd, echo = echo)
 
 }

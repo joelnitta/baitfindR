@@ -4,7 +4,8 @@
 \alias{cd_hit_est}
 \title{Cluster DNA sequences.}
 \usage{
-cd_hit_est(input, output, wd = here::here(), other_args = NULL, ...)
+cd_hit_est(input, output, wd = here::here(), other_args = NULL,
+  echo = FALSE, ...)
 }
 \arguments{
 \item{input}{Character vector of length one; the path to the input file for
@@ -18,6 +19,8 @@ will be run.}
 
 \item{other_args}{Character vector; other arguments to pass to cd-hit-est.
 Each should be an element of the vector.}
+
+\item{echo}{Logical; should the standard output and error be printed to the screen?}
 
 \item{...}{Additional other arguments. Not used by this function, but meant
 to be used by \code{\link[drake]{drake_plan}} for tracking during workflows.}
