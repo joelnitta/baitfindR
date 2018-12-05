@@ -5,6 +5,7 @@ Version: 0.1.0
 Authors@R: person(c("Joel", "H."), "Nitta", email = "joelnitta@gmail.com", role = c("aut", "cre"),
   comment = c(ORCID = "0000-0003-4719-7472"))
 Description: Extends the Yang and Smith (2014 Mol Biol Evol 31:3081-3092) orthology inference pipeline to find appropriate loci for use as baits in sequence capture.
+Depends: R (>= 2.10)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -21,6 +22,7 @@ Imports:
     stringr,
     checkr,
     glue,
-    ips
+    ips,
+    assertthat
 URL: https://github.com/joelnitta/baitfindR
 BugReports: https://github.com/joelnitta/baitfindR/issues
