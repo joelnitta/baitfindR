@@ -29,7 +29,7 @@
 #' \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
 #'
 #' @export
-transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
+transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
   arguments <- c("-t", transcriptome_file, other_args)
@@ -73,7 +73,7 @@ transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other
 #' \dontrun{transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")}
 #'
 #' @export
-transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
+transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
   blast_argument <- if(is.null(blast_result)) {NULL} else {c("--retain_blastp_hits", blast_result)}
@@ -121,7 +121,7 @@ transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = 
 #' \dontrun{cd_hit_est("some/transcriptome_file.cds", "some/result.cds.cdhitest")}
 #'
 #' @export
-cd_hit_est <- function (input, output, wd = here::here(), other_args = NULL, echo = FALSE, ...) {
+cd_hit_est <- function (input, output, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
   arguments <- c("-i", input, "-o", output, other_args)

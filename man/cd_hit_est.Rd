@@ -5,7 +5,7 @@
 \title{Cluster DNA sequences.}
 \usage{
 cd_hit_est(input, output, wd = here::here(), other_args = NULL,
-  echo = FALSE, ...)
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...)
 }
 \arguments{
 \item{input}{Character vector of length one; the path to the input file for

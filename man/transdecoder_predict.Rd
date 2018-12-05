@@ -5,7 +5,8 @@
 \title{Predict coding regions.}
 \usage{
 transdecoder_predict(transcriptome_file, blast_result = NULL,
-  wd = here::here(), other_args = NULL, echo = FALSE, ...)
+  wd = here::here(), other_args = NULL,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...)
 }
 \arguments{
 \item{transcriptome_file}{Character vector of length one; the path to the fasta

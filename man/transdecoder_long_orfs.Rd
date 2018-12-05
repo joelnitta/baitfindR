@@ -5,7 +5,8 @@
 \title{Find long open reading frames.}
 \usage{
 transdecoder_long_orfs(transcriptome_file, wd = here::here(),
-  other_args = NULL, echo = FALSE, ...)
+  other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo",
+  fallback = FALSE), ...)
 }
 \arguments{
 \item{transcriptome_file}{Character vector of length one; the path to the

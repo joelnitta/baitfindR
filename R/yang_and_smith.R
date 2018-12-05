@@ -23,7 +23,7 @@
 #' @examples
 #' \dontrun{fasta_to_tree(seq_folder = "some/folder/containing/fasta/seqs", number_cores = 1, seq_type = "dna", bootstrap = FALSE)}
 #' @export
-fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), seq_folder, number_cores, seq_type, bootstrap = FALSE, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -87,7 +87,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{write_fasta_files_from_mcl(all_fasta = "some/folder/all.fasta", mcl_outfile = "some/folder/hit-frac0.4_I1.4_e5", minimal_taxa = 5, outdir = "some/folder")}
 #' @export
-write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -140,7 +140,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{blast_to_mcl(blast_results = "some/folder/blastresults.tab", hit_fraction_cutoff = 0.5)}
 #' @export
-blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, echo = FALSE, ...) {
+blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
@@ -239,7 +239,7 @@ fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") 
 #' @examples
 #' \dontrun{trim_tips(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4)}
 #' @export
-trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -302,7 +302,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
 #' @examples
 #' \dontrun{mask_tips_by_taxonID_transcripts(tree_folder = "some/folder/containing/tree/files", aln_folder = "some/folder/containing/alignment/files")}
 #' @export
-mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, aln_folder, mask_paraphyletic = TRUE, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -365,7 +365,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
 #' @examples
 #' \dontrun{cut_long_internal_branches(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".mm", internal_branch_length_cutoff = 0.3, outdir = "some/other/folder/")}
 #' @export
-cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -431,7 +431,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{write_fasta_files_from_trees(all_fasta = "some/folder/all.fasta", tree_file_ending = ".subtree", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, tree_file_ending, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -492,7 +492,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
 #' @examples
 #' \dontrun{filter_1to1_orthologs(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder")}
 #' @export
-filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -559,7 +559,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
 #' @examples
 #' \dontrun{prune_paralogs_MI(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", relative_cutoff = 0.2, absolute_cutoff = 0.4, outdir = "some/folder")}
 #' @export
-prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -624,7 +624,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{prune_paralogs_MO(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
 #' @export
-prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -736,7 +736,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{prune_paralogs_RT(tree_folder = "some/folder/containing/tree/files", tree_file_ending = ".tre", outgroup = c("ABC", "EFG"), ingroup = c("HIJ", "KLM"), outdir = "some/folder")}
 #' @export
-prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, min_ingroup_taxa = 2, outdir, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), tree_folder, tree_file_ending, ingroup, outgroup, min_ingroup_taxa = 2, outdir, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -804,7 +804,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
 #' @examples
 #' \dontrun{write_ortholog_fasta_files(all_fasta = "some/folder/all.fasta", tree_folder = "some/folder/containing/tree/files", outdir = "some/folder", minimal_taxa = 5)}
 #' @export
-write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, outdir, minimal_taxa = 4, overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), all_fasta, tree_folder, outdir, minimal_taxa = 4, overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -865,7 +865,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
 #' @examples
 #' \dontrun{mafft_wrapper(fasta_folder = "some/folder/with/fasta/files", number_cores = 2, seq_type = "dna")}
 #' @export
-mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, infile_ending = "fa", number_cores, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -922,7 +922,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 #' @examples
 #' \dontrun{phyutility_wrapper(fasta_folder = "some/folder/with/alignments/", min_col_occup = 0.3, seq_type = "dna")}
 #' @export
-phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = FALSE, ...) {
+phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
   path_to_ys <- jntools::add_slash(path_to_ys)
