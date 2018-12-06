@@ -118,7 +118,8 @@ name in <code>outdir</code>.</p>
 
     <pre class="usage"><span class='fu'>prune_paralogs_RT</span>(<span class='kw'>path_to_ys</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::path_to_ys"</span>),
   <span class='no'>tree_folder</span>, <span class='no'>tree_file_ending</span>, <span class='no'>ingroup</span>, <span class='no'>outgroup</span>, <span class='kw'>min_ingroup_taxa</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='no'>outdir</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>get_hash</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+  <span class='no'>outdir</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>get_hash</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>echo</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::echo"</span>, <span class='kw'>fallback</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,6 +159,10 @@ name in <code>outdir</code>.</p>
     <tr>
       <th>get_hash</th>
       <td><p>Logical; should the 32-byte MD5 hash be computed for all pruned tree files concatenated together? Used for by <code><a href='http://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows. If <code>TRUE</code>, this function will return the hash.</p></td>
+    </tr>
+    <tr>
+      <th>echo</th>
+      <td><p>Logical; should the standard output and error be printed to the screen?</p></td>
     </tr>
     <tr>
       <th>...</th>

@@ -113,7 +113,8 @@ sequences (i.e., the transcriptome). This is a wrapper that calls
     </div>
 
     <pre class="usage"><span class='fu'>transdecoder_long_orfs</span>(<span class='no'>transcriptome_file</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='kw pkg'>here</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/here/topics/here'>here</a></span>(),
-  <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::echo"</span>,
+  <span class='kw'>fallback</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,6 +133,10 @@ will be run, and the output folder created.</p></td>
       <th>other_args</th>
       <td><p>Character vector; other arguments to pass to TransDecoder.
 Each should be an element of the vector.</p></td>
+    </tr>
+    <tr>
+      <th>echo</th>
+      <td><p>Logical; should the standard output and error be printed to the screen?</p></td>
     </tr>
     <tr>
       <th>...</th>

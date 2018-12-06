@@ -109,7 +109,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>blast_to_mcl</span>(<span class='kw'>path_to_ys</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::path_to_ys"</span>),
-  <span class='no'>blast_results</span>, <span class='no'>hit_fraction_cutoff</span>, <span class='no'>...</span>)</pre>
+  <span class='no'>blast_results</span>, <span class='no'>hit_fraction_cutoff</span>,
+  <span class='kw'>echo</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::echo"</span>, <span class='kw'>fallback</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -125,6 +126,10 @@
     <tr>
       <th>hit_fraction_cutoff</th>
       <td><p>Numeric between 0 and 1. Indicates the minimum percentage overlap between query and target in blast results to be retained in the output. According to Y&amp;S, "A low hit-fraction cutoff will output clusters with more incomplete sequences and much larger and sparser alignments, whereas a high hit-fraction cutoff gives tighter clusters but ignores incomplete or divergent sequences."</p></td>
+    </tr>
+    <tr>
+      <th>echo</th>
+      <td><p>Logical; should the standard output and error be printed to the screen?</p></td>
     </tr>
     <tr>
       <th>...</th>
