@@ -43,13 +43,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
                         sep = "|")
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(seq_folder, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(seq_folder, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(seq_folder, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
@@ -102,12 +96,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   search_terms <- "cluster\\d*\\.fa$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms, full.names = TRUE)
-    if (length(files_to_delete) > 0) {
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
@@ -256,13 +245,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   search_terms <- "\\.tt$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(tree_folder, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(tree_folder, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(tree_folder, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
@@ -321,13 +304,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   search_terms <- "\\.mm$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(tree_folder, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(tree_folder, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(tree_folder, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
@@ -388,13 +365,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
   search_terms <- "\\.subtree$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
@@ -449,13 +420,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   search_terms <- "rr\\.fa$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
@@ -510,13 +475,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   search_terms <- "1to1ortho\\.tre$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
@@ -577,13 +536,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   search_terms <- "1to1ortho\\.tre$|MIortho.*\\.tre$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
@@ -642,13 +595,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   search_terms <- "1to1ortho\\.tre$|\\.reroot$|\\.ortho\\.tre$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # modify actual script to change ingroups and outgroups
   ys_script <- readr::read_lines(fs::path(path_to_ys, "prune_paralogs_MO.py"))
@@ -754,13 +701,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   search_terms <- "\\.inclade\\d*|\\.unrooted-ortho\\.tre$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # this script needs outgroups and ingroups provided as a text file
   in_out <- c(paste0("OUT\t", outgroup), paste0("IN\t", ingroup))
@@ -822,13 +763,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
   search_terms <- "\\.fa$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(outdir, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "write_ortholog_fasta_files.py"), all_fasta, tree_folder, outdir, minimal_taxa)
@@ -882,13 +817,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   search_terms <- "\\.mafft\\.aln$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(fasta_folder, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(fasta_folder, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(fasta_folder, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "mafft_wrapper.py"), fasta_folder, infile_ending, number_cores, seq_type)
@@ -943,13 +872,7 @@ phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::p
   search_terms <- "\\.aln-cln$"
 
   # optional: delete all previous output written in this folder
-  if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(fasta_folder, pattern = search_terms)
-    if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(fasta_folder, files_to_delete)
-      file.remove(files_to_delete)
-    }
-  }
+  if (isTRUE(overwrite)) delete_old_output(fasta_folder, search_terms)
 
   # call command
   arguments <- c(fs::path(path_to_ys, "phyutility_wrapper.py"), fasta_folder, min_col_occup, seq_type)
