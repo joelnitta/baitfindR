@@ -32,8 +32,8 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 
   # modify arguments
   bootstrap <- ifelse(bootstrap, "y", "n")
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  seq_folder <- jntools::add_slash(seq_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  seq_folder <- fs::path_abs(seq_folder)
 
   # define search terms for output files
   search_terms <- paste("cluster.*\\.fa\\.mafft\\.aln$",
@@ -52,13 +52,13 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
+  arguments <- c(fs::path(path_to_ys, "fasta_to_tree.py"), seq_folder, number_cores, seq_type, bootstrap)
   processx::run("python", arguments, wd = seq_folder, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
-    output <- list.files(seq_folder, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(seq_folder, output), readr::read_file) )} else {output}
+    output <- list.files(seq_folder, pattern = search_terms, full.names = TRUE)
+    output <- if (length(output) > 0) {unlist( lapply(output, readr::read_file) )} else {output}
     hash <- digest::digest(output)
     return(hash)
   }
@@ -95,29 +95,28 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
 
   # define search terms for output files
   search_terms <- "cluster\\d*\\.fa$"
 
   # optional: delete all previous output written in this folder
   if (isTRUE(overwrite)) {
-    files_to_delete <- list.files(outdir, pattern = search_terms)
+    files_to_delete <- list.files(outdir, pattern = search_terms, full.names = TRUE)
     if (length(files_to_delete) > 0) {
-      files_to_delete <- paste0(outdir, files_to_delete)
       file.remove(files_to_delete)
     }
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
+  arguments <- c(fs::path(path_to_ys, "write_fasta_files_from_mcl.py"), all_fasta, mcl_outfile, minimal_taxa, outdir)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
+    output <- list.files(outdir, pattern = search_terms, full.names = TRUE)
+    output <- if (length(output) > 0) {unlist( lapply(output, readr::read_file) )} else {output}
     hash <- digest::digest(output)
     return(hash)
   }
@@ -143,8 +142,8 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
 blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), blast_results, hit_fraction_cutoff, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  arguments <- c(paste0(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  arguments <- c(fs::path(path_to_ys, "blast_to_mcl.py"), blast_results, hit_fraction_cutoff)
 
   # call command
   processx::run("python", arguments, echo = echo)
@@ -154,8 +153,9 @@ blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to
   # but this results in files with the same name from different hit_faction_cutoff
   # values. Append the hit_fraction_cutoff value so we can tell them apart.
 
-  ident_file <- paste0(blast_results, ".ident")
-  ident_file_rename <- paste0(ident_file, ".hit-frac", hit_fraction_cutoff)
+  blast_results <- fs::path_abs(blast_results)
+  ident_file <- fs::path(blast_results, ext = "ident")
+  ident_file_rename <- fs::path(ident_file, ext = glue::glue("hit-frac.{hit_fraction_cutoff}"))
   if (file.exists(ident_file)) {
     file.rename(ident_file, ident_file_rename)
   }
@@ -175,6 +175,8 @@ blast_to_mcl <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to
 #' \dontrun{fix_names_from_transdecoder(transdecoder_output = "some/folder/CODE.transdecoder.cds")}
 #' @export
 fix_names_from_transdecoder <- function (transdecoder_output, mol_type = "dna") {
+
+  transdecoder_output <- fs::path_abs(transdecoder_output)
 
   if (!(mol_type == "dna" | mol_type == "aa")) {
     stop("Must choose 'dna' or 'aa' for mol_type")
@@ -247,8 +249,8 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "\\.tt$"
@@ -263,7 +265,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
+  arguments <- c(fs::path(path_to_ys, "trim_tips.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -310,9 +312,9 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  tree_folder <- jntools::add_slash(tree_folder)
-  aln_folder <- jntools::add_slash(aln_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  tree_folder <- fs::path_abs(tree_folder)
+  aln_folder <- fs::path_abs(aln_folder)
   mask_paraphyletic <- ifelse(isTRUE(mask_paraphyletic), "y", "n")
 
   # define search terms for output files
@@ -328,7 +330,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
+  arguments <- c(fs::path(path_to_ys, "mask_tips_by_taxonID_transcripts.py"), tree_folder, aln_folder, mask_paraphyletic)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -373,9 +375,9 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  tree_folder <- jntools::add_slash(tree_folder)
-  outdir <- jntools::add_slash(outdir)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  tree_folder <- fs::path_abs(tree_folder)
+  outdir <- fs::path_abs(outdir)
 
   # more error checking
   if(tree_folder == outdir) {
@@ -395,7 +397,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
+  arguments <- c(fs::path(path_to_ys, "cut_long_internal_branches.py"), tree_folder, tree_file_ending, internal_branch_length_cutoff, minimal_taxa, outdir)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -439,9 +441,9 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "rr\\.fa$"
@@ -456,7 +458,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
+  arguments <- c(fs::path(path_to_ys, "write_fasta_files_from_trees.py"), all_fasta, tree_folder, tree_file_ending, outdir)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -500,9 +502,9 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "1to1ortho\\.tre$"
@@ -517,7 +519,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
+  arguments <- c(fs::path(path_to_ys, "filter_1to1_orthologs.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -567,9 +569,9 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "1to1ortho\\.tre$|MIortho.*\\.tre$"
@@ -584,7 +586,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
+  arguments <- c(fs::path(path_to_ys, "prune_paralogs_MI.py"), tree_folder, tree_file_ending, relative_cutoff, absolute_cutoff, minimal_taxa, outdir)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -632,9 +634,9 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "1to1ortho\\.tre$|\\.reroot$|\\.ortho\\.tre$"
@@ -649,7 +651,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 
   # modify actual script to change ingroups and outgroups
-  ys_script <- readr::read_lines(paste0(path_to_ys, "prune_paralogs_MO.py"))
+  ys_script <- readr::read_lines(fs::path(path_to_ys, "prune_paralogs_MO.py"))
 
   # look for chunks of comments and single comment lines, delete these
   # (some comment chunks contained old outgroup / ingroup assignments)
@@ -685,14 +687,14 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   ys_script[ingroup_line] <- ingroup_replacement
 
   # write out new temporary python script
-  readr::write_lines(ys_script, path = paste0(path_to_ys, "prune_paralogs_MO_temp.py"))
+  readr::write_lines(ys_script, path = fs::path(path_to_ys, "prune_paralogs_MO_temp.py"))
 
   # call command
-  arguments <- c(paste0(path_to_ys, "prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
+  arguments <- c(fs::path(path_to_ys, "prune_paralogs_MO_temp.py"), tree_folder, tree_file_ending, minimal_taxa, outdir)
   processx::run("python", arguments, echo = echo)
 
   # delete temporary script
-  file.remove(paste0(path_to_ys, "prune_paralogs_MO_temp.py"))
+  file.remove(fs::path(path_to_ys, "prune_paralogs_MO_temp.py"))
 
   # optional: get MD5 hash of output
   if (isTRUE(get_hash)) {
@@ -744,9 +746,9 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "\\.inclade\\d*|\\.unrooted-ortho\\.tre$"
@@ -767,7 +769,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   readr::write_lines(in_out, path = here::here("in_out_temp"))
 
   # call command
-  arguments <- c(paste0(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
+  arguments <- c(fs::path(path_to_ys, "prune_paralogs_RT.py"), tree_folder, tree_file_ending, outdir, min_ingroup_taxa, here::here("in_out_temp"))
   processx::run("python", arguments, echo = echo)
 
   # delete temporary in_out file
@@ -812,9 +814,9 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  outdir <- jntools::add_slash(outdir)
-  tree_folder <- jntools::add_slash(tree_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  outdir <- fs::path_abs(outdir)
+  tree_folder <- fs::path_abs(tree_folder)
 
   # define search terms for output files
   search_terms <- "\\.fa$"
@@ -829,7 +831,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "write_ortholog_fasta_files.py"), all_fasta, tree_folder, outdir, minimal_taxa)
+  arguments <- c(fs::path(path_to_ys, "write_ortholog_fasta_files.py"), all_fasta, tree_folder, outdir, minimal_taxa)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -873,8 +875,8 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   }
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  fasta_folder <- jntools::add_slash(fasta_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  fasta_folder <- fs::path_abs(fasta_folder)
 
   # define search terms for output files
   search_terms <- "\\.mafft\\.aln$"
@@ -889,7 +891,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "mafft_wrapper.py"), fasta_folder, infile_ending, number_cores, seq_type)
+  arguments <- c(fs::path(path_to_ys, "mafft_wrapper.py"), fasta_folder, infile_ending, number_cores, seq_type)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
@@ -925,8 +927,8 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
 phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"), fasta_folder, min_col_occup, seq_type = "dna", overwrite = FALSE, get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
 
   # modify arguments
-  path_to_ys <- jntools::add_slash(path_to_ys)
-  fasta_folder <- jntools::add_slash(fasta_folder)
+  path_to_ys <- fs::path_abs(path_to_ys)
+  fasta_folder <- fs::path_abs(fasta_folder)
 
   # error checking
   if(is.null(path_to_ys)) {
@@ -950,7 +952,7 @@ phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::p
   }
 
   # call command
-  arguments <- c(paste0(path_to_ys, "phyutility_wrapper.py"), fasta_folder, min_col_occup, seq_type)
+  arguments <- c(fs::path(path_to_ys, "phyutility_wrapper.py"), fasta_folder, min_col_occup, seq_type)
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
