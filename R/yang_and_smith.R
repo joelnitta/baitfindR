@@ -50,12 +50,7 @@ fasta_to_tree <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   processx::run("python", arguments, wd = seq_folder, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(seq_folder, pattern = search_terms, full.names = TRUE)
-    output <- if (length(output) > 0) {unlist( lapply(output, readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(seq_folder, search_terms)
 }
 
 #' Write fasta files from MCL results.
@@ -103,12 +98,7 @@ write_fasta_files_from_mcl <- function (path_to_ys = pkgconfig::get_config("bait
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms, full.names = TRUE)
-    output <- if (length(output) > 0) {unlist( lapply(output, readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Prepare BLAST results for MCL.
@@ -252,12 +242,7 @@ trim_tips <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(tree_folder, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(tree_folder, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(tree_folder, search_terms)
 }
 
 #' Mask tips in tree.
@@ -311,12 +296,7 @@ mask_tips_by_taxonID_transcripts <- function (path_to_ys = pkgconfig::get_config
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(tree_folder, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(tree_folder, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(tree_folder, search_terms)
 }
 
 #' Cut long internal branches in tree.
@@ -372,12 +352,7 @@ cut_long_internal_branches <- function (path_to_ys = pkgconfig::get_config("bait
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Write fasta files from trees.
@@ -427,12 +402,7 @@ write_fasta_files_from_trees <- function (path_to_ys = pkgconfig::get_config("ba
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Identify orthologs using the "one-to-one" method.
@@ -482,12 +452,7 @@ filter_1to1_orthologs <- function (path_to_ys = pkgconfig::get_config("baitfindR
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Identify orthologs using the "MI" method.
@@ -543,12 +508,7 @@ prune_paralogs_MI <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Identify orthologs using the "MO" method.
@@ -644,12 +604,7 @@ prune_paralogs_MO <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   file.remove(fs::path(path_to_ys, "prune_paralogs_MO_temp.py"))
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Identify orthologs using the "RT" method.
@@ -717,12 +672,7 @@ prune_paralogs_RT <- function (path_to_ys = pkgconfig::get_config("baitfindR::pa
   file.remove(here::here("in_out_temp"))
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Write fasta files from ortholog trees.
@@ -770,12 +720,7 @@ write_ortholog_fasta_files <- function (path_to_ys = pkgconfig::get_config("bait
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(outdir, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(outdir, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(outdir, search_terms)
 }
 
 #' Align all fasta files in a directory.
@@ -824,12 +769,7 @@ mafft_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::path_t
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(fasta_folder, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(fasta_folder, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(fasta_folder, search_terms)
 }
 
 #' Clean all alignments in a directory.
@@ -879,10 +819,5 @@ phyutility_wrapper <- function (path_to_ys = pkgconfig::get_config("baitfindR::p
   processx::run("python", arguments, echo = echo)
 
   # optional: get MD5 hash of output
-  if (isTRUE(get_hash)) {
-    output <- list.files(fasta_folder, pattern = search_terms)
-    output <- if (length(output) > 0) {unlist( lapply(paste0(fasta_folder, output), readr::read_file) )} else {output}
-    hash <- digest::digest(output)
-    return(hash)
-  }
+  if (isTRUE(get_hash)) get_out_hash(fasta_folder, search_terms)
 }
