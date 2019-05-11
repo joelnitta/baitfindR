@@ -17,11 +17,10 @@ set_ys_path <- function (path) {
 
 #' Make a directory.
 #'
-#' Creates a directory in the working directory, and adds a hidden \code{.name} file,
-#' which is a plain text file containing the name of the directory. The purpose of
-#' the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}}
-#' during workflows, because \code{\link[drake]{drake_plan}} can only track files,
-#' not folders.
+#' Creates a directory in the working directory, and adds a hidden \code{.keep}
+#' file. The purpose of the \code{.keep} file is to allow for tracking by
+#'  \code{\link[drake]{drake_plan}} during workflows, because
+#'  \code{\link[drake]{drake_plan}} can only track files, not folders.
 #'
 #' @param dir_name Name of the directory to be created.
 #' @param ... Other arguments. Not used by this function, but meant to be used
@@ -34,10 +33,10 @@ set_ys_path <- function (path) {
 #' \dontrun{make_dir("new_dir")}
 #' @export
 make_dir <- function (dir_name, ...) {
+  dir_name <- fs::path_abs(dir_name)
   if(!dir.exists(dir_name)) {
     dir.create(dir_name)
-    dir_name <- jntools::add_slash(dir_name)
-    sink(file = paste0(dir_name, ".name"), type = "output")
+    sink(file = fs::path(dir_name, ".keep"), type = "output")
     cat(dir_name)
     sink()
   }
