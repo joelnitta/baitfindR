@@ -86,13 +86,13 @@ extract_regions_from_fasta <- function (bed_file, fasta_file, out_fasta_file, ..
 #' @examples
 #' # First write genes, introns, and exons out as tsv files
 #'
-#' dir.create("temp_dir")
+#' temp_dir <- tempdir()
 #' find_bed_regions(
-#'   gff3_file = "data_raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+#'   gff3_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3", package = "baitfindR", mustWork = TRUE),
 #'   source_select = "araport11",
 #'   out_type = "write_all",
-#'   out_dir = "temp_dir",
-#'   prefix = "test"
+#'   out_dir = temp_dir,
+#'   prefix = "arabidopsis"
 #' )
 #'
 #' # Now mask the genome, using the bed file and genome fasta file.
@@ -208,8 +208,11 @@ clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
 #' # Find genes
+#'
+#' arabidopsis_gff_file <- system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3", package = "baitfindR", mustWork = TRUE)
+#'
 #' genes <- find_bed_regions(
-#'   gff3_file = "/home/rstudio/baitfindR_simple/data_raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+#'   gff3_file = arabidopsis_gff_file,
 #'   source_select = "araport11",
 #'   out_type = "genes"
 #' )
@@ -217,7 +220,7 @@ clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
 #'
 #' # Find introns
 #' introns <- find_bed_regions(
-#'   gff3_file = "/home/rstudio/baitfindR_simple/data_raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+#'   gff3_file = arabidopsis_gff_file,
 #'   source_select = "araport11",
 #'   out_type = "introns"
 #' )
@@ -225,20 +228,20 @@ clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
 #'
 #' # Find exons
 #' exons <- find_bed_regions(
-#'   gff3_file = "/home/rstudio/baitfindR_simple/data_raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+#'   gff3_file = arabidopsis_gff_file,
 #'   source_select = "araport11",
 #'   out_type = "exons"
 #' )
 #' tibble::as_tibble(exons)
 #'
 #' # Write genes, introns, and exons out as tsv files
-#' dir.create("temp_dir")
+#' temp_dir <- tempdir()
 #' find_bed_regions(
-#'   gff3_file = "/home/rstudio/baitfindR_simple/data_raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+#'   gff3_file = arabidopsis_gff_file,
 #'   source_select = "araport11",
 #'   out_type = "write_all",
-#'   out_dir = "temp_dir",
-#'   prefix = "test"
+#'   out_dir = temp_dir,
+#'   prefix = "arabidopsis"
 #' )
 #' @export
 find_bed_regions <- function (gff3_file,
