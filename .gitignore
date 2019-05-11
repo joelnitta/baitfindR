@@ -2,6 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-data-raw/*.fa.bz2
-data-raw/*.tar.gz
-data-raw/*.fasta
+data-raw/*
+!data-raw/*.R
