@@ -24,6 +24,9 @@ Imports:
     glue,
     ips,
     assertthat,
-    magrittr
+    magrittr,
+    bedr,
+    dplyr,
+    fs
 URL: https://github.com/joelnitta/baitfindR
 BugReports: https://github.com/joelnitta/baitfindR/issues
