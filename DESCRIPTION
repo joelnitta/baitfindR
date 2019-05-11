@@ -23,6 +23,7 @@ Imports:
     checkr,
     glue,
     ips,
-    assertthat
+    assertthat,
+    magrittr
 URL: https://github.com/joelnitta/baitfindR
 BugReports: https://github.com/joelnitta/baitfindR/issues
