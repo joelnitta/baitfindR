@@ -62,7 +62,7 @@ tcs <- function (alignment, number_cores = 1, other_args = NULL, wd = here::here
 tcs_loop <- function (folder, pattern = NULL, number_cores = 1, other_args = NULL, ...) {
 
   # add trailing slash
-  folder <- jntools::add_slash(folder)
+  folder <- fs::path_abs(folder)
 
   # run loop
   alignments <- list.files(folder, pattern = pattern)

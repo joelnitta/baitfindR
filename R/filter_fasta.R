@@ -72,9 +72,9 @@ filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa
 
   # other checks on taxonomy_data
   checkr::check_data(taxonomy_data, values = list(
-      sample = "a",
-      group = c("out", "in")),
-      order = FALSE, nrow = TRUE, exclusive = FALSE, key = "sample", error = TRUE)
+    sample = "a",
+    group = c("out", "in")),
+    order = FALSE, nrow = TRUE, exclusive = FALSE, key = "sample", error = TRUE)
 
   ### check that at least filter_col or min_taxa are provided
   if (is.null(filter_col) & is.null(min_taxa)) {
@@ -83,7 +83,7 @@ filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa
 
   ### read fasta files
 
-  seq_folder <- jntools::add_slash(seq_folder)
+  seq_folder <- fs::path_abs(seq_folder)
 
   fasta_names <- list.files(seq_folder, pattern = "\\.fa$|\\.fasta$")
 
@@ -92,7 +92,7 @@ filter_fasta <- function (seq_folder, taxonomy_data, filter_col = NULL, min_taxa
     stop(paste("No files ending in .fa or .fasta in", seq_folder))
   }
 
-  fasta_files <- lapply(paste0(seq_folder, fasta_names), ape::read.FASTA)
+  fasta_files <- purrr::map(fs::path(seq_folder, fasta_names), ape::read.FASTA)
 
   # make list of unique user-provided higher-level taxa (e.g., genus, family, etc)
   if (!is.null(filter_col)) {
