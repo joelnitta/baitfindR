@@ -15,11 +15,27 @@
 #' written to the path specified by `out_fasta_file`.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
-#' extract_regions_from_fasta(
-#'   bed_file = "temp_dir/test_genes"
-#'   fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta"
-#'   out_fasta_file = "temp_dir/test_masked_genes"
+#' @examples
+#' \dontrun{
+#' # First write gene, intron, and exon bed regions out as tsv files
+#'
+#' temp_dir <- tempdir()
+#'
+#' find_bed_regions(
+#'   gff3_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3", package = "baitfindR", mustWork = TRUE),
+#'   source_select = "araport11",
+#'   out_type = "write_all",
+#'   out_dir = temp_dir,
+#'   prefix = "arabidopsis"
 #' )
+#'
+#' # Extract genes.
+#' extract_regions_from_fasta(
+#'   bed_file = fs::path_file(temp_dir, "arabidopsis_introns"),
+#'   fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta",
+#'   out_fasta_file = fs::path_file(temp_dir, "arabidopsis_gene_seqs.fasta")
+#' )
+#' }
 #' @export
 extract_regions_from_fasta <- function (bed_file, fasta_file, out_fasta_file, ...) {
 
@@ -84,6 +100,7 @@ extract_regions_from_fasta <- function (bed_file, fasta_file, out_fasta_file, ..
 #' written to the path specified by `out_fasta_file`.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @examples
+#' \dontrun{
 #' # First write genes, introns, and exons out as tsv files
 #'
 #' temp_dir <- tempdir()
@@ -101,6 +118,7 @@ extract_regions_from_fasta <- function (bed_file, fasta_file, out_fasta_file, ..
 #'   fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta",
 #'   out_fasta_file = "temp_dir/test_masked"
 #' )
+#' }
 #' @export
 mask_regions_in_fasta <- function (bed_file, fasta_file, out_fasta_file, ...) {
 
@@ -162,11 +180,6 @@ mask_regions_in_fasta <- function (bed_file, fasta_file, out_fasta_file, ...) {
 #' @return Dataframe in "bed" format.
 #'
 clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
-
-  # Check input format
-  assertthat::assert_that(
-    bedr:::determine.input(region, verbose = verbose) == 1,
-    msg = "Input must be dataframe in 'bed' format")
 
   region %>%
     # Check if region is valid
@@ -234,6 +247,7 @@ clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
 #' )
 #' tibble::as_tibble(exons)
 #'
+#' \dontrun{
 #' # Write genes, introns, and exons out as tsv files
 #' temp_dir <- tempdir()
 #' find_bed_regions(
@@ -243,6 +257,7 @@ clean_gff <- function (region, check.chr = FALSE, verbose = FALSE) {
 #'   out_dir = temp_dir,
 #'   prefix = "arabidopsis"
 #' )
+#' }
 #' @export
 find_bed_regions <- function (gff3_file,
                               source_select = NULL,
