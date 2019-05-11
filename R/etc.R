@@ -64,3 +64,30 @@ cat_files <- function (input_file_list, output_file) {
   collapsed_files <- paste(unlisted_files, collapse="")
   readr::write_file(collapsed_files, output_file)
 }
+
+#' Delete old output in a folder
+#'
+#' All file names matching `terms` will be deleted
+#'
+#' @param folder Path to folder
+#' @param terms A regular expression: search terms to find files to delete.
+#'
+#' @return The deleted paths (invisibly).
+#'
+#' @examples
+#' \dontrun{
+#' make_dir("test")
+#' fs::file_create("test/a")
+#' fs::file_create("test/b")
+#' fs::file_create("test/1")
+#' list.files("test")
+#' delete_old_output("test", "c")
+#' list.files("test")
+#' delete_old_output("test", "a|b")
+#' list.files("test")
+#' fs::file_delete("test")
+#' }
+delete_old_output <- function (folder, terms) {
+  files_to_delete <- list.files(folder, pattern = terms, full.names = TRUE)
+  fs::file_delete(files_to_delete)
+}
