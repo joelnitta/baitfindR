@@ -5,3 +5,4 @@
 data-raw/*
 !data-raw/*.R
 !data-raw/*.Rmd
+!data-raw/*.md
