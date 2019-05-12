@@ -46,7 +46,7 @@ This is a wrapper for makeblastdb.
 \dontrun{
 library(ape)
 data(woodmouse)
-temp_dir <- tempdir()
+temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
 ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
 list.files(temp_dir)
 build_blast_db(
@@ -56,7 +56,7 @@ build_blast_db(
   parse_seqids = TRUE,
   wd = temp_dir)
 list.files(temp_dir)
-fs::file_delete(list.files(temp_dir, full.names = TRUE))
+fs::file_delete(temp_dir)
 }
 }
 \references{

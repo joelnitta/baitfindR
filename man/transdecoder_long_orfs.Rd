@@ -38,7 +38,17 @@ sequences (i.e., the transcriptome). This is a wrapper that calls
 \code{TransDecoder.LongOrfs}.
 }
 \examples{
-\dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
+\dontrun{
+library(ape)
+temp_dir <- tempdir()
+data("PSKY")
+write.FASTA(PSKY, fs::path(temp_dir, "PSKY.fasta"))
+transdecoder_long_orfs(
+  transcriptome_file = fs::path(temp_dir, "PSKY.fasta"),
+  wd = temp_dir
+  )
+list.files(temp_dir)
+}
 
 }
 \references{

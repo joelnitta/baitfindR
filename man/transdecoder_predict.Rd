@@ -43,7 +43,9 @@ blastp search to make sure that peptides with a blastp hit against the
 reference database are retained in the TransDecoder output.
 }
 \examples{
-\dontrun{transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")}
+\dontrun{
+transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")
+}
 
 }
 \references{

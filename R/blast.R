@@ -31,7 +31,7 @@
 #' \dontrun{
 #' library(ape)
 #' data(woodmouse)
-#' temp_dir <- tempdir()
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
 #' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
 #' list.files(temp_dir)
 #' build_blast_db(
@@ -41,7 +41,7 @@
 #'   parse_seqids = TRUE,
 #'   wd = temp_dir)
 #' list.files(temp_dir)
-#' fs::file_delete(list.files(temp_dir, full.names = TRUE))
+#' fs::file_delete(temp_dir)
 #' }
 #' @export
 build_blast_db <- function (in_seqs,
@@ -98,6 +98,9 @@ build_blast_db <- function (in_seqs,
 #' \code{blastp} \code{outfmt} argument. Default = "6".
 #' @param other_args Character vector; other arguments to pass on to
 #' \code{blastp}. For a list of options, run \code{blastp -help}.
+#' @param wd Character vector of length one; working directory. The blast
+#' search will be conducted here.
+#' @param echo Logical; should standard error and output be printed?
 #' @param ... Additional other arguments. Not used by this function,
 #' but meant to be used by \code{\link[drake]{drake_plan}} for tracking
 #' during workflows.
@@ -105,23 +108,80 @@ build_blast_db <- function (in_seqs,
 #' search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
+#' @examples
+#' \dontrun{
+#' library(ape)
+#' library(baitfindR)
+#'
+#' # Make temp dir for storing files
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+#'
+#' # Write out ape::woodmouse dataset as amino acids
+#' data(woodmouse)
+#' woodmouse_aa <- trans(woodmouse, 2)
+#' ape::write.FASTA(woodmouse_aa, fs::path(temp_dir, "woodmouse.fasta"))
+#'
+#' # Make protein blast database
+#' build_blast_db(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   db_type = "prot",
+#'   out_name = "wood",
+#'   parse_seqids = TRUE,
+#'   wd = temp_dir)
+#'
+#' # Blast the original sequences against the database
+#' blast_p(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   database = "wood",
+#'   out_file = "blastp_results",
+#'   wd = temp_dir,
+#'   echo = TRUE
+#' )
+#'
+#' # Take a look at the results.
+#' readr::read_tsv(
+#'   fs::path(temp_dir, "blastp_results"),
+#'   col_names = FALSE
+#'   )
+#'
+#' # Cleanup.
+#' fs::file_delete(temp_dir)
+#' }
 #' @export
 blast_p <- function (query,
                      database,
                      out_file,
                      outfmt = "6",
                      other_args = NULL,
+                     echo = TRUE,
+                     wd,
                      ...) {
 
+  # Check input
+
+  assertthat::assert_that(assertthat::is.string(query))
+  assertthat::assert_that(assertthat::is.string(database))
+  assertthat::assert_that(assertthat::is.string(out_file))
+  assertthat::assert_that(assertthat::is.string(outfmt))
+  assertthat::assert_that(is.character(other_args) | is.null(other_args))
+  assertthat::assert_that(is.logical(echo))
+  assertthat::assert_that(assertthat::is.string(wd))
+
+  wd <- fs::path_abs(wd)
+  assertthat::assert_that(assertthat::is.dir(wd))
+
+  query <- fs::path_abs(query)
+  assertthat::assert_that(assertthat::is.readable(query))
+
   # modify arguments
-  arguments <- c(paste("-query", query),
-                 paste("-db", database),
-                 paste("-out", out_file),
-                 paste("-outfmt", outfmt),
+  arguments <- c("-query", query,
+                 "-db", database,
+                 "-out", out_file,
+                 "-outfmt", outfmt,
                  other_args)
 
   # run command
-  system2("blastp", arguments)
+  processx::run("blastp", arguments, wd = wd, echo = echo)
 
 }
 
@@ -139,6 +199,9 @@ blast_p <- function (query,
 #' \code{blastn} \code{outfmt} argument. Default = "6".
 #' @param other_args Character vector; other arguments to pass on to
 #' \code{blastn}. For a list of options, run \code{blastn -help}.
+#' @param wd Character vector of length one; working directory. The blast
+#' search will be conducted here.
+#' @param echo Logical; should standard error and output be printed?
 #' @param ... Additional other arguments. Not used by this function,
 #' but meant to be used by \code{\link[drake]{drake_plan}} for tracking
 #' during workflows.
@@ -146,22 +209,78 @@ blast_p <- function (query,
 #' search, named with the value of \code{out_file}.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
+#' @examples
+#' \dontrun{
+#' library(ape)
+#' library(baitfindR)
+#'
+#' # Make temp dir for storing files
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+#'
+#' # Write out ape::woodmouse dataset as DNA
+#' data(woodmouse)
+#' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
+#'
+#' # Make protein blast database
+#' build_blast_db(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   db_type = "nucl",
+#'   out_name = "wood",
+#'   parse_seqids = TRUE,
+#'   wd = temp_dir)
+#'
+#' # Blast the original sequences against the database
+#' blast_n(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   database = "wood",
+#'   out_file = "blastn_results",
+#'   wd = temp_dir,
+#'   echo = TRUE
+#' )
+#'
+#' # Take a look at the results.
+#' readr::read_tsv(
+#'   fs::path(temp_dir, "blastn_results"),
+#'   col_names = FALSE
+#'   )
+#'
+#' # Cleanup.
+#' fs::file_delete(temp_dir)
+#' }
 #' @export
 blast_n <- function (query,
                      database,
                      out_file,
-                     outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'",
+                     outfmt = "6",
                      other_args = NULL,
+                     echo = TRUE,
+                     wd,
                      ...) {
 
+  # Check input
+
+  assertthat::assert_that(assertthat::is.string(query))
+  assertthat::assert_that(assertthat::is.string(database))
+  assertthat::assert_that(assertthat::is.string(out_file))
+  assertthat::assert_that(assertthat::is.string(outfmt))
+  assertthat::assert_that(is.character(other_args) | is.null(other_args))
+  assertthat::assert_that(is.logical(echo))
+  assertthat::assert_that(assertthat::is.string(wd))
+
+  wd <- fs::path_abs(wd)
+  assertthat::assert_that(assertthat::is.dir(wd))
+
+  query <- fs::path_abs(query)
+  assertthat::assert_that(assertthat::is.readable(query))
+
   # modify arguments
-  arguments <- c(paste("-query", query),
-                 paste("-db", database),
-                 paste("-out", out_file),
-                 paste("-outfmt", outfmt),
+  arguments <- c("-query", query,
+                 "-db", database,
+                 "-out", out_file,
+                 "-outfmt", outfmt,
                  other_args)
 
   # run command
-  system2("blastn", arguments)
+  processx::run("blastn", arguments, wd = wd, echo = echo)
 
 }

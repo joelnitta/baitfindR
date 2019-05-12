@@ -4,9 +4,8 @@
 \alias{blast_n}
 \title{Run a blastn query.}
 \usage{
-blast_n(query, database, out_file,
-  outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'",
-  other_args = NULL, ...)
+blast_n(query, database, out_file, outfmt = "6", other_args = NULL,
+  echo = TRUE, wd, ...)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta
@@ -24,6 +23,11 @@ the results file.}
 \item{other_args}{Character vector; other arguments to pass on to
 \code{blastn}. For a list of options, run \code{blastn -help}.}
 
+\item{echo}{Logical; should standard error and output be printed?}
+
+\item{wd}{Character vector of length one; working directory. The blast
+search will be conducted here.}
+
 \item{...}{Additional other arguments. Not used by this function,
 but meant to be used by \code{\link[drake]{drake_plan}} for tracking
 during workflows.}
@@ -34,6 +38,45 @@ search, named with the value of \code{out_file}.
 }
 \description{
 This is a wrapper for blastn.
+}
+\examples{
+\dontrun{
+library(ape)
+library(baitfindR)
+
+# Make temp dir for storing files
+temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+
+# Write out ape::woodmouse dataset as DNA
+data(woodmouse)
+ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
+
+# Make protein blast database
+build_blast_db(
+  fs::path(temp_dir, "woodmouse.fasta"),
+  db_type = "nucl",
+  out_name = "wood",
+  parse_seqids = TRUE,
+  wd = temp_dir)
+
+# Blast the original sequences against the database
+blast_n(
+  fs::path(temp_dir, "woodmouse.fasta"),
+  database = "wood",
+  out_file = "blastn_results",
+  wd = temp_dir,
+  echo = TRUE
+)
+
+# Take a look at the results.
+readr::read_tsv(
+  fs::path(temp_dir, "blastn_results"),
+  col_names = FALSE
+  )
+
+# Cleanup.
+fs::file_delete(temp_dir)
+}
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
