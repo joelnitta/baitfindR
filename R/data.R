@@ -18,9 +18,9 @@
 
 #' Fern transcriptome
 #'
-#' A fern transcriptome from the oneKp project that has been randomly downsized
-#' to 5 percent of its original size. Named by 1kP code.
+#' List of fern transcriptomes from the oneKp project that have been randomly
+#' downsized to 5 percent of original size. Named by 1kP code.
 #'
-#' @format List of class 'DNAbin".
+#' @format List of lists, each of class 'DNAbin".
 #' @source \url{http://www.onekp.com/public_data.html}
-"PSKY"
+"example_transcriptomes"

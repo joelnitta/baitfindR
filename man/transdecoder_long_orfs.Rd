@@ -41,7 +41,8 @@ sequences (i.e., the transcriptome). This is a wrapper that calls
 \dontrun{
 library(ape)
 temp_dir <- tempdir()
-data("PSKY")
+data("example_transcriptomes")
+PSKY <- example_transcriptomes$PSKY
 write.FASTA(PSKY, fs::path(temp_dir, "PSKY.fasta"))
 transdecoder_long_orfs(
   transcriptome_file = fs::path(temp_dir, "PSKY.fasta"),

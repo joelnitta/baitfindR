@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Translation}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -58,7 +58,8 @@ list.files(temp_dir)
 Write out example fasta transcriptome: *Asplenium nidus* transcriptome from the [1KP project](www.onekp.com/) downsized to 5% of original size.
 
 ```{r write-example-transcriptome}
-PSKY <- baitfindR::PSKY
+example_transcriptomes <- baitfindR::example_transcriptomes
+PSKY <- example_transcriptomes$PSKY
 ape::write.FASTA(PSKY, fs::path(temp_dir, "PSKY"))
 
 list.files(temp_dir)
@@ -96,7 +97,7 @@ Blast candidate long ORFs against the protein database (takes 2-3 minutes).
 
 ```{r blast-orfs}
 blast_p_results <- baitfindR::blast_p(
-  query = fs::path(temp_dir, "PSKY.transdecoder_dir/longest_orfs.pep"), 
+  query = fs::path(temp_dir, "PSKY.transdecoder_dir/longest_orfs.pep"),
   database = "arabidopsis",
   wd = fs::path(temp_dir),
   other_args = c("-max_target_seqs", 1, "-evalue", 10, "-num_threads", 2),

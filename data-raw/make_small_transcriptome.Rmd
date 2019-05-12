@@ -1,5 +1,5 @@
 ---
-title: "make_small_transcriptome"
+title: "make_small_transcriptomes"
 author: "Joel Nitta"
 date: "5/12/2019"
 output: github_document
@@ -9,37 +9,99 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Make small version of a transcriptome file for testing functions.
+Make small versions of transcriptome files for testing functions.
 
-The transriptome will be randomly downsized to the fraction set by `keep_frac`.
+The transcriptomes will be randomly downsized to the fraction set by `keep_frac`.
 
-```{r}
+Load packages.
+
+```{r load-packages}
+library(rvest)
+library(tidyverse)
+library(XML)
+library(baitfindR)
+library(ape)
+```
+
+Define helper function for downsizing transcriptomes.
+
+```{r downsize-transcriptome}
+downsize_transcriptome <- function (file, keep_frac) {
+  # Read in file. Use bzfile() because it's compressed
+  seq <- ape::read.FASTA(bzfile(file))
+  # Randomly downsize to specified fraction of transcripts
+  seq <- seq[sample(1:length(seq), keep_frac*length(seq))]
+}
+```
+
+Scrape sample codes and URLs to download transcriptome assemblies from [oneKp website](http://www.onekp.com/public_data.html).
+
+```{r scrape-onekp}
+# First, scrape links contained within oneKp data website.
+
+# Set URL for oneKp data website
+url <- "http://www.onekp.com/public_data.html"
+
+# Scrape links for assemblies.
+# Use Selectorgadget to identify the CSS component with links.
+# Note: run vignette(“selectorgadget”) for a refresher on how to do this.
+links <- read_html(url) %>% html_nodes("td:nth-child(5) a")
+
+# Next, read in the main table (just plain text, without links).
+tbls_xml <- readHTMLTable(url)
+
+# Extract the table and add links to assemblies,
+# keeping only transcriptomes in baitfindR example dataset .
+onekp_download_data <- 
+  tbls_xml[[1]] %>% 
+  as_tibble %>%
+  mutate_all(as.character) %>%
+  mutate(assembly_link = map_chr(links, xml_attrs)) %>%
+  select(code = `1kP_Code`, assembly_link) %>%
+  filter(code %in% baitfindR::onekp_data$code)
+```
+
+Download transcriptomes.
+
+```{r download-transcriptomes}
+purrr::walk2(
+  .x = onekp_download_data$assembly_link, 
+  .y = fs::path(
+    "data-raw", 
+    glue::glue("{onekp_download_data$code}-SOAPdenovo-Trans-assembly.fa.bz2")) %>% 
+    here::here(),
+  ~ download.file(url = .x, destfile = .y)
+)
+```
+
+Downsize transcriptomes.
+
+```{r downsize-transcriptomes}
 # Set fraction of transcriptome to keep
 keep_frac <- 0.05
 
 # Set seed
 set.seed(5394)
 
-# Clear out old files, if present
-fs::file_delete(here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2"))
+# Downsize and write out transcriptomes as list.
+example_transcriptomes <-
+  purrr::map(
+    fs::path(
+      "data-raw", 
+      glue::glue("{onekp_download_data$code}-SOAPdenovo-Trans-assembly.fa.bz2")) %>% 
+      here::here() %>%
+      set_names(onekp_download_data$code),
+    ~ downsize_transcriptome(., keep_frac = keep_frac)
+  )
+```
 
-# Download transcriptome
-download.file(
-  url = "https://drive.google.com/uc?export=download&id=1Avi1oAeW9RPExzzreWZMht7EplvKEX0J",
-  destfile = here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2")
-)
+Write out list of downsized transcriptomes to `data/`.
 
-# Read in file with ape. Use bzfile() because it's compressed
-PSKY <- ape::read.FASTA(
-  bzfile(here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2"))
-    )
+```{r use-data}
+usethis::use_data(example_transcriptomes, overwrite = TRUE)
+```
 
-# Randomly downsize to specified fraction of transcripts
-PSKY <- PSKY[sample(1:length(PSKY), keep_frac*length(PSKY))]
-
-# Write out to data/
-usethis::use_data(PSKY, overwrite = TRUE)
-
+```{r sesh-info}
 sessionInfo()
 ```
 
