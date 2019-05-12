@@ -74,6 +74,7 @@ exons <- find_bed_regions(
 )
 tibble::as_tibble(exons)
 
+\dontrun{
 # Write genes, introns, and exons out as tsv files
 temp_dir <- tempdir()
 find_bed_regions(
@@ -83,6 +84,7 @@ find_bed_regions(
   out_dir = temp_dir,
   prefix = "arabidopsis"
 )
+}
 }
 \author{
 Joel H Nitta, \email{joelnitta@gmail.com}

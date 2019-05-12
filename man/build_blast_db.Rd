@@ -4,21 +4,30 @@
 \alias{build_blast_db}
 \title{Build a BLAST database.}
 \usage{
-build_blast_db(in_seqs, out_name, db_type = "nucl", other_args = NULL,
-  ...)
+build_blast_db(in_seqs, db_type = "nucl", out_name = NULL,
+  title = NULL, parse_seqids = FALSE, echo = TRUE, wd, ...)
 }
 \arguments{
 \item{in_seqs}{Character vector of length one; the path to the fasta
 file containing the sequences to be included in the database.}
 
-\item{out_name}{Character vector of length one; name of BLAST database
-to be created.}
-
 \item{db_type}{Character vector of length one; "nucl" for DNA or "prot"
 for amino acids (proteins).}
 
-\item{other_args}{Character vector; other arguments to pass on to
-\code{makeblastdb}. For a list of options, run \code{makeblastdb -help}.}
+\item{out_name}{Character vector of length one; name of BLAST database
+to be created (optional). This will be used to name all database files;
+if omitted, the name of the `in_seqs` file will be used instead.}
+
+\item{title}{Character vector of length one; title of BLAST database
+to be created (optional).}
+
+\item{parse_seqids}{Logical; should the makeblastdb flag
+"parse_seqids" be used?}
+
+\item{echo}{Logical; should standard error and output be printed?}
+
+\item{wd}{Character vector of length one; working directory. The blast
+database will be made here.}
 
 \item{...}{Additional other arguments. Not used by this function, but
 meant to be used by \code{\link[drake]{drake_plan}} for tracking
@@ -32,6 +41,23 @@ the working directory.
 }
 \description{
 This is a wrapper for makeblastdb.
+}
+\examples{
+\dontrun{
+library(ape)
+data(woodmouse)
+temp_dir <- tempdir()
+ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
+list.files(temp_dir)
+build_blast_db(
+  fs::path(temp_dir, "woodmouse.fasta"),
+  title = "test db",
+  out_name = "wood",
+  parse_seqids = TRUE,
+  wd = temp_dir)
+list.files(temp_dir)
+fs::file_delete(list.files(temp_dir, full.names = TRUE))
+}
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}

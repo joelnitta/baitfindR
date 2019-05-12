@@ -17,11 +17,10 @@ by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 directory \code{dir_name}.
 }
 \description{
-Creates a directory in the working directory, and adds a hidden \code{.name} file,
-which is a plain text file containing the name of the directory. The purpose of
-the \code{.name} file is to allow for tracking by \code{\link[drake]{drake_plan}}
-during workflows, because \code{\link[drake]{drake_plan}} can only track files,
-not folders.
+Creates a directory in the working directory, and adds a hidden \code{.keep}
+file. The purpose of the \code{.keep} file is to allow for tracking by
+ \code{\link[drake]{drake_plan}} during workflows, because
+ \code{\link[drake]{drake_plan}} can only track files, not folders.
 }
 \examples{
 \dontrun{make_dir("new_dir")}

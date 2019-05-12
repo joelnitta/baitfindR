@@ -15,6 +15,9 @@ No column headers are used.}
 \item{fasta_file}{Path to file in fasta format to extract regions from.}
 
 \item{out_fasta_file}{Path to write extracted regions (in fasta format).}
+
+\item{...}{Other arguments. Not used by this function, but meant to be used
+by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 List; output of processx::run(). Externally, a fasta file will be
@@ -24,11 +27,26 @@ written to the path specified by `out_fasta_file`.
 Wrapper for bedtools getfasta.
 }
 \examples{
-extract_regions_from_fasta(
-  bed_file = "temp_dir/test_genes"
-  fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta"
-  out_fasta_file = "temp_dir/test_masked_genes"
+\dontrun{
+# First write gene, intron, and exon bed regions out as tsv files
+
+temp_dir <- tempdir()
+
+find_bed_regions(
+  gff3_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3", package = "baitfindR", mustWork = TRUE),
+  source_select = "araport11",
+  out_type = "write_all",
+  out_dir = temp_dir,
+  prefix = "arabidopsis"
 )
+
+# Extract genes.
+extract_regions_from_fasta(
+  bed_file = fs::path_file(temp_dir, "arabidopsis_introns"),
+  fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta",
+  out_fasta_file = fs::path_file(temp_dir, "arabidopsis_gene_seqs.fasta")
+)
+}
 }
 \author{
 Joel H Nitta, \email{joelnitta@gmail.com}

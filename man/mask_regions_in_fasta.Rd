@@ -12,6 +12,9 @@ mask_regions_in_fasta(bed_file, fasta_file, out_fasta_file, ...)
 \item{fasta_file}{Path to unmasked fasta file.}
 
 \item{out_fasta_file}{Path to write masked fasta file.}
+
+\item{...}{Other arguments. Not used by this function, but meant to be used
+by \code{\link[drake]{drake_plan}} for tracking during workflows.}
 }
 \value{
 List; output of processx::run(). Externally, a fasta file will be
@@ -29,6 +32,7 @@ start position (e.g., 1), and end position (e.g., 10), in that order.
 No column headers are used.
 }
 \examples{
+\dontrun{
 # First write genes, introns, and exons out as tsv files
 
 temp_dir <- tempdir()
@@ -46,6 +50,7 @@ mask_genome(
   fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta",
   out_fasta_file = "temp_dir/test_masked"
 )
+}
 }
 \author{
 Joel H Nitta, \email{joelnitta@gmail.com}
