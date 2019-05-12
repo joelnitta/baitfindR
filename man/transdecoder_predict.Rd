@@ -42,6 +42,9 @@ containing the .transdecoder_dir output folders from
 blastp search to make sure that peptides with a blastp hit against the
 reference database are retained in the TransDecoder output.
 }
+\details{
+For a more detailed example, see vignettes.
+}
 \examples{
 \dontrun{
 transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")

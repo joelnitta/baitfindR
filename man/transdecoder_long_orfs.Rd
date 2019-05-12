@@ -49,7 +49,6 @@ transdecoder_long_orfs(
   )
 list.files(temp_dir)
 }
-
 }
 \references{
 \url{http://transdecoder.github.io}

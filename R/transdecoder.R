@@ -37,7 +37,6 @@
 #'   )
 #' list.files(temp_dir)
 #' }
-#'
 #' @export
 transdecoder_long_orfs <- function (
   transcriptome_file,
@@ -69,6 +68,8 @@ transdecoder_long_orfs <- function (
 #' \code{\link{transdecoder_long_orfs}}. Optionally include the results of a
 #' blastp search to make sure that peptides with a blastp hit against the
 #' reference database are retained in the TransDecoder output.
+#'
+#' For a more detailed example, see vignettes.
 #'
 #' @param transcriptome_file Character vector of length one; the path to the fasta
 #' file containing transcript sequences (i.e., the transcriptome).
@@ -164,10 +165,60 @@ transdecoder_predict <- function (
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{http://www.bioinformatics.org/cd-hit/}, \url{http://transdecoder.github.io}
 #' @examples
-#' \dontrun{cd_hit_est("some/transcriptome_file.cds", "some/result.cds.cdhitest")}
+#' \dontrun{
+#' library(ape)
+#' library(baitfindR)
 #'
+#' # Make temp dir for storing output
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+#' data("PSKY")
+#'
+#' # Write downsized transcriptome to temp dir
+#' write.FASTA(PSKY, fs::path(temp_dir, "PSKY"))
+#'
+#' # Get CDS
+#' transdecoder_long_orfs(
+#'   transcriptome_file = fs::path(temp_dir, "PSKY"),
+#'   wd = temp_dir
+#'   )
+#'
+#' # Cluster similar genes in CDS
+#' cd_hit_est(
+#'   input = fs::path(temp_dir, "PSKY.transdecoder_dir", "longest_orfs.cds"),
+#'   output = fs::path(temp_dir, "PSKY.cd-hit-est"),
+#'   wd = temp_dir,
+#'   echo = TRUE
+#' )
+#'
+#' # Check output
+#' list.files(temp_dir)
+#' head(readr::read_lines(fs::path(temp_dir, "PSKY.cd-hit-est")))
+#' head(readr::read_lines(fs::path(temp_dir, "PSKY.cd-hit-est.clstr")))
+#'
+#' # Cleanup
+#' fs::file_delete(temp_dir)
+#' }
 #' @export
-cd_hit_est <- function (input, output, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
+cd_hit_est <- function (
+  input,
+  output,
+  wd = here::here(),
+  other_args = NULL,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...) {
+
+  # Check input
+  assertthat::assert_that(assertthat::is.string(input))
+  assertthat::assert_that(assertthat::is.string(output))
+  assertthat::assert_that(is.character(other_args) | is.null(other_args))
+  assertthat::assert_that(is.logical(echo))
+  assertthat::assert_that(assertthat::is.string(wd))
+
+  wd <- fs::path_abs(wd)
+  assertthat::assert_that(assertthat::is.dir(wd))
+
+  input <- fs::path_abs(input)
+  assertthat::assert_that(assertthat::is.readable(input))
 
   # modify arguments
   arguments <- c("-i", input, "-o", output, other_args)

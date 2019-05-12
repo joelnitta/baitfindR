@@ -43,8 +43,39 @@ similarity threshold, usually a sequence identity." cd-hit-est comes bundled wit
 transdecoder, so it is run from there.
 }
 \examples{
-\dontrun{cd_hit_est("some/transcriptome_file.cds", "some/result.cds.cdhitest")}
+\dontrun{
+library(ape)
+library(baitfindR)
 
+# Make temp dir for storing output
+temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+data("PSKY")
+
+# Write downsized transcriptome to temp dir
+write.FASTA(PSKY, fs::path(temp_dir, "PSKY"))
+
+# Get CDS
+transdecoder_long_orfs(
+  transcriptome_file = fs::path(temp_dir, "PSKY"),
+  wd = temp_dir
+  )
+
+# Cluster similar genes in CDS
+cd_hit_est(
+  input = fs::path(temp_dir, "PSKY.transdecoder_dir", "longest_orfs.cds"),
+  output = fs::path(temp_dir, "PSKY.cd-hit-est"),
+  wd = temp_dir,
+  echo = TRUE
+)
+
+# Check output
+list.files(temp_dir)
+head(readr::read_lines(fs::path(temp_dir, "PSKY.cd-hit-est")))
+head(readr::read_lines(fs::path(temp_dir, "PSKY.cd-hit-est.clstr")))
+
+# Cleanup
+fs::file_delete(temp_dir)
+}
 }
 \references{
 \url{http://www.bioinformatics.org/cd-hit/}, \url{http://transdecoder.github.io}
