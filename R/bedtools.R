@@ -10,11 +10,11 @@
 #' No column headers are used.
 #' @param fasta_file Path to file in fasta format to extract regions from.
 #' @param out_fasta_file Path to write extracted regions (in fasta format).
-#' @param ...
+#' @param ... Other arguments. Not used by this function, but meant to be used
+#' by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return List; output of processx::run(). Externally, a fasta file will be
 #' written to the path specified by `out_fasta_file`.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
-#' @examples
 #' @examples
 #' \dontrun{
 #' # First write gene, intron, and exon bed regions out as tsv files
@@ -95,7 +95,8 @@ extract_regions_from_fasta <- function (bed_file, fasta_file, out_fasta_file, ..
 #' @param bed_file Path to bed file with locations of regions to mask.
 #' @param fasta_file Path to unmasked fasta file.
 #' @param out_fasta_file Path to write masked fasta file.
-#' @param ...
+#' @param ... Other arguments. Not used by this function, but meant to be used
+#' by \code{\link[drake]{drake_plan}} for tracking during workflows.
 #' @return List; output of processx::run(). Externally, a fasta file will be
 #' written to the path specified by `out_fasta_file`.
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
