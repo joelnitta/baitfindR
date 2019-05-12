@@ -32,10 +32,10 @@
 #'
 #' # Extract genes.
 #' extract_regions_from_fasta(
-#'   bed_file = fs::path_file(temp_dir, "arabidopsis_introns"),
+#'   bed_file = fs::path(temp_dir, "arabidopsis_introns"),
 #'   fasta_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.fasta",
 #'   package = "baitfindR", mustWork = TRUE),
-#'   out_fasta_file = fs::path_file(temp_dir, "arabidopsis_gene_seqs.fasta")
+#'   out_fasta_file = fs::path(temp_dir, "arabidopsis_gene_seqs.fasta")
 #' )
 #' }
 #' @export
