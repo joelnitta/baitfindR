@@ -44,7 +44,8 @@
 #' fs::file_delete(list.files(temp_dir, full.names = TRUE))
 #' }
 #' @export
-build_blast_db <- function (in_seqs, db_type = "nucl",
+build_blast_db <- function (in_seqs,
+                            db_type = "nucl",
                             out_name = NULL,
                             title = NULL,
                             parse_seqids = FALSE,
@@ -105,8 +106,12 @@ build_blast_db <- function (in_seqs, db_type = "nucl",
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @export
-blast_p <- function (query, database, out_file, outfmt = "6",
-                     other_args = NULL, ...) {
+blast_p <- function (query,
+                     database,
+                     out_file,
+                     outfmt = "6",
+                     other_args = NULL,
+                     ...) {
 
   # modify arguments
   arguments <- c(paste("-query", query),
@@ -142,9 +147,12 @@ blast_p <- function (query, database, out_file, outfmt = "6",
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @export
-blast_n <- function (query, database, out_file,
+blast_n <- function (query,
+                     database,
+                     out_file,
                      outfmt = "'6 qseqid qlen sseqid slen frames pident nident length mismatch gapopen qstart qend sstart send evalue bitscore'",
-                     other_args = NULL, ...) {
+                     other_args = NULL,
+                     ...) {
 
   # modify arguments
   arguments <- c(paste("-query", query),
