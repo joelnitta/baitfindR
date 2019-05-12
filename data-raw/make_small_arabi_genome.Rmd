@@ -41,7 +41,7 @@ arabidopsis_genome_small[["1"]] <- arabidopsis_genome_small[["1"]][1:100000]
 
 # Write out FASTA file to inst/extdata
 ape::write.FASTA(
-  arabidopsis_genome,
+  arabidopsis_genome_small,
   here::here("inst/extdata/Arabidopsis_thaliana_TAIR10_40_small.fasta"))
 
 sessionInfo()
