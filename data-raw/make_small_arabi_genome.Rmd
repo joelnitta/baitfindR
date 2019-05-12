@@ -1,0 +1,47 @@
+---
+title: "make_small_arabi_genome"
+author: "Joel Nitta"
+date: "5/11/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(here::here())
+```
+
+Make small version of Arabidopsis genome file for testing functions.
+
+This only includes the first ca. 100,000 bases of chromosome 1.
+
+```{r make-small-genome}
+# Download genome
+download.file(
+  url = "ftp://ftp.ensemblgenomes.org/pub/release-40/plants/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz",
+  destfile = "data-raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz"
+)
+
+# Unzip
+R.utils::gunzip(
+  filename = "data-raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz",
+  destname = "data-raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.fasta"
+)
+
+# Read in fasta
+arabidopsis_genome <- ape::read.FASTA("data-raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.fasta")
+
+# Fix names (only take first part of name separated by space)
+names(arabidopsis_genome) <-
+  names(arabidopsis_genome) %>% str_split(" ") %>% map_chr(1)
+
+# Keep only first 100,000 nucleotides of chromosome 1
+arabidopsis_genome_small <- arabidopsis_genome["1"]
+arabidopsis_genome_small[["1"]] <- arabidopsis_genome_small[["1"]][1:100000]
+
+# Write out FASTA file to inst/extdata
+ape::write.FASTA(
+  arabidopsis_genome,
+  "inst/extdata/Arabidopsis_thaliana_TAIR10_40_small.fasta")
+
+sessionInfo()
+```
