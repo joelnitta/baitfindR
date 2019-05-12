@@ -56,7 +56,7 @@ genes <- find_bed_regions(
   source_select = "araport11",
   out_type = "genes"
 )
-tibble::as_tibble(genes)
+head(genes)
 
 # Find introns
 introns <- find_bed_regions(
@@ -64,7 +64,7 @@ introns <- find_bed_regions(
   source_select = "araport11",
   out_type = "introns"
 )
-tibble::as_tibble(introns)
+head(introns)
 
 # Find exons
 exons <- find_bed_regions(
@@ -72,7 +72,7 @@ exons <- find_bed_regions(
   source_select = "araport11",
   out_type = "exons"
 )
-tibble::as_tibble(exons)
+head(exons)
 
 \dontrun{
 # Write genes, introns, and exons out as tsv files
