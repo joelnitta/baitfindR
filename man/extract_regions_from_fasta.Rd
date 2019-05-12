@@ -33,7 +33,8 @@ Wrapper for bedtools getfasta.
 temp_dir <- tempdir()
 
 find_bed_regions(
-  gff3_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3", package = "baitfindR", mustWork = TRUE),
+  gff3_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.gff3",
+  package = "baitfindR", mustWork = TRUE),
   source_select = "araport11",
   out_type = "write_all",
   out_dir = temp_dir,
@@ -43,7 +44,8 @@ find_bed_regions(
 # Extract genes.
 extract_regions_from_fasta(
   bed_file = fs::path_file(temp_dir, "arabidopsis_introns"),
-  fasta_file = "data_raw/Arabidopsis_thaliana.TAIR10.dna.toplevel.renamed.fasta",
+  fasta_file = system.file("extdata", "Arabidopsis_thaliana_TAIR10_40_small.fasta",
+  package = "baitfindR", mustWork = TRUE),
   out_fasta_file = fs::path_file(temp_dir, "arabidopsis_gene_seqs.fasta")
 )
 }
