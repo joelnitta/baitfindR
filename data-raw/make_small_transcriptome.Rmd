@@ -1,0 +1,45 @@
+---
+title: "make_small_transcriptome"
+author: "Joel Nitta"
+date: "5/12/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Make small version of a transcriptome file for testing functions.
+
+The transriptome will be randomly downsized to the fraction set by `keep_frac`.
+
+```{r}
+# Set fraction of transcriptome to keep
+keep_frac <- 0.05
+
+# Set seed
+set.seed(5394)
+
+# Clear out old files, if present
+fs::file_delete(here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2"))
+
+# Download transcriptome
+download.file(
+  url = "https://drive.google.com/uc?export=download&id=1Avi1oAeW9RPExzzreWZMht7EplvKEX0J",
+  destfile = here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2")
+)
+
+# Read in file with ape. Use bzfile() because it's compressed
+PSKY <- ape::read.FASTA(
+  bzfile(here::here("data-raw/PSKY-SOAPdenovo-Trans-assembly.fa.bz2"))
+    )
+
+# Randomly downsize to specified fraction of transcripts
+PSKY <- PSKY[sample(1:length(PSKY), keep_frac*length(PSKY))]
+
+# Write out to data/
+usethis::use_data(PSKY, overwrite = TRUE)
+
+sessionInfo()
+```
+

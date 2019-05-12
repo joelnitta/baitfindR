@@ -15,3 +15,12 @@
 #'
 #' Pteridophyte Phylogeny Group I. 2016. A community-derived classification for extant lycophytes and ferns. Journal of Systematics and Evolution 54:563–603.
 "onekp_data"
+
+#' Fern transcriptome
+#'
+#' A fern transcriptome from the oneKp project that has been randomly downsized
+#' to 5 percent of its original size. Named by 1kP code.
+#'
+#' @format List of class 'DNAbin".
+#' @source \url{http://www.onekp.com/public_data.html}
+"PSKY"
