@@ -26,10 +26,34 @@
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{http://transdecoder.github.io}
 #' @examples
-#' \dontrun{transdecoder_long_orfs("some/transcriptome_file.fa")}
+#' \dontrun{
+#' library(ape)
+#' temp_dir <- tempdir()
+#' data("PSKY")
+#' write.FASTA(PSKY, fs::path(temp_dir, "PSKY.fasta"))
+#' transdecoder_long_orfs(
+#'   transcriptome_file = fs::path(temp_dir, "PSKY.fasta"),
+#'   wd = temp_dir
+#'   )
+#' list.files(temp_dir)
+#' }
 #'
 #' @export
-transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
+transdecoder_long_orfs <- function (
+  transcriptome_file,
+  wd = here::here(),
+  other_args = NULL,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...) {
+
+  # check input
+  wd <- fs::path_abs(wd)
+  assertthat::assert_that(assertthat::is.dir(wd))
+
+  transcriptome_file <- fs::path_abs(transcriptome_file)
+  assertthat::assert_that(assertthat::is.readable(transcriptome_file))
+
+  assertthat::assert_that(is.character(other_args) | is.null(other_args))
 
   # modify arguments
   arguments <- c("-t", transcriptome_file, other_args)
@@ -70,13 +94,35 @@ transdecoder_long_orfs <- function (transcriptome_file, wd = here::here(), other
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{http://transdecoder.github.io}
 #' @examples
-#' \dontrun{transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")}
+#' \dontrun{
+#' transdecoder_predict("some/transcriptome_file.fa", "some/blast_result.txt")
+#' }
 #'
 #' @export
-transdecoder_predict <- function (transcriptome_file, blast_result = NULL, wd = here::here(), other_args = NULL, echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...) {
+transdecoder_predict <- function (
+  transcriptome_file,
+  blast_result = NULL,
+  wd = here::here(),
+  other_args = NULL,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...) {
+
+  # check input
+  wd <- fs::path_abs(wd)
+  assertthat::assert_that(assertthat::is.dir(wd))
+
+  transcriptome_file <- fs::path_abs(transcriptome_file)
+  assertthat::assert_that(assertthat::is.readable(transcriptome_file))
+
+  assertthat::assert_that(is.character(other_args) | is.null(other_args))
 
   # modify arguments
-  blast_argument <- if(is.null(blast_result)) {NULL} else {c("--retain_blastp_hits", blast_result)}
+  blast_argument <- if(is.null(blast_result)) { NULL } else {
+    assertthat::assert_that(assertthat::is.string(blast_result))
+    blast_result <- fs::path_abs(blast_result)
+    assertthat::assert_that(assertthat::is.readable(blast_result))
+    c("--retain_blastp_hits", blast_result)
+  }
 
   arguments <- c("-t", transcriptome_file, blast_argument, other_args)
 
