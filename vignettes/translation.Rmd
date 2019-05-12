@@ -1,0 +1,126 @@
+---
+title: "Translation"
+author: "Joel Nitta"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Translation}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Background
+
+This vignette demonstrates `baitfindR` functions for translating open reading frames (ORFs) from transcriptomes.
+
+These functions require `blast` (2.6.0) and `transdecoder` (3.0.1) to be installed and on the user's `PATH`. Other versions have not been tested and may not work properly. The best way to ensure the proper dependencies are available is to use the `baitfindR` [docker image](https://hub.docker.com/r/joelnitta/baitfindr).
+
+## Setup
+
+Most of these functions are wrappers for external programs that modify and write-out files on disk, unlike R functions that use objects in the R environment. So we will make a temporary directory for writing files, and check on what's in there with `list.files()` after each step.
+
+```{r load-packages}
+# Load packages.
+library(baitfindR)
+library(ape)
+library(fs)
+
+# Turn on echo flag to print messages from calls to external programs.
+pkgconfig::set_config(`baitfindR::echo` = TRUE)
+
+# Make temporary working directory to write files.
+temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+```
+
+## Load data
+
+Download the *Arabidopsis thaliana* proteome (14.7 mb). This will be used to detect candidate ORFs.
+
+```{r download-arabi}
+download.file(
+  url = "https://www.arabidopsis.org/download_files/Sequences/TAIR10_blastsets/TAIR10_pep_20110103_representative_gene_model_updated",
+  destfile = fs::path(temp_dir, "arabidopsis_prot.fasta")
+)
+
+# Check what we've written out.
+list.files(temp_dir)
+```
+
+Write out example fasta transcriptome: *Asplenium nidus* transcriptome from the [1KP project](www.onekp.com/) downsized to 5% of original size.
+
+```{r write-example-transcriptome}
+PSKY <- baitfindR::PSKY
+ape::write.FASTA(PSKY, fs::path(temp_dir, "PSKY"))
+
+list.files(temp_dir)
+```
+
+## Find ORFs
+
+Construct blast database from *Arabidopsis* proteome.
+
+```{r build-prot-db}
+blast_db <- baitfindR::build_blast_db(
+  in_seqs = fs::path(temp_dir, "arabidopsis_prot.fasta"),
+  out_name = "arabidopsis",
+  parse_seqids = TRUE,
+  db_type = "prot",
+  wd = temp_dir
+)
+
+list.files(temp_dir)
+```
+
+Find long ORFs in transcriptome.
+
+```{r find-long-orfs}
+long_orfs <- baitfindR::transdecoder_long_orfs(
+  transcriptome_file = fs::path(temp_dir, "PSKY"),
+  wd = temp_dir,
+  other_args = "-S"
+)
+
+list.files(temp_dir)
+```
+
+Blast candidate long ORFs against the protein database (takes 2-3 minutes).
+
+```{r blast-orfs}
+blast_p_results <- baitfindR::blast_p(
+  query = fs::path(temp_dir, "PSKY.transdecoder_dir/longest_orfs.pep"), 
+  database = "arabidopsis",
+  wd = fs::path(temp_dir),
+  other_args = c("-max_target_seqs", 1, "-evalue", 10, "-num_threads", 2),
+  out_file = fs::path(temp_dir, "PSKY.blastp.outfmt6")
+)
+
+list.files(temp_dir)
+```
+
+Output the final ORFs, preferentially retaining those with blast hits.
+
+```{r predict}
+predict_results <- baitfindR::transdecoder_predict(
+  transcriptome_file = fs::path(temp_dir, "PSKY"),
+  blast_result = fs::path(temp_dir, "PSKY.blastp.outfmt6"),
+  wd = temp_dir,
+  echo = FALSE # transdecoder predict produces really long output
+)
+
+list.files(temp_dir)
+```
+
+## Cleanup
+
+```{r cleanup}
+fs::file_delete(temp_dir)
+```

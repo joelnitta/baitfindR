@@ -29,3 +29,7 @@ Imports:
     fs
 URL: https://github.com/joelnitta/baitfindR
 BugReports: https://github.com/joelnitta/baitfindR/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
