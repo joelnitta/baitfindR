@@ -1,0 +1,36 @@
+---
+title: "make_small_arabi_gff"
+author: "Joel Nitta"
+date: "5/11/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd(here::here())
+```
+
+Make small version of Arabidopsis GFF file for testing bed functions.
+
+This only includes the first ca. 1000 features in the GFF file, which all 
+happen to be on chromosome 1.
+
+```{r make-small-gff}
+# Download gff3
+download.file(
+  url = "ftp://ftp.ensemblgenomes.org/pub/release-40/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+  destfile = "data-raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz"
+)
+
+# Unzip
+R.utils::gunzip(
+  filename = "data-raw/Arabidopsis_thaliana.TAIR10.40.gff3.gz",
+  destname = "data-raw/Arabidopsis_thaliana.TAIR10.40.gff3"
+)
+
+# Copy first 1000 lines of file to inst/extdata/
+system("cat data-raw/Arabidopsis_thaliana.TAIR10.40.gff3 | head -n 1000 > inst/extdata/Arabidopsis_thaliana_TAIR10_40_small.gff3")
+
+sessionInfo()
+```
+
