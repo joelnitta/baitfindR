@@ -4,8 +4,8 @@
 \alias{blast_n}
 \title{Run a blastn query.}
 \usage{
-blast_n(query, database, out_file, outfmt = "6", other_args = NULL,
-  echo = TRUE, wd, ...)
+blast_n(query, database, out_file = NULL, outfmt = "6",
+  other_args = NULL, echo = TRUE, wd, ...)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta
@@ -40,9 +40,7 @@ search, named with the value of \code{out_file}.
 This is a wrapper for blastn.
 }
 \examples{
-\dontrun{
 library(ape)
-library(baitfindR)
 
 # Make temp dir for storing files
 temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
@@ -76,7 +74,6 @@ readr::read_tsv(
 
 # Cleanup.
 fs::file_delete(temp_dir)
-}
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}

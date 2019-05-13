@@ -28,7 +28,6 @@
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @examples
-#' \dontrun{
 #' library(ape)
 #' data(woodmouse)
 #' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
@@ -42,7 +41,6 @@
 #'   wd = temp_dir)
 #' list.files(temp_dir)
 #' fs::file_delete(temp_dir)
-#' }
 #' @export
 build_blast_db <- function (in_seqs,
                             db_type = "nucl",
@@ -109,9 +107,7 @@ build_blast_db <- function (in_seqs,
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @examples
-#' \dontrun{
 #' library(ape)
-#' library(baitfindR)
 #'
 #' # Make temp dir for storing files
 #' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
@@ -146,11 +142,10 @@ build_blast_db <- function (in_seqs,
 #'
 #' # Cleanup.
 #' fs::file_delete(temp_dir)
-#' }
 #' @export
 blast_p <- function (query,
                      database,
-                     out_file,
+                     out_file = NULL,
                      outfmt = "6",
                      other_args = NULL,
                      echo = TRUE,
@@ -161,7 +156,7 @@ blast_p <- function (query,
 
   assertthat::assert_that(assertthat::is.string(query))
   assertthat::assert_that(assertthat::is.string(database))
-  assertthat::assert_that(assertthat::is.string(out_file))
+  assertthat::assert_that(assertthat::is.string(out_file) | is.null(out_file))
   assertthat::assert_that(assertthat::is.string(outfmt))
   assertthat::assert_that(is.character(other_args) | is.null(other_args))
   assertthat::assert_that(is.logical(echo))
@@ -174,10 +169,12 @@ blast_p <- function (query,
   assertthat::assert_that(assertthat::is.readable(query))
 
   # modify arguments
+  if(!is.null(out_file)) out_file <- c("-out", out_file)
+
   arguments <- c("-query", query,
                  "-db", database,
-                 "-out", out_file,
                  "-outfmt", outfmt,
+                 out_file,
                  other_args)
 
   # run command
@@ -210,9 +207,7 @@ blast_p <- function (query,
 #' @author Joel H Nitta, \email{joelnitta@@gmail.com}
 #' @references \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
 #' @examples
-#' \dontrun{
 #' library(ape)
-#' library(baitfindR)
 #'
 #' # Make temp dir for storing files
 #' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
@@ -246,11 +241,10 @@ blast_p <- function (query,
 #'
 #' # Cleanup.
 #' fs::file_delete(temp_dir)
-#' }
 #' @export
 blast_n <- function (query,
                      database,
-                     out_file,
+                     out_file = NULL,
                      outfmt = "6",
                      other_args = NULL,
                      echo = TRUE,
@@ -261,7 +255,7 @@ blast_n <- function (query,
 
   assertthat::assert_that(assertthat::is.string(query))
   assertthat::assert_that(assertthat::is.string(database))
-  assertthat::assert_that(assertthat::is.string(out_file))
+  assertthat::assert_that(assertthat::is.string(out_file) | is.null(out_file))
   assertthat::assert_that(assertthat::is.string(outfmt))
   assertthat::assert_that(is.character(other_args) | is.null(other_args))
   assertthat::assert_that(is.logical(echo))
@@ -274,10 +268,12 @@ blast_n <- function (query,
   assertthat::assert_that(assertthat::is.readable(query))
 
   # modify arguments
+  if(!is.null(out_file)) out_file <- c("-out", out_file)
+
   arguments <- c("-query", query,
                  "-db", database,
-                 "-out", out_file,
                  "-outfmt", outfmt,
+                 out_file,
                  other_args)
 
   # run command

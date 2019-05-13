@@ -43,7 +43,6 @@ the working directory.
 This is a wrapper for makeblastdb.
 }
 \examples{
-\dontrun{
 library(ape)
 data(woodmouse)
 temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
@@ -57,7 +56,6 @@ build_blast_db(
   wd = temp_dir)
 list.files(temp_dir)
 fs::file_delete(temp_dir)
-}
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK279690/}
