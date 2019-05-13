@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Concatenate files. — cat_files • baitfindR</title>
+<title>Clean up data from a gff file and
+convert to bed format — clean_gff • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,10 +32,11 @@
 
 
 
-<meta property="og:title" content="Concatenate files. — cat_files" />
+<meta property="og:title" content="Clean up data from a gff file and
+convert to bed format — clean_gff" />
 
-<meta property="og:description" content="Concatenate a list and write out the result as single file. Equivalent
-of cat file1 file2." />
+<meta property="og:description" content="Helper function for `find_bed_regions`. Merges overlapping regions and sorts
+regions." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,45 +115,46 @@ of cat file1 file2." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Concatenate files.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/etc.R'><code>R/etc.R</code></a></small>
-    <div class="hidden name"><code>cat_files.Rd</code></div>
+    <h1>Clean up data from a gff file and
+convert to bed format</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/bedtools.R'><code>R/bedtools.R</code></a></small>
+    <div class="hidden name"><code>clean_gff.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Concatenate a list and write out the result as single file. Equivalent
-of <code>cat file1 file2</code>.</p>
+    <p>Helper function for `find_bed_regions`. Merges overlapping regions and sorts
+regions.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>cat_files</span>(<span class='no'>input_file_list</span>, <span class='no'>output_file</span>)</pre>
+    <pre class="usage"><span class='fu'>clean_gff</span>(<span class='no'>region</span>, <span class='kw'>check.chr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>input_file_list</th>
-      <td><p>A list. Could be any list, but it's meant to used
-for lists of files that have been read into R as character vectors, e.g.,
-using <code><a href='https://readr.tidyverse.org/reference/read_file.html'>read_file</a></code>.</p></td>
+      <th>region</th>
+      <td><p>Dataframe; list of gene regions in "bed" format. Must include
+the following columns in order: `chr` ('chromosome', character), `start`
+(start position, numeric), and `end` (end position, numeric).</p></td>
     </tr>
     <tr>
-      <th>output_file</th>
-      <td><p>Path to write output file.</p></td>
+      <th>check.chr</th>
+      <td><p>Logical; should coordinates be checked for chromosomal
+format with "chr" prefix?</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Logical; should `bedr` functions output all messages?</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of length one in the R environment; externally,
-the concatenated output file.</p>
+    <p>Dataframe in "bed" format.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>cat_files</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>), <span class='st'>"my_list.txt"</span>)
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -159,12 +162,8 @@ the concatenated output file.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
-    <h2>Author</h2>
-    <p>Joel H Nitta, <a href='mailto:joelnitta@gmail.com'>joelnitta@gmail.com</a></p>
   </div>
 </div>
 

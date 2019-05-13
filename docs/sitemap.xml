@@ -25,7 +25,19 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/cd_hit_est.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/clean_gff.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/cut_long_internal_branches.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/delete_old_output.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/example_transcriptomes.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/extract_regions_from_fasta.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/fasta_to_tree.html</loc>
@@ -37,13 +49,22 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/filter_fasta.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/find_bed_regions.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/fix_names_from_transdecoder.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/get_out_hash.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/mafft_wrapper.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/make_dir.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/mask_regions_in_fasta.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/mask_tips_by_taxonID_transcripts.html</loc>
@@ -56,6 +77,9 @@
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/phyutility_wrapper.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/pipe.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/prune_paralogs_MI.html</loc>
@@ -92,5 +116,8 @@
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/write_ortholog_fasta_files.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//articles/translation.html</loc>
   </url>
 </urlset>
