@@ -13,8 +13,4 @@ devtools::install_github("joelnitta/baitfindR")
 
 ## Examples
 
-`baitfindR` works best in conjunction with [drake](https://ropensci.github.io/drake/) to manage a bait-finding workflow. There are two examples of such workflows available:
-
-- [A simple workflow](https://github.com/joelnitta/baitfindR_simple) that uses several pre-set parameters in a single plan.
-
-- [A more complicated workflow](https://github.com/joelnitta/baitfindR_complex) comprised of multiple plans allowing the user to test different parameter combinations.
+`baitfindR` works best in conjunction with [drake](https://ropensci.github.io/drake/) to manage a bait-finding workflow. Please see [the example repo](https://github.com/joelnitta/baitfindR_example).
