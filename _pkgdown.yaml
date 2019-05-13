@@ -32,6 +32,12 @@ reference:
   - write_ortholog_fasta_files
   - mafft_wrapper
   - phyutility_wrapper
+- title: Intron masking
+  desc: Functions to mask introns in baits.
+  contents:
+  - extract_regions_from_fasta
+  - mask_regions_in_fasta
+  - find_bed_regions
 - title: Bait filtering
   desc: Functions to help choose a final set of baits from the pool of candidate low copy orthologs produced by the Y&S workflow.
   contents:
@@ -47,6 +53,7 @@ reference:
   desc: ~
   contents:
   - onekp_data
+  - example_transcriptomes
 - title: Deprecated
   desc: ~
   contents:
