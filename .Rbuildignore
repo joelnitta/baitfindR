@@ -4,3 +4,4 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^data-raw$
+^docker-compose.yml$
