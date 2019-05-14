@@ -49,6 +49,7 @@ reference:
   - cat_files
   - make_dir
   - set_ys_path
+  - write_fasta_files
 - title: Example data
   desc: ~
   contents:
