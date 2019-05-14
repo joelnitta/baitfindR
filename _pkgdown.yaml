@@ -11,6 +11,7 @@ reference:
   - blast_n
   - blast_p
   - blast_n_list
+  - extract_blast_hits
 - title: Y&S workflow
   desc: Wrappers for functions used in the Y&S workflow.
   contents:

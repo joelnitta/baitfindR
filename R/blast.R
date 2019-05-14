@@ -407,3 +407,120 @@ blast_n_list <- function (fasta_folder,
   if (isTRUE(get_hash)) get_out_hash(fasta_folder, search_terms)
 
 }
+
+#' Extract top blast hits from multiple blast output files
+#'
+#' BLAST results files must be in tabular format (e.g., outfmt 6). For each
+#' BLAST results file, the single top hit (sorted by ascending evalue, then
+#' descending bitscore) will be extracted from the BLAST database and written
+#' to `out_dir`.
+#'
+#' @param blast_results_dir Path to folder containing BLAST results files.
+#' @param blast_results_pattern Optional; pattern used for matching with grep. Only
+#' files with names matching the pattern will be used to extract top blast hits.
+#' @param blast_cols Character vector; column names of BLAST results. See
+#' https://www.ncbi.nlm.nih.gov/books/NBK279684/ (Table C1) for details. Must
+#' include at least 'evalue' and 'bitscore'.
+#' @param database_path Path to the BLAST database, including the database
+#' name.
+#' @param out_dir Path to folder to write results.
+#' @param out_ext File extension used when writing out top BLAST hit.
+#' @param ... Additional other arguments. Not used by this function,
+#' but meant to be used by \code{\link[drake]{drake_plan}} for tracking
+#' during workflows.
+#'
+#' @return TRUE when runs successfully; externally, the top blast hit for each
+#' fasta result will be written to `out_dir`.
+#'
+#' @examples
+#' library(ape)
+#'
+#' # Make temp dir for storing files
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+#'
+#' # Write out ape::woodmouse dataset as DNA
+#' data(woodmouse)
+#' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
+#' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse2.fasta"))
+#'
+#' # Make blast database
+#' build_blast_db(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   db_type = "nucl",
+#'   out_name = "wood",
+#'   parse_seqids = TRUE,
+#'   wd = temp_dir)
+#'
+#' # Blast the original sequences against the database
+#' blast_n_list(
+#'   fasta_folder = temp_dir,
+#'   fasta_pattern = "fasta",
+#'   database_path = fs::path(temp_dir, "wood")
+#' )
+#'
+#' # Extract the top BLAST hit for each fasta file.
+#' extract_blast_hits(
+#'   blast_results_dir = temp_dir,
+#'   blast_results_pattern = "\\.tsv$",
+#'   database_path = fs::path(temp_dir, "wood"),
+#'   out_dir = temp_dir
+#' )
+#'
+#' list.files(temp_dir)
+#' ape::read.FASTA(fs::path(temp_dir, "woodmouse.tsv.bestmatch.fasta"))
+#'
+#' # Cleanup.
+#' fs::file_delete(temp_dir)
+#' @export
+extract_blast_hits <- function (
+  blast_results_dir,
+  blast_results_pattern,
+  blast_cols = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+                 "qstart", "qend", "sstart", "send", "evalue", "bitscore"),
+  database_path,
+  out_dir,
+  out_ext = "bestmatch.fasta", ...) {
+
+  # Check input
+  assertthat::assert_that(assertthat::is.string(blast_results_pattern))
+  assertthat::assert_that(assertthat::is.string(database_path))
+  assertthat::assert_that(assertthat::is.string(out_ext))
+  assertthat::assert_that(assertthat::is.dir(out_dir))
+  assertthat::assert_that(assertthat::is.dir(blast_results_dir))
+  assertthat::assert_that(is.character(blast_cols))
+
+
+  out_dir <- fs::path_abs(out_dir)
+  blast_results_dir <- fs::path_abs(blast_results_dir)
+
+  # Make list of blastdbcmd calls to extract top blast hits
+  command <-
+    list.files(blast_results_dir, pattern = blast_results_pattern, full.names = TRUE) %>%
+    purrr::set_names(.) %>%
+    purrr::map_df(readr::read_tsv, col_names = blast_cols, .id = "file_name") %>%
+    dplyr::mutate(
+      file_name = fs::path_file(file_name),
+      output = fs::path(out_dir, file_name, ext = out_ext)
+      ) %>%
+    dplyr::group_by(file_name) %>%
+    dplyr::arrange(evalue, desc(bitscore)) %>%
+    dplyr::slice(1) %>%
+    dplyr::ungroup() %>%
+    # format the command to extract the blast hit as a column
+    dplyr::mutate(command = glue::glue('blastdbcmd -db {fs::path_file(database_path)} -entry "{sseqid}" > {output}')) %>%
+    dplyr::pull(command)
+
+  # Write out bash script
+  # Name file after hash of commands vector, should be unique.
+  temp_bash_file <- digest::digest(command)
+  readr::write_lines(
+    path = fs::path(fs::path_dir(database_path), temp_bash_file),
+    x = c("#!/bin/bash", command)
+  )
+
+  # Run bash script
+  processx::run("bash", temp_bash_file, echo = TRUE, wd = fs::path_dir(database_path))
+
+  # Cleanup
+  file.remove(fs::path(fs::path_dir(database_path), temp_bash_file))
+}
