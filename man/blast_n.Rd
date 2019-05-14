@@ -49,7 +49,7 @@ temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
 data(woodmouse)
 ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
 
-# Make protein blast database
+# Make blast database
 build_blast_db(
   fs::path(temp_dir, "woodmouse.fasta"),
   db_type = "nucl",

@@ -2,6 +2,7 @@
 
 export("%>%")
 export(blast_n)
+export(blast_n_list)
 export(blast_p)
 export(blast_to_mcl)
 export(build_blast_db)
