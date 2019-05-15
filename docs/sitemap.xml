@@ -7,6 +7,9 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/blast_n.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/blast_n_list.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/blast_p.html</loc>
   </url>
   <url>
@@ -37,10 +40,16 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/example_transcriptomes.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/extract_blast_hits.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/extract_regions_from_fasta.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/fasta_to_tree.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/fill_introns.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/filter_1to1_orthologs.html</loc>
@@ -91,6 +100,9 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/prune_paralogs_RT.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/realign_with_best_hits.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/set_ys_path.html</loc>
   </url>
   <url>
@@ -106,7 +118,16 @@
     <loc>https://joelnitta.github.io/baitfindR//reference/transdecoder_predict.html</loc>
   </url>
   <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/trim_both_ends.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/trim_one_end.html</loc>
+  </url>
+  <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/trim_tips.html</loc>
+  </url>
+  <url>
+    <loc>https://joelnitta.github.io/baitfindR//reference/write_fasta_files.html</loc>
   </url>
   <url>
     <loc>https://joelnitta.github.io/baitfindR//reference/write_fasta_files_from_mcl.html</loc>

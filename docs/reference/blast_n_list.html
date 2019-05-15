@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run a blastn query. — blast_n • baitfindR</title>
+<title>Run blastn on all fasta files in a folder. — blast_n_list • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Run a blastn query. — blast_n" />
+<meta property="og:title" content="Run blastn on all fasta files in a folder. — blast_n_list" />
 
-<meta property="og:description" content="This is a wrapper for blastn." />
+<meta property="og:description" content="Output is written to the same folder containing the input files." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,42 +111,49 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run a blastn query.</h1>
+    <h1>Run blastn on all fasta files in a folder.</h1>
     <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/blast.R'><code>R/blast.R</code></a></small>
-    <div class="hidden name"><code>blast_n.Rd</code></div>
+    <div class="hidden name"><code>blast_n_list.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This is a wrapper for blastn.</p>
+    <p>Output is written to the same folder containing the input files.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>blast_n</span>(<span class='no'>query</span>, <span class='no'>database</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>outfmt</span> <span class='kw'>=</span> <span class='st'>"6"</span>,
-  <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>wd</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>blast_n_list</span>(<span class='no'>fasta_folder</span>, <span class='no'>fasta_pattern</span>, <span class='no'>database_path</span>, <span class='kw'>out_ext</span> <span class='kw'>=</span> <span class='st'>"tsv"</span>,
+  <span class='kw'>outfmt</span> <span class='kw'>=</span> <span class='st'>"6"</span>, <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>get_hash</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>query</th>
-      <td><p>Character vector of length one; the path to the fasta
-file to use as the query sequence(s).</p></td>
+      <th>fasta_folder</th>
+      <td><p>Path to the folder containing fasta files to BLAST.</p></td>
     </tr>
     <tr>
-      <th>database</th>
-      <td><p>Character vector of length one; the name of the blast
-database.</p></td>
+      <th>fasta_pattern</th>
+      <td><p>Optional; pattern used for matching with grep. Only
+files with names matching the pattern will be included in the
+BLAST search.</p></td>
     </tr>
     <tr>
-      <th>out_file</th>
-      <td><p>Character vector of length one; the name to use for
-the results file.</p></td>
+      <th>database_path</th>
+      <td><p>Path to the BLAST database, including the database
+name.</p></td>
+    </tr>
+    <tr>
+      <th>out_ext</th>
+      <td><p>File extension used for BLAST results files. The result of
+each BLAST search will be a file with the same name as the input fasta files,
+but with this extension appended.</p></td>
     </tr>
     <tr>
       <th>outfmt</th>
-      <td><p>Character vector of length one; value to pass to
-<code>blastn</code> <code>outfmt</code> argument. Default = "6".</p></td>
+      <td><p>String; format to use for BLAST output. See
+https://www.ncbi.nlm.nih.gov/books/NBK279684/ (Table C1) for details.</p></td>
     </tr>
     <tr>
       <th>other_args</th>
@@ -154,13 +161,19 @@ the results file.</p></td>
 <code>blastn</code>. For a list of options, run <code>blastn -help</code>.</p></td>
     </tr>
     <tr>
+      <th>overwrite</th>
+      <td><p>Logical: should old output be erased before running this
+function? "Old output" will be determined by matching any file names with
+`out_ext`.</p></td>
+    </tr>
+    <tr>
       <th>echo</th>
       <td><p>Logical; should standard error and output be printed?</p></td>
     </tr>
     <tr>
-      <th>wd</th>
-      <td><p>Character vector of length one; working directory. The blast
-search will be conducted here.</p></td>
+      <th>get_hash</th>
+      <td><p>Logical; if TRUE, the MD5 hash of the output will be
+returned.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -172,8 +185,9 @@ during workflows.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tab-separated text file with the results of the blastn
-search, named with the value of <code>out_file</code>.</p>
+    <p>NULL or character vector if `get_hash` is TRUE.
+Externally, a text file file with the results of the blastn
+search, named by adding `out_ext` to each input fasta file name.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -189,6 +203,7 @@ search, named with the value of <code>out_file</code>.</p>
 <span class='co'># Write out ape::woodmouse dataset as DNA</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>woodmouse</span>)
 <span class='kw pkg'>ape</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/ape/topics/write.dna'>write.FASTA</a></span>(<span class='no'>woodmouse</span>, <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"woodmouse.fasta"</span>))
+<span class='kw pkg'>ape</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/ape/topics/write.dna'>write.FASTA</a></span>(<span class='no'>woodmouse</span>, <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"woodmouse2.fasta"</span>))
 
 <span class='co'># Make blast database</span>
 <span class='fu'><a href='build_blast_db.html'>build_blast_db</a></span>(
@@ -198,17 +213,17 @@ search, named with the value of <code>out_file</code>.</p>
   <span class='kw'>parse_seqids</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>wd</span> <span class='kw'>=</span> <span class='no'>temp_dir</span>)</div><div class='output co'>#&gt; 
 #&gt; 
-#&gt; Building a new DB, current time: 05/15/2019 16:40:36
+#&gt; Building a new DB, current time: 05/15/2019 16:40:37
 #&gt; New DB name:   /tmp/RtmpeNC9nF/baitfindR_example/wood
 #&gt; New DB title:  /tmp/RtmpeNC9nF/baitfindR_example/woodmouse.fasta
 #&gt; Sequence type: Nucleotide
 #&gt; Keep MBits: T
 #&gt; Maximum file size: 1000000000B
-#&gt; Adding sequences from FASTA; added 15 sequences in 0.011471 seconds.</div><div class='output co'>#&gt; $status
+#&gt; Adding sequences from FASTA; added 15 sequences in 0.0124049 seconds.</div><div class='output co'>#&gt; $status
 #&gt; [1] 0
 #&gt; 
 #&gt; $stdout
-#&gt; [1] "\n\nBuilding a new DB, current time: 05/15/2019 16:40:36\nNew DB name:   /tmp/RtmpeNC9nF/baitfindR_example/wood\nNew DB title:  /tmp/RtmpeNC9nF/baitfindR_example/woodmouse.fasta\nSequence type: Nucleotide\nKeep MBits: T\nMaximum file size: 1000000000B\nAdding sequences from FASTA; added 15 sequences in 0.011471 seconds.\n"
+#&gt; [1] "\n\nBuilding a new DB, current time: 05/15/2019 16:40:37\nNew DB name:   /tmp/RtmpeNC9nF/baitfindR_example/wood\nNew DB title:  /tmp/RtmpeNC9nF/baitfindR_example/woodmouse.fasta\nSequence type: Nucleotide\nKeep MBits: T\nMaximum file size: 1000000000B\nAdding sequences from FASTA; added 15 sequences in 0.0124049 seconds.\n"
 #&gt; 
 #&gt; $stderr
 #&gt; [1] ""
@@ -217,31 +232,49 @@ search, named with the value of <code>out_file</code>.</p>
 #&gt; [1] FALSE
 #&gt; </div><div class='input'>
 <span class='co'># Blast the original sequences against the database</span>
-<span class='fu'>blast_n</span>(
-  <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"woodmouse.fasta"</span>),
-  <span class='kw'>database</span> <span class='kw'>=</span> <span class='st'>"wood"</span>,
-  <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='st'>"blastn_results"</span>,
-  <span class='kw'>wd</span> <span class='kw'>=</span> <span class='no'>temp_dir</span>,
-  <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</div><div class='output co'>#&gt; $status
-#&gt; [1] 0
-#&gt; 
-#&gt; $stdout
-#&gt; [1] ""
-#&gt; 
-#&gt; $stderr
-#&gt; [1] ""
-#&gt; 
-#&gt; $timeout
-#&gt; [1] FALSE
-#&gt; </div><div class='input'>
+<span class='fu'>blast_n_list</span>(
+  <span class='kw'>fasta_folder</span> <span class='kw'>=</span> <span class='no'>temp_dir</span>,
+  <span class='kw'>fasta_pattern</span> <span class='kw'>=</span> <span class='st'>"fasta"</span>,
+  <span class='kw'>database_path</span> <span class='kw'>=</span> <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"wood"</span>)
+)</div><div class='output co'>#&gt; [1] "c90963e4b507281024a89cbb54d8074f"</div><div class='input'>
 <span class='co'># Take a look at the results.</span>
 <span class='kw pkg'>readr</span><span class='kw ns'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_tsv</a></span>(
-  <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"blastn_results"</span>),
+  <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"woodmouse.tsv"</span>),
   <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
   )</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
 #&gt; <span class='message'>cols(</span>
 #&gt; <span class='message'>  X1 = <span style='color: #BB0000;'>col_character()</span><span>,</span>
+#&gt; <span class='message'>  X2 = </span><span style='color: #BB0000;'>col_character()</span><span>,</span>
+#&gt; <span class='message'>  X3 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X4 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X5 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X6 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X7 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X8 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X9 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X10 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X11 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
+#&gt; <span class='message'>  X12 = </span><span style='color: #00BB00;'>col_double()</span><span></span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 225 x 12</span><span>
+#&gt;    X1    X2         X3    X4    X5    X6    X7    X8    X9   X10   X11   X12
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span> No305 No305   100     964     0     0     2   965     2   965     0  </span><span style='text-decoration: underline;'>1</span><span>773
+#&gt; </span><span style='color: #555555;'> 2</span><span> No305 No1103S  98.5   960    14     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>700
+#&gt; </span><span style='color: #555555;'> 3</span><span> No305 No306    98.2   964    17     0     2   965     2   965     0  </span><span style='text-decoration: underline;'>1</span><span>694
+#&gt; </span><span style='color: #555555;'> 4</span><span> No305 No0912S  98.3   960    16     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>688
+#&gt; </span><span style='color: #555555;'> 5</span><span> No305 No1206S  98.1   960    18     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'> 6</span><span> No305 No1202S  98.1   960    18     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'> 7</span><span> No305 No1007S  98.1   960    18     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'> 8</span><span> No305 No0909S  98.1   960    18     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'> 9</span><span> No305 No0908S  98.1   960    18     0     2   961     2   961     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'>10</span><span> No305 No304    98.0   961    19     0     2   962     2   962     0  </span><span style='text-decoration: underline;'>1</span><span>677
+#&gt; </span><span style='color: #555555;'># … with 215 more rows</span><span></div><div class='input'>
+<span class='kw pkg'>readr</span><span class='kw ns'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_tsv</a></span>(
+  <span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"woodmouse2.tsv"</span>),
+  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  )</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  X1 = </span><span style='color: #BB0000;'>col_character()</span><span>,</span>
 #&gt; <span class='message'>  X2 = </span><span style='color: #BB0000;'>col_character()</span><span>,</span>
 #&gt; <span class='message'>  X3 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>
 #&gt; <span class='message'>  X4 = </span><span style='color: #00BB00;'>col_double()</span><span>,</span>

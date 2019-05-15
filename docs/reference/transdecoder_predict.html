@@ -16,8 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -76,7 +75,7 @@ reference database are retained in the TransDecoder output." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -100,7 +99,7 @@ reference database are retained in the TransDecoder output." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joelnitta/baitfindR">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -132,8 +131,8 @@ reference database are retained in the TransDecoder output.</p>
     </div>
 
     <pre class="usage"><span class='fu'>transdecoder_predict</span>(<span class='no'>transcriptome_file</span>, <span class='kw'>blast_result</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>wd</span> <span class='kw'>=</span> <span class='kw pkg'>here</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/here/man/here.html'>here</a></span>(), <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>echo</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/pkgconfig/man/get_config.html'>get_config</a></span>(<span class='st'>"baitfindR::echo"</span>, <span class='kw'>fallback</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='no'>...</span>)</pre>
+  <span class='kw'>wd</span> <span class='kw'>=</span> <span class='kw pkg'>here</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/here/topics/here'>here</a></span>(), <span class='kw'>other_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>echo</span> <span class='kw'>=</span> <span class='kw pkg'>pkgconfig</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/pkgconfig/topics/get_config'>get_config</a></span>(<span class='st'>"baitfindR::echo"</span>, <span class='kw'>fallback</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,13 +167,13 @@ should be an element of the vector.</p></td>
     <tr>
       <th>...</th>
       <td><p>Additional other arguments. Not used by this function, but meant to be
-used by <code><a href='https://rdrr.io/pkg/drake/man/drake_plan.html'>drake_plan</a></code> for tracking during workflows.</p></td>
+used by <code><a href='https://www.rdocumentation.org/packages/drake/topics/drake_plan'>drake_plan</a></code> for tracking during workflows.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Within the R environment, a list with components specified in <code><a href='https://rdrr.io/pkg/processx/man/run.html'>run</a></code>.</p>
+    <p>Within the R environment, a list with components specified in <code><a href='https://www.rdocumentation.org/packages/processx/topics/run'>run</a></code>.</p>
 <p>Externally, four output files (.cds, .pep, .bed, and .gff3) for each input
 transcriptome file will be written to the working directory.</p>
     
@@ -218,7 +217,7 @@ transcriptome file will be written to the working directory.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
    </div>

@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clean up data from a gff file and
-convert to bed format — clean_gff • baitfindR</title>
+<title>Trim both ends of alignment — trim_both_ends • baitfindR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,11 +30,9 @@ convert to bed format — clean_gff • baitfindR</title>
 
 
 
-<meta property="og:title" content="Clean up data from a gff file and
-convert to bed format — clean_gff" />
+<meta property="og:title" content="Trim both ends of alignment — trim_both_ends" />
 
-<meta property="og:description" content="Helper function for `find_bed_regions`. Merges overlapping regions and sorts
-regions." />
+<meta property="og:description" content="Trim both ends of alignment" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -114,46 +111,56 @@ regions." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clean up data from a gff file and
-convert to bed format</h1>
-    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/bedtools.R'><code>R/bedtools.R</code></a></small>
-    <div class="hidden name"><code>clean_gff.Rd</code></div>
+    <h1>Trim both ends of alignment</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joelnitta/baitfindR/blob/master/R/fill_introns.R'><code>R/fill_introns.R</code></a></small>
+    <div class="hidden name"><code>trim_both_ends.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Helper function for `find_bed_regions`. Merges overlapping regions and sorts
-regions.</p>
+    <p>Trim both ends of alignment</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>clean_gff</span>(<span class='no'>region</span>, <span class='kw'>check.chr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>trim_both_ends</span>(<span class='no'>alignment</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>region</th>
-      <td><p>Dataframe; list of gene regions in "bed" format. Must include
-the following columns in order: `chr` ('chromosome', character), `start`
-(start position, numeric), and `end` (end position, numeric).</p></td>
-    </tr>
-    <tr>
-      <th>check.chr</th>
-      <td><p>Logical; should coordinates be checked for chromosomal
-format with "chr" prefix?</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Logical; should `bedr` functions output all messages?</p></td>
+      <th>alignment</th>
+      <td><p>matrix of class DNAbin</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe in "bed" format.</p>
+    <p>matrix of class DNAbin</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ape</span>)
+<span class='no'>dna_mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"n"</span>, <span class='st'>"t"</span>, <span class='st'>"a"</span>, <span class='st'>"n"</span>), <span class='fl'>2</span>), <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>dna_mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ape/topics/as.alignment'>as.DNAbin</a></span>(<span class='no'>dna_mat</span>)
+<span class='no'>dna_mat</span></div><div class='output co'>#&gt; 2 DNA sequences in binary format stored in a matrix.
+#&gt; 
+#&gt; All sequences of same length: 4 
+#&gt; 
+#&gt; Labels:
+#&gt; 
+#&gt; Base composition:
+#&gt;   a   c   g   t 
+#&gt; 0.5 0.0 0.0 0.5 
+#&gt; (Total: 8 bases)</div><div class='input'><span class='fu'>trim_both_ends</span>(<span class='no'>dna_mat</span>)</div><div class='output co'>#&gt; 2 DNA sequences in binary format stored in a matrix.
+#&gt; 
+#&gt; All sequences of same length: 2 
+#&gt; 
+#&gt; Labels:
+#&gt; 
+#&gt; Base composition:
+#&gt;   a   c   g   t 
+#&gt; 0.5 0.0 0.0 0.5 
+#&gt; (Total: 4 bases)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -161,7 +168,9 @@ format with "chr" prefix?</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
