@@ -12,6 +12,7 @@ reference:
   - blast_p
   - blast_n_list
   - extract_blast_hits
+  - realign_with_best_hits
 - title: Y&S workflow
   desc: Wrappers for functions used in the Y&S workflow.
   contents:
@@ -40,6 +41,7 @@ reference:
   - extract_regions_from_fasta
   - mask_regions_in_fasta
   - find_bed_regions
+  - fill_introns
 - title: Bait filtering
   desc: Functions to help choose a final set of baits from the pool of candidate low copy orthologs produced by the Y&S workflow.
   contents:
