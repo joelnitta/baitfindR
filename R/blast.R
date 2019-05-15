@@ -597,7 +597,18 @@ realign_with_best_hits <- function (best_hits_dir,
                                     fasta_dir,
                                     fasta_pattern = "\\.fa$", ...) {
 
+  # Check input
+  assertthat::assert_that(assertthat::is.string(best_hits_dir))
+  assertthat::assert_that(assertthat::is.string(best_hits_pattern))
+  assertthat::assert_that(assertthat::is.string(fasta_dir))
+  assertthat::assert_that(assertthat::is.string(fasta_pattern))
+
   best_hits_dir <- fs::path_abs(best_hits_dir)
+  assertthat::assert_that(assertthat::is.dir(best_hits_dir))
+  best_hits_dir <- fs::path_abs(best_hits_dir)
+
+  fasta_dir <- fs::path_abs(fasta_dir)
+  assertthat::assert_that(assertthat::is.dir(fasta_dir))
   fasta_dir <- fs::path_abs(fasta_dir)
 
   # Get file names of top blast hits
@@ -628,8 +639,13 @@ realign_with_best_hits <- function (best_hits_dir,
 
   select <- fasta_to_add_names == best_hits_names
 
+  assertthat::assert_that(
+    any(select),
+    msg = "No names match between top blast hits and fasta sequences to realign"
+    )
+
   # combine and re-align blast-filtered alignments with their top matches
   purrr::map2(fasta_to_add[select], blast_top_matches[select], c) %>%
     purrr::map(ips::mafft, path = "/usr/bin/mafft", options = "--adjustdirection") %>%
-    rlang::set_names(best_hits_names[select])
+    purrr::set_names(best_hits_names[select])
 }
