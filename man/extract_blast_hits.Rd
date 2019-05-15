@@ -12,12 +12,14 @@ extract_blast_hits(blast_results_dir, blast_results_pattern,
 \arguments{
 \item{blast_results_dir}{Path to folder containing BLAST results files.}
 
-\item{blast_results_pattern}{Optional; pattern used for matching with grep. Only
-files with names matching the pattern will be used to extract top blast hits.}
+\item{blast_results_pattern}{Optional; pattern used for matching with grep.
+Only files with names matching the pattern will be used to extract top blast
+hits.}
 
 \item{blast_cols}{Character vector; column names of BLAST results. See
 https://www.ncbi.nlm.nih.gov/books/NBK279684/ (Table C1) for details. Must
-include at least 'evalue' and 'bitscore'.}
+include at least 'sseqid', 'evalue', and 'bitscore'. Defaults to standard
+columns for output format 6.}
 
 \item{database_path}{Path to the BLAST database, including the database
 name.}
