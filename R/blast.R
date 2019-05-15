@@ -526,3 +526,110 @@ extract_blast_hits <- function (
   # Cleanup
   file.remove(fs::path(fs::path_dir(database_path), temp_bash_file))
 }
+
+#' Realign top blast hit of multi-fasta file with that fasta file.
+#'
+#' Top hits and original fasta files are matched based on the first part
+#' of the filename separated by periods (i.e., the filename without any
+#' extension).
+#'
+#' @param best_hits_dir Path to directory containing top blast hits.
+#' @param best_hits_pattern Pattern used for matching with grep. Only
+#' files with names matching the pattern will be included as the top
+#' blast hit.
+#' @param fasta_dir Path to directory containing fasta files for realignment.
+#' @param fasta_pattern Pattern used for matching with grep. Only
+#' files with names matching the pattern will be included for realignment.
+#' @param ... Additional other arguments. Not used by this function,
+#' but meant to be used by \code{\link[drake]{drake_plan}} for tracking
+#' during workflows.
+#'
+#' @return List of lists, each of which is of class `DNAbin`.
+#'
+#' @examples
+#'
+#' library(ape)
+#'
+#' # Make temp dir for storing files
+#' temp_dir <- fs::dir_create(fs::path(tempdir(), "baitfindR_example"))
+#'
+#' # Write out ape::woodmouse dataset as DNA
+#' data(woodmouse)
+#' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse.fasta"))
+#' ape::write.FASTA(woodmouse, fs::path(temp_dir, "woodmouse2.fasta"))
+#'
+#' # Make blast database
+#' build_blast_db(
+#'   fs::path(temp_dir, "woodmouse.fasta"),
+#'   db_type = "nucl",
+#'   out_name = "wood",
+#'   parse_seqids = TRUE,
+#'   wd = temp_dir)
+#'
+#' # Blast the original sequences against the database
+#' blast_n_list(
+#'   fasta_folder = temp_dir,
+#'   fasta_pattern = "fasta",
+#'   database_path = fs::path(temp_dir, "wood")
+#' )
+#'
+#' # Extract the top BLAST hit for each fasta file.
+#' extract_blast_hits(
+#'   blast_results_dir = temp_dir,
+#'   blast_results_pattern = "\\.tsv$",
+#'   database_path = fs::path(temp_dir, "wood"),
+#'   out_dir = temp_dir,
+#'   out_ext = "bestmatch"
+#' )
+#'
+#' realign_with_best_hits(
+#'   best_hits_dir = temp_dir,
+#'   best_hits_pattern = "bestmatch",
+#'   fasta_dir = temp_dir,
+#'   fasta_pattern = "fasta"
+#' )
+#'
+#' # Cleanup.
+#' fs::file_delete(temp_dir)
+#' @export
+realign_with_best_hits <- function (best_hits_dir,
+                                    best_hits_pattern = "bestmatch",
+                                    fasta_dir,
+                                    fasta_pattern = "\\.fa$", ...) {
+
+  best_hits_dir <- fs::path_abs(best_hits_dir)
+  fasta_dir <- fs::path_abs(fasta_dir)
+
+  # Get file names of top blast hits
+  best_hits_files <- list.files(best_hits_dir, best_hits_pattern, full.names = TRUE)
+
+  # Read in seqs of top blast hits
+  blast_top_matches <- purrr::map(best_hits_files, ape::read.FASTA)
+
+  # Get file names of alignments to which to add best hits
+  fasta_files <- list.files(best_hits_dir, fasta_pattern, full.names = TRUE)
+
+  # Read in alignments to which to add best hits
+  fasta_to_add <- purrr::map(fasta_files, ape::read.FASTA)
+
+  # Match sequence to add to alignment by first part of filename
+  # (without extension).
+  fasta_to_add_names <-
+    fasta_files %>%
+    fs::path_file() %>%
+    stringr::str_split("\\.") %>%
+    purrr::map_chr(1)
+
+  best_hits_names <-
+    best_hits_files %>%
+    fs::path_file() %>%
+    stringr::str_split("\\.") %>%
+    purrr::map_chr(1)
+
+  select <- fasta_to_add_names == best_hits_names
+
+  # combine and re-align blast-filtered alignments with their top matches
+  purrr::map2(fasta_to_add[select], blast_top_matches[select], c) %>%
+    purrr::map(ips::mafft, path = "/usr/bin/mafft", options = "--adjustdirection") %>%
+    rlang::set_names(best_hits_names[select])
+}
