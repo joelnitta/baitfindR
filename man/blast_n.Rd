@@ -21,7 +21,12 @@ the results file.}
 \code{blastn} \code{outfmt} argument. Default = "6".}
 
 \item{other_args}{Character vector; other arguments to pass on to
-\code{blastn}. For a list of options, run \code{blastn -help}.}
+\code{blastn}.
+Must be formatted so that each argument name and its value are
+separate, consecutive elements of the vector, e.g.,
+\code{c("-evalue", 10, "-num_threads", 1)}.
+The argument name must be preceded by a hyphen.
+For a list of options, run \code{blastn -help}.}
 
 \item{echo}{Logical; should standard error and output be printed?}
 

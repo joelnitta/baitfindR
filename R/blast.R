@@ -195,7 +195,12 @@ blast_p <- function (query,
 #' @param outfmt Character vector of length one; value to pass to
 #' \code{blastn} \code{outfmt} argument. Default = "6".
 #' @param other_args Character vector; other arguments to pass on to
-#' \code{blastn}. For a list of options, run \code{blastn -help}.
+#' \code{blastn}.
+#' Must be formatted so that each argument name and its value are
+#' separate, consecutive elements of the vector, e.g.,
+#' \code{c("-evalue", 10, "-num_threads", 1)}.
+#' The argument name must be preceded by a hyphen.
+#' For a list of options, run \code{blastn -help}.
 #' @param wd Character vector of length one; working directory. The blast
 #' search will be conducted here.
 #' @param echo Logical; should standard error and output be printed?
@@ -260,6 +265,9 @@ blast_n <- function (query,
   assertthat::assert_that(is.character(other_args) | is.null(other_args))
   assertthat::assert_that(is.logical(echo))
   assertthat::assert_that(assertthat::is.string(wd))
+  assertthat::assert_that(
+    length(other_args) > 1 | is.null(other_args),
+    msg = "other_args not formatted correctly. Check help file by running ?baitfindr::blast_n")
 
   wd <- fs::path_abs(wd)
   assertthat::assert_that(assertthat::is.dir(wd))
@@ -503,7 +511,7 @@ extract_blast_hits <- function (
     dplyr::mutate(
       file_name = fs::path_file(file_name),
       output = fs::path(out_dir, file_name, ext = out_ext)
-      ) %>%
+    ) %>%
     dplyr::group_by(file_name) %>%
     dplyr::arrange(evalue, desc(bitscore)) %>%
     dplyr::slice(1) %>%
@@ -642,7 +650,7 @@ realign_with_best_hits <- function (best_hits_dir,
   assertthat::assert_that(
     any(select),
     msg = "No names match between top blast hits and fasta sequences to realign"
-    )
+  )
 
   # combine and re-align blast-filtered alignments with their top matches
   purrr::map2(fasta_to_add[select], blast_top_matches[select], c) %>%
