@@ -626,7 +626,7 @@ realign_with_best_hits <- function (best_hits_dir,
   blast_top_matches <- purrr::map(best_hits_files, ape::read.FASTA)
 
   # Get file names of alignments to which to add best hits
-  fasta_files <- list.files(best_hits_dir, fasta_pattern, full.names = TRUE)
+  fasta_files <- list.files(fasta_dir, fasta_pattern, full.names = TRUE)
 
   # Read in alignments to which to add best hits
   fasta_to_add <- purrr::map(fasta_files, ape::read.FASTA)
