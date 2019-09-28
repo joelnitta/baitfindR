@@ -99,7 +99,7 @@ trim_both_ends <- function (alignment) {
 #' woodmouse <- as.list(woodmouse)
 #' woodmouse_with_introns <- ips::mafft(
 #'   c(woodmouse, woodmouse_ref),
-#'   path = "/usr/bin/mafft")
+#'   exec = "/usr/bin/mafft")
 #'
 #' # Image of the alignment shows that 'ref' has 'n's at positions 400-450,
 #' # while other sequences have gaps ('-').
