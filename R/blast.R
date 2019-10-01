@@ -645,15 +645,19 @@ realign_with_best_hits <- function (best_hits_dir,
     stringr::str_split("\\.") %>%
     purrr::map_chr(1)
 
-  select <- fasta_to_add_names == best_hits_names
+  names(blast_top_matches) <- best_hits_names
+
+  names(fasta_to_add) <- fasta_to_add_names
+
+  select <- intersect(best_hits_names, fasta_to_add_names)
 
   assertthat::assert_that(
-    any(select),
+    length(select) > 0,
     msg = "No names match between top blast hits and fasta sequences to realign"
   )
 
   # combine and re-align blast-filtered alignments with their top matches
-  purrr::map2(fasta_to_add[select], blast_top_matches[select], c) %>%
+  purrr::map2(fasta_to_add[select], blast_top_matches[select], c)  %>%
     purrr::map(ips::mafft, exec = "/usr/bin/mafft", options = "--adjustdirection") %>%
     purrr::set_names(best_hits_names[select])
 }
