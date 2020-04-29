@@ -4,11 +4,18 @@
 \alias{cut_long_internal_branches}
 \title{Cut long internal branches in tree.}
 \usage{
-
-  cut_long_internal_branches(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  tree_folder, tree_file_ending, internal_branch_length_cutoff,
-  minimal_taxa = 4, outdir, overwrite = FALSE, get_hash = TRUE,
-  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...)
+cut_long_internal_branches(
+  path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
+  tree_folder,
+  tree_file_ending,
+  internal_branch_length_cutoff,
+  minimal_taxa = 4,
+  outdir,
+  overwrite = FALSE,
+  get_hash = TRUE,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...
+)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., \code{"/Users/me/apps/phylogenomic_dataset_construction/"}}

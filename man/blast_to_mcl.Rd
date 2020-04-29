@@ -4,10 +4,13 @@
 \alias{blast_to_mcl}
 \title{Prepare BLAST results for MCL.}
 \usage{
-
-  blast_to_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  blast_results, hit_fraction_cutoff,
-  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...)
+blast_to_mcl(
+  path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
+  blast_results,
+  hit_fraction_cutoff,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...
+)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the complete path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}

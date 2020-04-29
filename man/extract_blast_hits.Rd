@@ -4,10 +4,16 @@
 \alias{extract_blast_hits}
 \title{Extract top blast hits from multiple blast output files}
 \usage{
-extract_blast_hits(blast_results_dir, blast_results_pattern,
-  blast_cols = c("qseqid", "sseqid", "pident", "length", "mismatch",
-  "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"),
-  database_path, out_dir, out_ext = "bestmatch.fasta", ...)
+extract_blast_hits(
+  blast_results_dir,
+  blast_results_pattern,
+  blast_cols = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+    "qstart", "qend", "sstart", "send", "evalue", "bitscore"),
+  database_path,
+  out_dir,
+  out_ext = "bestmatch.fasta",
+  ...
+)
 }
 \arguments{
 \item{blast_results_dir}{Path to folder containing BLAST results files.}

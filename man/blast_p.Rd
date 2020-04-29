@@ -4,8 +4,16 @@
 \alias{blast_p}
 \title{Run a blastp query.}
 \usage{
-blast_p(query, database, out_file = NULL, outfmt = "6",
-  other_args = NULL, echo = TRUE, wd, ...)
+blast_p(
+  query,
+  database,
+  out_file = NULL,
+  outfmt = "6",
+  other_args = NULL,
+  echo = TRUE,
+  wd,
+  ...
+)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta file

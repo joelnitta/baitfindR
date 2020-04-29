@@ -4,7 +4,9 @@
 \name{example_transcriptomes}
 \alias{example_transcriptomes}
 \title{Fern transcriptome}
-\format{List of lists, each of class 'DNAbin".}
+\format{
+List of lists, each of class 'DNAbin".
+}
 \source{
 \url{http://www.onekp.com/public_data.html}
 }

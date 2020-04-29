@@ -4,8 +4,16 @@
 \alias{build_blast_db}
 \title{Build a BLAST database.}
 \usage{
-build_blast_db(in_seqs, db_type = "nucl", out_name = NULL,
-  title = NULL, parse_seqids = FALSE, echo = TRUE, wd, ...)
+build_blast_db(
+  in_seqs,
+  db_type = "nucl",
+  out_name = NULL,
+  title = NULL,
+  parse_seqids = FALSE,
+  echo = TRUE,
+  wd,
+  ...
+)
 }
 \arguments{
 \item{in_seqs}{Character vector of length one; the path to the fasta

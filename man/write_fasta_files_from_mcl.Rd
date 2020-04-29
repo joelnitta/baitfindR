@@ -4,11 +4,17 @@
 \alias{write_fasta_files_from_mcl}
 \title{Write fasta files from MCL results.}
 \usage{
-
-  write_fasta_files_from_mcl(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  all_fasta, mcl_outfile, minimal_taxa = 4, outdir, overwrite = FALSE,
-  get_hash = TRUE, echo = pkgconfig::get_config("baitfindR::echo",
-  fallback = FALSE), ...)
+write_fasta_files_from_mcl(
+  path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
+  all_fasta,
+  mcl_outfile,
+  minimal_taxa = 4,
+  outdir,
+  overwrite = FALSE,
+  get_hash = TRUE,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...
+)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}

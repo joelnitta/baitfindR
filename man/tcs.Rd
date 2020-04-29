@@ -4,8 +4,7 @@
 \alias{tcs}
 \title{Calculate TCS.}
 \usage{
-tcs(alignment, number_cores = 1, other_args = NULL,
-  wd = here::here(), ...)
+tcs(alignment, number_cores = 1, other_args = NULL, wd = here::here(), ...)
 }
 \arguments{
 \item{alignment}{Character vector of length one; the path to the input alignment}

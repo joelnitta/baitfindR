@@ -4,8 +4,16 @@
 \alias{blast_n}
 \title{Run a blastn query.}
 \usage{
-blast_n(query, database, out_file = NULL, outfmt = "6",
-  other_args = NULL, echo = TRUE, wd, ...)
+blast_n(
+  query,
+  database,
+  out_file = NULL,
+  outfmt = "6",
+  other_args = NULL,
+  echo = TRUE,
+  wd,
+  ...
+)
 }
 \arguments{
 \item{query}{Character vector of length one; the path to the fasta

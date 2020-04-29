@@ -4,11 +4,17 @@
 \alias{filter_1to1_orthologs}
 \title{Identify orthologs using the "one-to-one" method.}
 \usage{
-
-  filter_1to1_orthologs(path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
-  tree_folder, tree_file_ending, minimal_taxa = 4, outdir,
-  overwrite = FALSE, get_hash = TRUE,
-  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE), ...)
+filter_1to1_orthologs(
+  path_to_ys = pkgconfig::get_config("baitfindR::path_to_ys"),
+  tree_folder,
+  tree_file_ending,
+  minimal_taxa = 4,
+  outdir,
+  overwrite = FALSE,
+  get_hash = TRUE,
+  echo = pkgconfig::get_config("baitfindR::echo", fallback = FALSE),
+  ...
+)
 }
 \arguments{
 \item{path_to_ys}{Character vector of length one; the path to the folder containing Y&S python scripts, e.g., "/Users/me/apps/phylogenomic_dataset_construction/"}

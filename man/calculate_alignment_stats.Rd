@@ -4,8 +4,12 @@
 \alias{calculate_alignment_stats}
 \title{Calculate summary statistics for an alignment.}
 \usage{
-calculate_alignment_stats(alignment, cutoff = 120, cutoff_any = FALSE,
-  include_aln = FALSE)
+calculate_alignment_stats(
+  alignment,
+  cutoff = 120,
+  cutoff_any = FALSE,
+  include_aln = FALSE
+)
 }
 \arguments{
 \item{alignment}{Input alignment; must be a matrix of class "DNAbin".}

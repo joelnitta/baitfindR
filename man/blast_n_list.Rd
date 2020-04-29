@@ -4,9 +4,18 @@
 \alias{blast_n_list}
 \title{Run blastn on all fasta files in a folder.}
 \usage{
-blast_n_list(fasta_folder, fasta_pattern, database_path, out_ext = "tsv",
-  outfmt = "6", other_args = NULL, overwrite = FALSE, echo = FALSE,
-  get_hash = TRUE, ...)
+blast_n_list(
+  fasta_folder,
+  fasta_pattern,
+  database_path,
+  out_ext = "tsv",
+  outfmt = "6",
+  other_args = NULL,
+  overwrite = FALSE,
+  echo = FALSE,
+  get_hash = TRUE,
+  ...
+)
 }
 \arguments{
 \item{fasta_folder}{Path to the folder containing fasta files to BLAST.}

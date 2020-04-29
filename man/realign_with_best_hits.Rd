@@ -4,8 +4,13 @@
 \alias{realign_with_best_hits}
 \title{Realign top blast hit of multi-fasta file with that fasta file.}
 \usage{
-realign_with_best_hits(best_hits_dir, best_hits_pattern = "bestmatch",
-  fasta_dir, fasta_pattern = "\\\\.fa$", ...)
+realign_with_best_hits(
+  best_hits_dir,
+  best_hits_pattern = "bestmatch",
+  fasta_dir,
+  fasta_pattern = "\\\\.fa$",
+  ...
+)
 }
 \arguments{
 \item{best_hits_dir}{Path to directory containing top blast hits.}

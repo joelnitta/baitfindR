@@ -4,8 +4,7 @@
 \alias{fill_introns}
 \title{Fill-in introns in an alignment}
 \usage{
-fill_introns(alignment, ref_pattern, outgroup = NULL,
-  trim_outgroup = FALSE)
+fill_introns(alignment, ref_pattern, outgroup = NULL, trim_outgroup = FALSE)
 }
 \arguments{
 \item{alignment}{matrix of class DNAbin}

@@ -4,7 +4,8 @@
 \name{onekp_data}
 \alias{onekp_data}
 \title{Taxonomic data for fern transcriptomes}
-\format{A data frame with 8 rows and 6 variables:
+\format{
+A data frame with 8 rows and 6 variables:
 \describe{
   \item{code}{4 letter code used to identify the sample}
   \item{species}{Binomial species name}
@@ -12,7 +13,8 @@
   \item{specific_epithet}{Specific epithet}
   \item{family}{Family}
   \item{group}{Ingroup or outgroup status}
-}}
+}
+}
 \source{
 \url{http://www.onekp.com/public_data.html}
 

@@ -4,10 +4,17 @@
 \alias{find_bed_regions}
 \title{Find genes, exons, and introns in a gff3 file}
 \usage{
-find_bed_regions(gff3_file, source_select = NULL, gene_label = "gene",
-  exon_label = "exon", verbose = FALSE, prefix = NULL,
-  out_dir = NULL, out_type = c("genes", "introns", "exons",
-  "write_all"), ...)
+find_bed_regions(
+  gff3_file,
+  source_select = NULL,
+  gene_label = "gene",
+  exon_label = "exon",
+  verbose = FALSE,
+  prefix = NULL,
+  out_dir = NULL,
+  out_type = c("genes", "introns", "exons", "write_all"),
+  ...
+)
 }
 \arguments{
 \item{gff3_file}{Path to input file in `gff3` format.}

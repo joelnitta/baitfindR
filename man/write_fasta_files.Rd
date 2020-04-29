@@ -4,8 +4,14 @@
 \alias{write_fasta_files}
 \title{Write out a list of fasta files to a directory}
 \usage{
-write_fasta_files(fasta_list, out_dir, fasta_names = NULL, ext = NULL,
-  get_hash = TRUE, ...)
+write_fasta_files(
+  fasta_list,
+  out_dir,
+  fasta_names = NULL,
+  ext = NULL,
+  get_hash = TRUE,
+  ...
+)
 }
 \arguments{
 \item{fasta_list}{List of DNA sequences to write out. Each item in list
