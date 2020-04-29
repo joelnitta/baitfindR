@@ -659,5 +659,5 @@ realign_with_best_hits <- function (best_hits_dir,
   # combine and re-align blast-filtered alignments with their top matches
   purrr::map2(fasta_to_add[select], blast_top_matches[select], c)  %>%
     purrr::map(ips::mafft, exec = "/usr/bin/mafft", options = "--adjustdirection") %>%
-    purrr::set_names(best_hits_names[select])
+    purrr::set_names(select)
 }
